@@ -9,6 +9,7 @@ requires-python = ">=3.12"
 dependencies = [
     "accelerate>=1.15.0",
     "datasets>=5.1.0",
+    "lm-eval[ifeval]>=0.4.13",
     "modal>=1.6.1",
     "peft>=0.21.2",
     "torch>=2.6",

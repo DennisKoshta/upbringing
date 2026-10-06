@@ -6,3 +6,4 @@ runs/
 outputs/
 *.safetensors
 wandb/
+runs_*.log
