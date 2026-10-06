@@ -192,6 +192,20 @@ def export_rlvr(download, n_traces=10):
         size += write(f"rlvr/trace-{i:02d}.json", {"nums": list(key[0]), "target": key[1], "frames": frames})
         index.append({"file": f"trace-{i:02d}.json", "nums": list(key[0]), "target": key[1]})
     size += write("rlvr/traces.json", {"puzzles": index, "steps": eval_steps})
+
+    # Post-hoc evaluation: identical settings for base and every saved checkpoint.
+    posthoc = []
+    for f in ls("evals/rlvr"):
+        if download:
+            pull(f"evals/rlvr/{f}", f"{CACHE}/evals/rlvr/{f}", refresh=True)
+        path = f"{CACHE}/evals/rlvr/{f}"
+        if os.path.exists(path):
+            d = json.load(open(path))
+            posthoc.append({k: d[k] for k in ("label", "step", "n_puzzles", "samples_per_puzzle", "settings",
+                                               "per_attempt_accuracy", "ci95", "greedy_accuracy", "pass_at_k", "mean_tokens")})
+    posthoc.sort(key=lambda d: d["step"])
+    if posthoc:
+        size += write("rlvr/posthoc.json", {"checkpoints": posthoc})
     print(f"rlvr: {len(train)} train steps, {len(evals)} eval points, {len(index)} traces, {size / 1e6:.2f} MB")
 
 
@@ -216,7 +230,12 @@ def export_costs():
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--skip-download", action="store_true")
+    ap.add_argument("--only", default="act1,rlvr,costs", help="comma-separated sections to export")
     args = ap.parse_args()
-    export_act1(not args.skip_download)
-    export_rlvr(not args.skip_download)
-    export_costs()
+    only = set(args.only.split(","))
+    if "act1" in only:
+        export_act1(not args.skip_download)
+    if "rlvr" in only:
+        export_rlvr(not args.skip_download)
+    if "costs" in only:
+        export_costs()

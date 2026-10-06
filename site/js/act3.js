@@ -19,8 +19,9 @@ function smooth(points, k = 9) {
 }
 
 export async function initAct3() {
-  const [curves, traces, bug, cmp] = await Promise.all([load("rlvr/curves.json"), load("rlvr/traces.json"), load("rlvr/bug.json"), load("rlvr/grader_comparison.json")]);
+  const [curves, traces, bug, cmp, posthoc] = await Promise.all([load("rlvr/curves.json"), load("rlvr/traces.json"), load("rlvr/bug.json"), load("rlvr/grader_comparison.json"), load("rlvr/posthoc.json")]);
   if (bug) drawBug(bug, cmp);
+  if (posthoc && posthoc.checkpoints.length > 1) drawPosthoc(posthoc.checkpoints);
   if (!curves || !curves.eval.length) {
     document.getElementById("a3-curves").textContent = "The run is in progress; curves appear after the first evaluation.";
     return;
@@ -247,4 +248,68 @@ function drawBug(bug, cmp) {
   ].forEach((x) => el("li", { text: x }, ul));
   el("p", { class: "note", text: "What this is and isn't: a grading vulnerability with a measured effect on the rewards in one batch. " +
     "It is not demonstrated reward hacking; we stopped the run at step 24, before we could see whether optimization learned to exploit it." }, right);
+}
+
+function drawPosthoc(cks) {
+  const fig = document.getElementById("a3-posthoc");
+  fig.hidden = false;
+  const s0 = cks[0];
+  document.getElementById("a3-posthoc-sub").textContent =
+    `Every checkpoint re-evaluated with identical settings: the same ${s0.n_puzzles} held-out puzzles, ` +
+    `${s0.samples_per_puzzle} attempts each at temperature ${s0.settings.temperature}, the corrected checker.`;
+  const last = cks[cks.length - 1];
+  const steps = cks.map((c) => c.step);
+  const maxStep = Math.max(...steps);
+  const top = Math.min(1, Math.ceil(Math.max(...cks.map((c) => Math.max(c.ci95[1], c.pass_at_k["32"] || 0))) * 10) / 10);
+  const pctTicks = [0, top / 2, top].map((v) => +v.toFixed(2));
+
+  // accuracy with CI: a dot per checkpoint, the interval as a short vertical rule
+  const accBox = document.getElementById("a3-acc-ci");
+  accBox.replaceChildren();
+  lineChart(accBox, {
+    height: 200, margin: { left: 34, right: 10, bottom: 24 },
+    x: { min: 0, max: maxStep, ticks: steps.filter((v, i) => i === 0 || i === steps.length - 1 || v % 200 === 0).map((v) => ({ v, label: String(v) })) },
+    y: { min: 0, max: top, ticks: pctTicks, fmt: (v) => pct(v), tipFmt: (v) => pct(v, 1) },
+    legend: true,
+    series: [
+      { id: "acc", name: "Sampled (T = 1)", color: "var(--a3)", points: cks.map((c) => [c.step, c.per_attempt_accuracy]), dots: true },
+      { id: "greedy", name: "Greedy", color: "var(--gray-mark)", points: cks.map((c) => [c.step, c.greedy_accuracy]), dots: true },
+    ],
+    intervals: cks.map((c) => ({ x: c.step, y0: c.ci95[0], y1: c.ci95[1], color: "var(--a3)" })),
+    xLabel: (x) => (x === 0 ? "base model" : `step ${x}`),
+  });
+  // pass@k: base in gray, trained checkpoints on a one-hue ordinal ramp, final in the accent
+  const ks = Object.keys(s0.pass_at_k).map(Number).sort((a, b) => a - b);
+  const pick = [cks[0], ...cks.slice(1, -1).filter((_, i, arr) => arr.length <= 2 || i === Math.floor(arr.length / 2)), last].filter((c, i, a) => a.indexOf(c) === i);
+  const ramp = ["#86b6ef", "#3987e5", "#1c5cab"];
+  const pkBox = document.getElementById("a3-passk");
+  pkBox.replaceChildren();
+  lineChart(pkBox, {
+    height: 200, margin: { left: 34, right: 64, bottom: 24 },
+    x: { min: 0, max: Math.log2(ks[ks.length - 1]), ticks: ks.map((k) => ({ v: Math.log2(k), label: String(k) })) },
+    y: { min: 0, max: top, ticks: pctTicks, fmt: (v) => pct(v), tipFmt: (v) => pct(v, 1) },
+    legend: true, endLabels: true,
+    series: pick.map((c, i) => ({
+      id: c.label,
+      name: c.step === 0 ? "Base model" : `Step ${c.step}`,
+      color: c.step === 0 ? "var(--gray-mark)" : c === last ? "var(--a3)" : ramp[Math.min(i - 1, ramp.length - 1)],
+      points: ks.map((k) => [Math.log2(k), c.pass_at_k[String(k)]]),
+      dots: true,
+    })),
+    xLabel: (x) => `k = ${Math.round(2 ** x)}`,
+  });
+
+  const note = document.getElementById("a3-posthoc-note");
+  note.replaceChildren();
+  note.append(`Base model: ${pct(s0.per_attempt_accuracy, 1)} per attempt, pass@32 ${pct(s0.pass_at_k["32"], 1)}. `);
+  note.append(`Step ${last.step}: `);
+  el("b", { text: `${pct(last.per_attempt_accuracy, 1)} per attempt` }, note);
+  note.append(` (95% CI ${pct(last.ci95[0], 1)}–${pct(last.ci95[1], 1)}), pass@32 ${pct(last.pass_at_k["32"], 1)}. ` +
+    "If RL only sharpened what the base model could already sample, the base curve would close the gap as k grows; " +
+    "32 attempts is far below the budgets where such crossovers have been reported, so this bounds the question rather than settling it.");
+  tableToggle(fig, () => ({
+    head: ["Checkpoint", "Per attempt", "95% CI", "Greedy", ...ks.map((k) => `pass@${k}`), "Tokens"],
+    rows: cks.map((c) => [c.step === 0 ? "base" : `step ${c.step}`, pct(c.per_attempt_accuracy, 1), `${pct(c.ci95[0], 1)}–${pct(c.ci95[1], 1)}`,
+      pct(c.greedy_accuracy, 1), ...ks.map((k) => pct(c.pass_at_k[String(k)], 1)), String(Math.round(c.mean_tokens))]),
+  }));
 }

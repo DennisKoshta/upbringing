@@ -143,6 +143,9 @@ export function lineChart(container, opts) {
       el("text", { x: sx(t.v), y: m.top + H + 16, "text-anchor": t.anchor || "middle", text: t.label }, svg);
     });
 
+    (state.intervals || []).forEach((iv) => {
+      el("line", { class: "ci", x1: sx(iv.x), x2: sx(iv.x), y1: sy(iv.y0), y2: sy(iv.y1), stroke: iv.color, opacity: 0.45 }, svg);
+    });
     state.series.forEach((s) => {
       if (!s.points.length) return;
       const d = s.points.map(([x, y], i) => `${i ? "L" : "M"}${sx(x).toFixed(1)},${sy(y).toFixed(1)}`).join("");

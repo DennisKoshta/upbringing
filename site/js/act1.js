@@ -230,7 +230,7 @@ export async function initAct1() {
     "DPO: length-normalized DPO (AI2's dpo_norm, β = 5, lr 2.5e-6, 128 pairs per step) on a random subset of AI2's 1B preference mix.",
     "Budget cuts: 58% of one SFT epoch (AI2 trained two) and 16% of the preference pairs.",
     "Every checkpoint is answered greedily through the chat template, so the base model sees exactly what the assistant sees. Token shading is log p(checkpoint) − log p(base) for the token the checkpoint chose.",
-    "Benchmarks: IFEval prompt-level loose accuracy and 0-shot chain-of-thought GSM8K. Our harness gives AI2's DPO model 67.1% on IFEval, exactly its published number.",
+    "Benchmarks: IFEval prompt-level loose accuracy and 0-shot chain-of-thought GSM8K. Our harness scores AI2's DPO model at 66.4–67.1% on IFEval across two runs (AI2 reports 67.1%): it reproduces their evaluation, not their training.",
   ].forEach((t) => el("li", { text: t }, ul));
 
   promptChips.select(0);

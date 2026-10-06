@@ -27,9 +27,11 @@ This table is updated as stages finish. Numbers below are from completed stages 
 
 ## Results so far
 
-**Evaluation harness, validated on AI2's released checkpoints.** IFEval (prompt-level loose) on AI2's DPO model:
-67.1% (AI2 reports 67.1); SFT 49.4% (50.5); Instruct 68.4% (70.1). This validates our evaluation of their
-checkpoints, not a reproduction of their training results; our budget-cut checkpoints are scored separately.
+**Evaluation harness, validated on AI2's released checkpoints.** IFEval (prompt-level loose), two runs of our harness
+vs AI2's reported numbers: DPO 67.1% / 66.4% (AI2: 67.1%); SFT 49.4% / 49.4% (50.5%); Instruct 68.4% / 67.7% (70.1%).
+Greedy vLLM decoding is not bit-reproducible across batch compositions, so treat differences under ~1 point as noise.
+This validates our evaluation of their checkpoints, not a reproduction of their training results; our budget-cut
+checkpoints are scored separately.
 
 **RLVR (in progress).** Held-out accuracy is reported per attempt: 256 puzzles never used in training, 4 attempts each at
 temperature 1, corrected verifier (1,024 attempts per point). Base model: 1.6%. Final numbers, with confidence intervals

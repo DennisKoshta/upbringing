@@ -77,7 +77,7 @@ Track spend with `uv run python scripts/spend.py`.
   - **Deviation:** 60k random pairs = 16% of AI2's 378k.
 - **Eval harness:** vLLM, chat-formatted, greedy. Validated against AI2's published numbers:
   - AI2 SFT: IFEval 49.4 (published 50.5)
-  - AI2 DPO: IFEval 67.1 (published 67.1)
+  - AI2 DPO: IFEval 67.1, then 66.4 on a re-run (published 67.1); greedy vLLM decoding varies by up to ~0.7 points between runs
   - AI2 Instruct: IFEval 68.4 (published 70.1)
   - GSM8K is 0-shot chat CoT (AI2 uses 8-shot), so absolute numbers differ by a few points.
 - **RLVR:** Qwen2.5-3B base on Countdown, GRPO (TRL `dapo` loss, group-std scaling), fp32 master weights, lr 1e-6 constant, β=0.
