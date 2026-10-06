@@ -66,6 +66,8 @@ def run_grpo(out_dir, model="Qwen/Qwen2.5-3B", max_steps=900, prompts_per_round=
         per_device_train_batch_size=per_device_batch, gradient_accumulation_steps=grad_accum,
         generation_batch_size=rollouts, num_generations=num_generations,
         max_completion_length=max_completion_length, temperature=1.0,
+        # Stop at the answer: left alone, the base model invents and answers new "User:" turns after it.
+        generation_kwargs={"stop": ["</answer>"], "include_stop_str_in_output": True} if use_vllm else None,
         use_vllm=use_vllm, vllm_mode="colocate", vllm_gpu_memory_utilization=vllm_gpu_memory_utilization,
         model_init_kwargs={"dtype": torch.float32},
         bf16=True, gradient_checkpointing=True,

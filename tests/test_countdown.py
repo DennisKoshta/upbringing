@@ -19,7 +19,7 @@ def test_rejects_code_and_bad_syntax():
 def test_answer_must_follow_think():
     assert extract_answer("<answer>1+2</answer>") is None
     assert extract_answer("hmm</think> <answer>1 + 2</answer>") == "1 + 2"
-    assert extract_answer("x</think><answer>1</answer> wait <answer> 2 + 1 </answer>") == "2 + 1"
+    assert extract_answer("x</think><answer>1</answer> User: new puzzle <answer> 2 + 1 </answer>") == "1"
 
 
 def test_reward_functions():

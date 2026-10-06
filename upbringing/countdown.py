@@ -24,11 +24,15 @@ def make_prompt(nums, target):
 
 
 def extract_answer(completion):
-    """The last <answer> block after the closing </think>, or None."""
+    """The first <answer> block after the closing </think>, or None.
+
+    The first, not the last: a base model that is not stopped at </answer> goes on to invent new "User:" puzzles and
+    answer those, and grading a later block would score an answer to a question nobody asked.
+    """
     if "</think>" not in completion:
         return None
-    found = _ANSWER.findall(completion.split("</think>", 1)[1])
-    return found[-1].strip() if found else None
+    m = _ANSWER.search(completion.split("</think>", 1)[1])
+    return m.group(1).strip() if m else None
 
 
 def is_correct(expr, nums, target):

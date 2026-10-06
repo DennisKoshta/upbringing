@@ -68,3 +68,20 @@ Development, evals and the Act II prototype run on the local RTX 4060 (8 GB). Mo
 | **Total** | **~$69**, leaving ~$30 for failed runs and reruns |
 
 Track spend with `uv run python scripts/spend.py`.
+
+## M1/M2 decisions and deviations (2026-10-06)
+- **SFT:** AI2's 1B recipe (lr 3e-5, linear, 3% warmup, ~128 seqs/step as 12×4096 packed tokens, max len 4096), with fp32 master weights, bf16 autocast, and an assistant-only loss mask (template with `{% generation %}`, tested byte-identical to the official one).
+  - **Deviation:** 6,500 steps ≈ 58% of one epoch, vs AI2's 2 epochs. The full epoch measured 545M tokens / 6.4 h / ~$27, over budget.
+- **DPO:** `sigmoid_norm` (= open-instruct `dpo_norm`), β=5, lr 2.5e-6, linear, 10% warmup, 128 pairs/step, max len 2048, padding-free.
+  - Reference log-probs are precomputed under bf16 autocast (a TRL subclass; without it, fp32 tensors reach flash-attention).
+  - **Deviation:** 60k random pairs = 16% of AI2's 378k.
+- **Eval harness:** vLLM, chat-formatted, greedy. Validated against AI2's published numbers:
+  - AI2 SFT: IFEval 49.4 (published 50.5)
+  - AI2 DPO: IFEval 67.1 (published 67.1)
+  - AI2 Instruct: IFEval 68.4 (published 70.1)
+  - GSM8K is 0-shot chat CoT (AI2 uses 8-shot), so absolute numbers differ by a few points.
+- **RLVR:** Qwen2.5-3B base on Countdown, GRPO (TRL `dapo` loss, group-std scaling), fp32 master weights, lr 1e-6 constant, β=0.
+  - Each round is 32 prompts × 8 = 256 rollouts with 2 optimizer steps (TinyZero's batch / mini-batch).
+  - 1024-token completions, 900 optimizer steps (450 rounds).
+  - Every rollout is logged; a held-out eval runs every 50 steps (256 puzzles × 4 samples).
+- **Early SFT time-lapse (free preview):** for "Who are you?", the base answers "What is your name?"; step 10 hallucinates a `<|assistant|>` tag; step 50 says "a friendly AI"; step 500 says "developed by OpenAI" (distillation residue in the data). The haiku prompt gets prose until step ~150 and a real haiku at step 500. GSM8K goes 17% → 39% by step 20.
