@@ -4,6 +4,7 @@ import { chips, compactStep, el, hideTip, load, pct, player, showTip, stepper, t
 import { ckptDetail, ckptName, ckptShort, visibleTokens } from "./ckpt.js";
 import { initGlossary } from "./glossary.js";
 
+const REFUSAL = /\b(sorry|can'?t fulfill|cannot fulfill|unable to)\b/i;
 const SHADE_FULL = 8; // nats: a token ~3000x more likely than under the base model gets the full shade
 const TESTS = [
   { key: "ifeval", name: "Instruction following", term: "ifeval", label: "IFEval" },
@@ -181,6 +182,17 @@ export async function initAct1() {
       list.after(summary);
     }
     summary.textContent = `Most frequent openings above; ${j.distinct} distinct jokes in ${j.valid} samples.`;
+    // Over-refusal: early in SFT the model applies the refusal template from the safety data to harmless requests.
+    const refusing = j.top.reduce((acc, [key, count], k) => acc + (REFUSAL.test(raws[k] || key) ? count : 0), 0);
+    let note = summary.nextElementSibling;
+    if (!note || !note.classList.contains("moment")) {
+      note = el("p", { class: "moment" });
+      summary.after(note);
+    }
+    note.hidden = refusing / 300 < 0.05;
+    note.textContent = `Over-refusal: at least ${Math.round((refusing / 300) * 100)}% of samples here decline to tell a joke. ` +
+      "About 13% of the SFT mixture is safety data teaching refusals. The short, repetitive refusal template is learned " +
+      "early, before the model learns when to use it, so it fires on harmless requests too. It fades with more SFT.";
   }
   document.getElementById("a1-ask-joke").addEventListener("click", () => {
     const j = ckpts[idx].joke;
