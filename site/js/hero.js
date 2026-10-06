@@ -1,5 +1,4 @@
-// Hero: a chat exchange whose answer is controlled by a "drag to train" slider. It plays slowly on its own until the
-// visitor touches the slider or picks a question.
+// Hero: a chat exchange whose answer is controlled by a "drag to train" slider, starting at the untrained model.
 import { el, load } from "./lib.js";
 import { ckptName } from "./ckpt.js";
 
@@ -32,12 +31,11 @@ export async function initHero() {
   let frames = null;
   let idx = 0;
   let touched = false;
-  let timer = null;
 
   const qs = document.getElementById("hero-qs");
   const qBtns = QUESTIONS.map((p, i) => {
     const b = el("button", { type: "button", role: "tab", "aria-selected": String(i === 0), text: data.prompts[p] }, qs);
-    b.addEventListener("click", () => { takeOver(); selectQuestion(i); });
+    b.addEventListener("click", () => selectQuestion(i));
     return b;
   });
 
@@ -70,21 +68,12 @@ export async function initHero() {
   function takeOver() {
     if (touched) return;
     touched = true;
-    clearInterval(timer);
     hint.classList.add("quiet");
   }
 
   range.addEventListener("input", () => { takeOver(); show(Number(range.value)); });
   range.addEventListener("pointerdown", takeOver);
 
+  // Start untrained and stay there until the visitor drags: the change should be theirs to make.
   await selectQuestion(0);
-  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  if (!reduced) {
-    // Demo: advance slowly so the change is visible, then wait for the visitor.
-    timer = setInterval(() => {
-      if (touched || document.hidden) return;
-      if (idx >= n - 1) { clearInterval(timer); return; }
-      show(idx + 1);
-    }, 2200);
-  }
 }
