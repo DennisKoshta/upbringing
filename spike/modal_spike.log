@@ -161,3 +161,512 @@ Downloading setuptools (1.0MiB)
  Downloaded vllm
  Downloaded torch
 Prepared 220 packages in 8.61s
+Installed 220 packages in 4.44s
+Bytecode compiled 26138 files in 8.61s
+ + accelerate==1.15.0
+ + agent-detector==2.0.0
+ + aiohappyeyeballs==2.7.1
+ + aiohttp==3.14.4
+ + aiosignal==1.4.0
+ + annotated-doc==0.0.5
+ + annotated-types==0.8.0
+ + anthropic==1.11.0
+ + anyio==4.15.1
+ + apache-tvm-ffi==0.1.11
+ + astor==0.8.1
+ + attrs==26.1.0
+ + blake3==1.0.10
+ + cachetools==7.2.1
+ + cbor2==6.1.5
+ + certifi==2026.7.22
+ + cffi==2.1.1
+ + charset-normalizer==3.5.2
+ + click==8.5.0
+ + cloudpickle==3.1.2
+ + compressed-tensors==0.17.0
+ + cryptography==50.0.2
+ + cuda-bindings==13.4.3
+ + cuda-core==1.2.1
+ + cuda-pathfinder==1.8.3
+ + cuda-python==13.4.1
+ + cuda-tile==1.6.0
+ + cuda-toolkit==13.0.3.0
+ + datasets==5.1.0
+ + depyf==0.20.0
+ + detect-installer==0.2.1
+ + dill==0.4.1
+ + dnspython==2.8.0
+ + docstring-parser==0.18.0
+ + einops==0.8.2
+ + email-validator==2.3.0
+ + fastapi==0.136.3
+ + fastapi-cli==0.0.32
+ + fastapi-cloud-cli==0.26.0
+ + fastar==0.12.0
+ + fastsafetensors==0.4.0
+ + filelock==4.0.12
+ + flashinfer-python==0.6.18.post1
+ + frozenlist==1.8.0
+ + fsspec==2026.7.0
+ + googleapis-common-protos==1.75.5
+ + grpcio==1.84.0
+ + h11==0.16.0
+ + hf-xet==1.7.0
+ + httpcore==1.0.9
+ + httpcore2==2.13.1
+ + httptools==0.8.0
+ + httpx==0.28.1
+ + httpx2==2.13.1
+ + huggingface-hub==1.33.0
+ + humming-kernels==0.1.12
+ + id==1.6.1
+ + idna==3.20
+ + ijson==3.5.1
+ + instanttensor==0.2.1
+ + interegular==0.3.3
+ + jinja2==3.1.6
+ + jiter==0.17.0
+ + jmespath==1.1.0
+ + jsonschema==4.26.0
+ + jsonschema-specifications==2025.9.1
+ + kernels==0.17.2
+ + lark==1.2.2
+ + llguidance==1.7.6
+ + llvmlite==0.47.0
+ + lm-format-enforcer==0.11.3
+ + loguru==0.7.3
+ + markdown-it-py==4.2.0
+ + markupsafe==3.0.4
+ + mcp==2.3.0
+ + mcp-types==2.3.0
+ + mdurl==0.1.2
+ + mistral-common==1.12.0
+ + ml-dtypes==0.6.0
+ + model-hosting-container-standards==0.1.16
+ + mpmath==1.3.0
+ + msgspec==0.22.0
+ + multidict==6.9.1
+ + multiprocess==0.70.19
+ + nccl4py==0.6.0
+ + networkx==3.7
+ + ninja==1.13.2
+ + numba==0.65.0
+ + numpy==2.3.5
+ + nvidia-cublas==13.1.1.3
+ + nvidia-cuda-cccl==13.3.4.3.1
+ + nvidia-cuda-crt==13.4.92
+ + nvidia-cuda-cupti==13.0.85
+ + nvidia-cuda-nvcc==13.4.92
+ + nvidia-cuda-nvdisasm==13.4.92
+ + nvidia-cuda-nvrtc==13.0.88
+ + nvidia-cuda-runtime==13.0.96
+ + nvidia-cudnn-cu13==9.20.0.48
+ + nvidia-cudnn-frontend==1.30.0
+ + nvidia-cufft==12.0.0.61
+ + nvidia-cufile==1.15.1.6
+ + nvidia-curand==10.4.0.35
+ + nvidia-cusolver==12.0.4.66
+ + nvidia-cusparse==12.6.3.3
+ + nvidia-cusparselt-cu13==0.8.1
+ + nvidia-cutlass-dsl==4.7.1
+ + nvidia-cutlass-dsl-libs-base==4.7.1
+ + nvidia-cutlass-dsl-libs-core==4.7.1
+ + nvidia-cutlass-dsl-libs-cu12==4.7.1
+ + nvidia-cutlass-dsl-libs-cu13==4.7.1
+ + nvidia-ml-py==13.615.71
+ + nvidia-nccl-cu13==2.29.7
+ + nvidia-nvjitlink==13.4.92
+ + nvidia-nvshmem-cu13==3.4.5
+ + nvidia-nvtx==13.0.85
+ + nvidia-nvvm==13.4.92
+ + nvtx==0.2.15
+ + openai==3.25.0
+ + openai-harmony==0.0.8
+ + opencv-python-headless==5.0.0.93
+ + opentelemetry-api==1.45.1
+ + opentelemetry-exporter-http-transport==0.66b1
+ + opentelemetry-exporter-otlp==1.45.1
+ + opentelemetry-exporter-otlp-common==0.66b1
+ + opentelemetry-exporter-otlp-proto-common==1.45.1
+ + opentelemetry-exporter-otlp-proto-grpc==1.45.1
+ + opentelemetry-exporter-otlp-proto-http==1.45.1
+ + opentelemetry-proto==1.45.1
+ + opentelemetry-sdk==1.45.1
+ + opentelemetry-semantic-conventions==0.66b1
+ + opentelemetry-semantic-conventions-ai==0.5.1
+ + outlines-core==0.2.14
+ + packaging==26.3
+ + pandas==3.0.6
+ + partial-json-parser==0.2.1.1.post7
+ + peft==0.21.2
+ + pillow==12.3.0
+ + platformdirs==4.12.3
+ + prometheus-client==0.26.0
+ + prometheus-fastapi-instrumentator==8.1.0
+ + propcache==0.5.4
+ + protobuf==7.36.2
+ + psutil==7.2.2
+ + py-cpuinfo==9.0.0
+ + pyarrow==25.0.1
+ + pyasn1==0.6.4
+ + pybase64==1.5.1
+ + pycountry==26.2.16
+ + pycparser==3.0
+ + pydantic==2.13.5
+ + pydantic-core==2.46.5
+ + pydantic-extra-types==2.11.1
+ + pydantic-settings==2.15.0
+ + pygments==2.21.0
+ + pyjwt==2.15.1
+ + pynvvideocodec==2.0.4
+ + pyopenssl==26.4.0
+ + python-dateutil==2.9.0.post0
+ + python-dotenv==1.2.4
+ + python-json-logger==4.2.0
+ + python-multipart==0.0.32
+ + pyyaml==6.0.3
+ + pyzmq==27.2.0
+ + quack-kernels==0.6.5
+ + referencing==0.37.0
+ + regex==2026.9.29
+ + requests==2.34.2
+ + rfc3161-client==1.0.9
+ + rfc8785==0.1.4
+ + rich==15.0.0
+ + rich-toolkit==0.20.5
+ + rignore==0.8.1
+ + rpds-py==2026.9.1
+ + safetensors==0.8.0
+ + securesystemslib==1.5.1
+ + sentencepiece==0.2.2
+ + sentry-sdk==2.71.0
+ + setproctitle==1.3.8
+ + setuptools==80.10.2
+ + shellingham==1.5.4
+ + sigstore==4.5.0
+ + sigstore-models==0.0.6
+ + sigstore-rekor-types==0.0.18
+ + six==1.17.0
+ + sniffio==1.3.1
+ + sse-starlette==3.5.0
+ + starlette==1.7.0
+ + supervisor==4.3.0
+ + sympy==1.14.0
+ + tabulate==0.10.0
+ + tiktoken==0.14.0
+ + tilelang==0.1.12
+ + tokenizers==0.23.2
+ + tokenspeed-mla==0.1.8
+ + tokenspeed-triton==3.8.10.post20260920
+ + tomlkit==0.15.1
+ + torch==2.13.0
+ + torch-c-dlpack-ext==0.1.5
+ + torchaudio==2.11.0
+ + torchcodec==0.17.0
+ + torchvision==0.28.0
+ + tqdm==4.70.1
+ + transformers==5.19.0
+ + triton==3.7.1
+ + trl==1.14.2
+ + truststore==0.10.4
+ + tuf==7.0.1
+ + typer==0.27.3
+ + typing-extensions==4.16.0
+ + typing-inspection==0.4.4
+ + urllib3==2.8.0
+ + uvicorn==0.54.0
+ + uvloop==0.23.0
+ + vllm==0.30.0
+ + watchfiles==1.3.0
+ + websockets==17.2
+ + xgrammar==0.2.8
+ + xxhash==4.0.1
+ + yarl==1.25.1
+ + z3-solver==4.15.4.0
+Saving image...
+Image saved, took 8.45s
+
+Built image im-DGq6gslxAaUbDfhyzP7REN in 35.52s
+
+
+Building image im-3oW9BQFhj8dfPJlW05uZba
+
+=> Step 0: FROM base
+
+=> Step 1: ENV HF_HOME=/vol/hf
+
+=> Step 2: ENV HF_XET_HIGH_PERFORMANCE=1
+Saving image...
+Image saved, took 1.72s
+
+Built image im-3oW9BQFhj8dfPJlW05uZba in 3.06s
+
+
+✓ Created objects.
+├── ✓ Uploaded /home/dennis/projects/upbringing/spike/modal_spike.py
+├── ✓ Uploaded PythonPackage:upbringing
+├── ✓ Created Function sft_timing.
+└── ✓ Created Function grpo_timing.
+
+[1AGenerating train split:   0%|          | 0/490364 [00:00<?, ? examples/s]
+[1AGenerating train split:  14%|█▍        | 71000/490364 [00:00<00:00, 698483.35 examples/s]
+[1AGenerating train split:  32%|███▏      | 159000/490364 [00:00<00:00, 797081.24 examples/s]
+[1AGenerating train split:  52%|█████▏    | 254000/490364 [00:00<00:00, 860836.45 examples/s]
+[1AGenerating train split:  71%|███████   | 346000/490364 [00:00<00:00, 880397.53 examples/s]
+[1AGenerating train split:  89%|████████▊ | 435000/490364 [00:00<00:00, 881585.69 examples/s]
+[1AGenerating train split: 100%|██████████| 490364/490364 [00:00<00:00, 857293.62 examples/s]
+
+[1AMap:   0%|          | 0/2000 [00:00<?, ? examples/s]Map: 100%|██████████| 2000/2000 [00:00<00:00, 30464.37 examples/s]
+
+[1AFetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]
+[1AFetching 2 files:  50%|█████     | 1/2 [00:25<00:25, 25.70s/it]
+[1AGenerating train split:   0%|          | 0/866138 [00:00<?, ? examples/s]
+[1AGenerating train split:   1%|▏         | 12000/866138 [00:00<00:07, 112814.80 examples/s]
+[1AGenerating train split:   3%|▎         | 29000/866138 [00:00<00:05, 142701.09 examples/s]
+[1AGenerating train split:   6%|▌         | 50000/866138 [00:00<00:04, 169226.34 examples/s]
+[1AGenerating train split:   8%|▊         | 71000/866138 [00:00<00:04, 180578.14 examples/s]
+[1AGenerating train split:  11%|█         | 94000/866138 [00:00<00:03, 194647.93 examples/s]
+[1AGenerating train split:  13%|█▎        | 115000/866138 [00:00<00:05, 130850.32 examples/s]
+[1AFetching 2 files: 100%|██████████| 2/2 [00:29<00:00, 12.78s/it]
+[1AFetching 2 files: 100%|██████████| 2/2 [00:29<00:00, 14.72s/it]
+
+[1ALoading weights:   0%|          | 0/434 [00:00<?, ?it/s]
+[1AGenerating train split:  15%|█▌        | 131000/866138 [00:01<00:09, 77555.59 examples/s] 
+[1AGenerating train split:  17%|█▋        | 144357/866138 [00:01<00:11, 60209.02 examples/s]
+[1AGenerating train split:  18%|█▊        | 155357/866138 [00:01<00:14, 50662.02 examples/s]
+[1ALoading weights:   0%|          | 1/434 [00:00<06:02,  1.19it/s]
+[1ALoading weights:  26%|██▌       | 113/434 [00:00<00:02, 158.77it/s]
+[1AGenerating train split:  19%|█▉        | 164357/866138 [00:02<00:15, 45697.26 examples/s]
+[1ALoading weights:  38%|███▊      | 167/434 [00:01<00:01, 183.84it/s]
+[1AGenerating train split:  20%|█▉        | 171357/866138 [00:02<00:16, 42720.63 examples/s]
+[1AGenerating train split:  20%|██        | 177357/866138 [00:02<00:16, 42732.92 examples/s]
+[1ALoading weights:  48%|████▊     | 208/434 [00:01<00:01, 185.39it/s]
+[1AGenerating train split:  21%|██        | 182357/866138 [00:02<00:16, 41341.51 examples/s]
+[1ALoading weights:  55%|█████▌    | 240/434 [00:01<00:00, 197.09it/s]
+[1ALoading weights:  62%|██████▏   | 269/434 [00:01<00:00, 198.70it/s]
+[1AGenerating train split:  22%|██▏       | 187357/866138 [00:02<00:16, 40524.94 examples/s]
+[1ALoading weights:  68%|██████▊   | 296/434 [00:01<00:00, 204.35it/s]
+[1ALoading weights:  74%|███████▍  | 321/434 [00:01<00:00, 212.17it/s]
+[1AGenerating train split:  22%|██▏       | 192357/866138 [00:02<00:17, 39432.33 examples/s]
+[1ALoading weights:  80%|███████▉  | 346/434 [00:02<00:00, 213.98it/s]
+[1AGenerating train split:  23%|██▎       | 198357/866138 [00:03<00:17, 38463.03 examples/s]
+[1ALoading weights:  85%|████████▌ | 370/434 [00:02<00:00, 217.99it/s]
+[1AGenerating train split:  23%|██▎       | 202357/866138 [00:03<00:17, 38116.36 examples/s]
+[1AGenerating train split:  24%|██▍       | 211357/866138 [00:03<00:13, 48275.23 examples/s]
+[1ALoading weights:  91%|█████████ | 394/434 [00:02<00:00, 216.21it/s]
+[1ALoading weights:  96%|█████████▌| 417/434 [00:02<00:00, 215.50it/s]
+[1AGenerating train split:  28%|██▊       | 238357/866138 [00:03<00:06, 99234.80 examples/s]
+[1AGenerating train split:  30%|███       | 261357/866138 [00:03<00:04, 131089.20 examples/s]
+[1ALoading weights: 100%|██████████| 434/434 [00:02<00:00, 180.05it/s]
+
+[1AGenerating train split:  33%|███▎      | 283357/866138 [00:03<00:04, 133625.85 examples/s]
+[1AGenerating train split:  34%|███▍      | 297714/866138 [00:03<00:04, 129556.75 examples/s]
+[1AGenerating train split:  36%|███▌      | 313714/866138 [00:03<00:04, 136844.60 examples/s]
+[1AGenerating train split:  38%|███▊      | 328714/866138 [00:04<00:03, 136950.23 examples/s]
+[1AGenerating train split:  40%|███▉      | 343714/866138 [00:04<00:03, 136853.59 examples/s]
+[1AGenerating train split:  42%|████▏     | 363714/866138 [00:04<00:03, 152004.72 examples/s]
+[1AGenerating train split:  44%|████▍     | 380714/866138 [00:04<00:03, 154216.46 examples/s]
+[1AGenerating train split:  46%|████▌     | 396714/866138 [00:04<00:03, 155384.43 examples/s]
+[1AGenerating train split:  48%|████▊     | 412714/866138 [00:04<00:02, 156533.36 examples/s]
+[1AGenerating train split:  50%|████▉     | 430714/866138 [00:04<00:02, 161063.21 examples/s]
+[1AGenerating train split:  52%|█████▏    | 453070/866138 [00:04<00:02, 153693.81 examples/s]
+[1AGenerating train split:  54%|█████▍    | 471070/866138 [00:04<00:02, 156789.04 examples/s]
+[1AGenerating train split:  56%|█████▋    | 488070/866138 [00:05<00:02, 157484.97 examples/s]
+[1AGenerating train split:  58%|█████▊    | 506070/866138 [00:05<00:02, 161438.69 examples/s]
+[1AGenerating train split:  61%|██████    | 529070/866138 [00:05<00:01, 180266.48 examples/s]
+[1AGenerating train split:  64%|██████▎   | 551070/866138 [00:05<00:01, 188308.17 examples/s]
+[1AGenerating train split:  66%|██████▌   | 572070/866138 [00:05<00:01, 193259.73 examples/s]
+[1AGenerating train split:  69%|██████▊   | 593426/866138 [00:05<00:01, 195460.35 examples/s]
+[1AGenerating train split:  72%|███████▏  | 619426/866138 [00:05<00:01, 209565.95 examples/s]
+[1AGenerating train split:  74%|███████▍  | 641426/866138 [00:05<00:01, 179201.12 examples/s]
+[1AGenerating train split:  77%|███████▋  | 664426/866138 [00:05<00:01, 190010.49 examples/s]
+[1AGenerating train split:  80%|███████▉  | 690426/866138 [00:06<00:00, 205733.32 examples/s]
+[1AGenerating train split:  83%|████████▎ | 717426/866138 [00:06<00:00, 219323.34 examples/s][RANK 0] Detected kernel version 4.19.0, which is below the recommended minimum of 5.5.0; this can cause the process to hang. It is recommended to upgrade the kernel to the minimum version or higher.
+
+[1AGenerating train split:  86%|████████▌ | 742782/866138 [00:06<00:00, 193563.99 examples/s]
+[1ALoading weights:   0%|          | 0/434 [00:00<?, ?it/s]
+[1AGenerating train split:  89%|████████▊ | 767782/866138 [00:06<00:00, 161225.79 examples/s]
+[1AGenerating train split:  91%|█████████ | 786782/866138 [00:06<00:00, 148105.61 examples/s]
+[1AGenerating train split:  93%|█████████▎| 805782/866138 [00:06<00:00, 138737.81 examples/s]
+[1AGenerating train split:  95%|█████████▌| 826782/866138 [00:07<00:00, 136912.22 examples/s]
+[1AGenerating train split:  98%|█████████▊| 845782/866138 [00:07<00:00, 146130.01 examples/s]
+[1AGenerating train split: 100%|█████████▉| 865782/866138 [00:07<00:00, 156622.27 examples/s]
+[1AGenerating train split: 100%|██████████| 866138/866138 [00:07<00:00, 119832.72 examples/s]
+
+[1ALoading weights:   0%|          | 1/434 [00:00<06:25,  1.12it/s]
+[1ALoading weights:  26%|██▌       | 111/434 [00:00<00:02, 152.60it/s]
+[1ALoading weights:  40%|████      | 175/434 [00:01<00:01, 171.14it/s]
+[1ALoading weights:  50%|█████     | 219/434 [00:01<00:01, 184.82it/s]
+[1ALoading weights:  59%|█████▉    | 255/434 [00:01<00:00, 189.12it/s]
+[1ALoading weights:  66%|██████▌   | 285/434 [00:01<00:00, 201.39it/s]
+[1ALoading weights:  72%|███████▏  | 314/434 [00:01<00:00, 216.44it/s]
+[1ALoading weights:  79%|███████▉  | 343/434 [00:02<00:00, 205.04it/s]
+[1AFetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]
+[1ALoading weights:  85%|████████▍ | 368/434 [00:02<00:00, 207.22it/s]
+[1ALoading weights:  90%|█████████ | 392/434 [00:02<00:00, 210.11it/s]
+[1ALoading weights:  96%|█████████▌| 416/434 [00:02<00:00, 209.01it/s]
+[1ALoading weights: 100%|██████████| 434/434 [00:02<00:00, 175.92it/s]
+
+[1AFetching 2 files:  50%|█████     | 1/2 [00:11<00:11, 11.62s/it]
+[1AParse safetensors files:   0%|          | 0/2 [00:00<?, ?it/s]
+[1AParse safetensors files:  50%|█████     | 1/2 [00:00<00:00,  3.80it/s]
+[1AParse safetensors files: 100%|██████████| 2/2 [00:00<00:00,  7.25it/s]
+
+[1AFetching 2 files: 100%|██████████| 2/2 [00:23<00:00, 11.94s/it]
+[1AFetching 2 files: 100%|██████████| 2/2 [00:23<00:00, 11.89s/it]
+Loading safetensors checkpoint shards:   0% Completed | 0/2 [00:00<?, ?it/s]
+
+[1AFetching 6 files:   0%|          | 0/6 [00:00<?, ?it/s]Loading safetensors checkpoint shards:  50% Completed | 1/2 [00:00<00:00,  1.24it/s]
+
+[1AFetching 6 files:  33%|███▎      | 2/6 [00:00<00:00,  4.84it/s]
+[1AFetching 6 files:  83%|████████▎ | 5/6 [00:00<00:00, 10.53it/s]Loading safetensors checkpoint shards: 100% Completed | 2/2 [00:01<00:00,  1.49it/s]
+Loading safetensors checkpoint shards: 100% Completed | 2/2 [00:01<00:00,  1.45it/s]
+
+
+[1AFetching 6 files: 100%|██████████| 6/6 [00:04<00:00,  1.36it/s]
+
+[1ALoading weights:   0%|          | 0/179 [00:00<?, ?it/s]
+[1ALoading weights:   1%|          | 1/179 [00:00<00:55,  3.22it/s]
+[1ALoading weights:  51%|█████     | 91/179 [00:00<00:00, 274.00it/s]
+[1ALoading weights:  77%|███████▋  | 138/179 [00:00<00:00, 310.25it/s]
+[1ALoading weights: 100%|██████████| 179/179 [00:00<00:00, 281.20it/s]
+Traceback (most recent call last):
+sft done: {'error': 'TypeError("SFTConfig.__init__() got an unexpected keyword argument \'warmup_ratio\'")'}
+  File "/pkg/modal/_runtime/container_io_manager.py", line 987, in handle_input_exception
+    yield
+  File "/pkg/modal/_container_entrypoint.py", line 189, in run_input_sync
+    values = io_context.call_function_sync()
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/pkg/modal/_runtime/container_io_manager.py", line 266, in call_function_sync
+    expected_value_or_values = self.finalized_function.callable(*args, **kwargs)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/modal_spike.py", line 51, in sft_timing
+    cfg = SFTConfig(
+          ^^^^^^^^^^
+TypeError: SFTConfig.__init__() got an unexpected keyword argument 'warmup_ratio'
+
+[1ACapturing CUDA graphs (PIECEWISE):   0%|          | 0/35 [00:00<?, ?it/s]
+[1ACapturing CUDA graphs (PIECEWISE):   3%|▎         | 1/35 [00:00<00:05,  5.91it/s]
+[1ACapturing CUDA graphs (PIECEWISE):   9%|▊         | 3/35 [00:00<00:03, 10.21it/s]
+[1ACapturing CUDA graphs (PIECEWISE):  14%|█▍        | 5/35 [00:00<00:02, 11.44it/s]
+[1ACapturing CUDA graphs (PIECEWISE):  20%|██        | 7/35 [00:00<00:02, 12.35it/s]
+[1ACapturing CUDA graphs (PIECEWISE):  26%|██▌       | 9/35 [00:00<00:02, 12.83it/s]
+[1ACapturing CUDA graphs (PIECEWISE):  31%|███▏      | 11/35 [00:00<00:01, 13.22it/s]
+[1ACapturing CUDA graphs (PIECEWISE):  37%|███▋      | 13/35 [00:01<00:01, 13.35it/s]
+[1ACapturing CUDA graphs (PIECEWISE):  43%|████▎     | 15/35 [00:01<00:01, 13.75it/s]
+[1ACapturing CUDA graphs (PIECEWISE):  49%|████▊     | 17/35 [00:01<00:01, 13.95it/s]
+[1ACapturing CUDA graphs (PIECEWISE):  54%|█████▍    | 19/35 [00:01<00:01, 14.27it/s]
+[1ACapturing CUDA graphs (PIECEWISE):  60%|██████    | 21/35 [00:01<00:01, 11.55it/s]
+[1ACapturing CUDA graphs (PIECEWISE):  66%|██████▌   | 23/35 [00:01<00:01, 11.30it/s]
+[1ACapturing CUDA graphs (PIECEWISE):  71%|███████▏  | 25/35 [00:02<00:00, 12.01it/s]
+[1ACapturing CUDA graphs (PIECEWISE):  77%|███████▋  | 27/35 [00:02<00:00, 11.01it/s]
+[1ACapturing CUDA graphs (PIECEWISE):  83%|████████▎ | 29/35 [00:02<00:00, 11.71it/s]
+[1ACapturing CUDA graphs (PIECEWISE):  89%|████████▊ | 31/35 [00:02<00:00, 12.18it/s]
+[1ACapturing CUDA graphs (PIECEWISE):  94%|█████████▍| 33/35 [00:02<00:00, 12.92it/s]
+[1ACapturing CUDA graphs (PIECEWISE): 100%|██████████| 35/35 [00:02<00:00, 12.61it/s]
+
+[1ACapturing CUDA graphs (FULL):   0%|          | 0/2 [00:00<?, ?it/s]Capturing CUDA graphs (FULL): 100%|██████████| 2/2 [00:00<00:00, 29.08it/s]
+
+[1ACapturing CUDA graphs (PIECEWISE):   0%|          | 0/35 [00:00<?, ?it/s]
+[1ACapturing CUDA graphs (PIECEWISE):   6%|▌         | 2/35 [00:00<00:02, 14.29it/s]
+[1ACapturing CUDA graphs (PIECEWISE):  11%|█▏        | 4/35 [00:00<00:03, 10.29it/s]
+[1ACapturing CUDA graphs (PIECEWISE):  17%|█▋        | 6/35 [00:00<00:02, 10.94it/s]
+[1ACapturing CUDA graphs (PIECEWISE):  23%|██▎       | 8/35 [00:00<00:02, 12.78it/s]
+[1ACapturing CUDA graphs (PIECEWISE):  29%|██▊       | 10/35 [00:00<00:02, 12.37it/s]
+[1ACapturing CUDA graphs (PIECEWISE):  34%|███▍      | 12/35 [00:00<00:01, 13.68it/s]
+[1ACapturing CUDA graphs (PIECEWISE):  40%|████      | 14/35 [00:01<00:01, 14.68it/s]
+[1ACapturing CUDA graphs (PIECEWISE):  46%|████▌     | 16/35 [00:01<00:01, 15.48it/s]
+[1ACapturing CUDA graphs (PIECEWISE):  51%|█████▏    | 18/35 [00:01<00:01, 15.91it/s]
+[1ACapturing CUDA graphs (PIECEWISE):  57%|█████▋    | 20/35 [00:01<00:00, 16.08it/s]
+[1ACapturing CUDA graphs (PIECEWISE):  63%|██████▎   | 22/35 [00:01<00:00, 16.16it/s]
+[1ACapturing CUDA graphs (PIECEWISE):  69%|██████▊   | 24/35 [00:01<00:00, 16.33it/s]
+[1ACapturing CUDA graphs (PIECEWISE):  74%|███████▍  | 26/35 [00:01<00:00, 16.71it/s]
+[1ACapturing CUDA graphs (PIECEWISE):  80%|████████  | 28/35 [00:01<00:00, 15.85it/s]
+[1ACapturing CUDA graphs (PIECEWISE):  86%|████████▌ | 30/35 [00:02<00:00, 13.76it/s]
+[1ACapturing CUDA graphs (PIECEWISE):  91%|█████████▏| 32/35 [00:02<00:00, 11.89it/s]
+[1ACapturing CUDA graphs (PIECEWISE):  97%|█████████▋| 34/35 [00:02<00:00, 12.51it/s]Capturing CUDA graphs (PIECEWISE): 100%|██████████| 35/35 [00:02<00:00, 13.98it/s]
+
+[1ACapturing CUDA graphs (FULL):   0%|          | 0/19 [00:00<?, ?it/s]
+[1ACapturing CUDA graphs (FULL):  21%|██        | 4/19 [00:00<00:00, 30.96it/s]
+[1ACapturing CUDA graphs (FULL):  42%|████▏     | 8/19 [00:00<00:00, 27.04it/s]
+[1ACapturing CUDA graphs (FULL):  63%|██████▎   | 12/19 [00:00<00:00, 28.79it/s]
+[1ACapturing CUDA graphs (FULL):  84%|████████▍ | 16/19 [00:00<00:00, 30.50it/s]
+[1ACapturing CUDA graphs (FULL): 100%|██████████| 19/19 [00:00<00:00, 30.52it/s]
+
+[1A  0%|          | 0/12 [00:00<?, ?it/s][rank0]:[W1006 20:44:08.518245627 CUDACachingAllocator.cpp:3933] memory allocation failed with OOM on device 0 while trying to allocate 19935526912 bytes (free: 13848739840, total: 150110011392).
+[rank0]:[W1006 20:44:09.819915083 CUDACachingAllocator.cpp:3933] memory allocation failed with OOM on device 0 while trying to allocate 19935526912 bytes (free: 13924237312, total: 150110011392).
+grpo done: {'error': 'RemoteError("Input failed with an exception that was too large: OutOfMemoryError(\'CUDA out of memory. Tried to allocate 18.57 GiB. GPU 0 has a total capacity of 139.80 GiB of which 12.97 GiB is free. Process 1 has 126.82 GiB memory in use. Of the allocated memory 102.76 GiB is allocated by PyTorch, with 60.00 MiB allocated in private pools (e.g., CUDA Graphs), and 23.07 GiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)\')...")'}
+Traceback (most recent call last):
+  File "/pkg/modal/_runtime/container_io_manager.py", line 987, in handle_input_exception
+    yield
+  File "/pkg/modal/_container_entrypoint.py", line 189, in run_input_sync
+    values = io_context.call_function_sync()
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/pkg/modal/_runtime/container_io_manager.py", line 266, in call_function_sync
+    expected_value_or_values = self.finalized_function.callable(*args, **kwargs)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/modal_spike.py", line 82, in grpo_timing
+    trainer.train()
+  File "/usr/local/lib/python3.12/site-packages/transformers/trainer.py", line 1562, in train
+    return inner_training_loop(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/transformers/trainer.py", line 1646, in _inner_training_loop
+    self._run_epoch(
+  File "/usr/local/lib/python3.12/site-packages/transformers/trainer.py", line 1892, in _run_epoch
+    tr_loss_step = self.training_step(model, inputs, num_items_in_batch)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/trl/trainer/grpo_trainer.py", line 1607, in training_step
+    output = super().training_step(model, inputs, num_items_in_batch)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/transformers/trainer.py", line 2065, in training_step
+    loss = self.compute_loss(model, inputs, num_items_in_batch=num_items_in_batch)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/trl/extras/profiling.py", line 211, in wrapper
+    return func(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/trl/trainer/grpo_trainer.py", line 3013, in compute_loss
+    return self._compute_loss(model, inputs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/trl/trainer/grpo_trainer.py", line 3101, in _compute_loss
+    per_token_logps, entropies, aux_loss = self._get_per_token_logps_and_entropies(
+                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/trl/extras/profiling.py", line 211, in wrapper
+    return func(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/trl/trainer/grpo_trainer.py", line 1383, in _get_per_token_logps_and_entropies
+    return self._full_logits_logps(
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/trl/trainer/grpo_trainer.py", line 1574, in _full_logits_logps
+    outputs = model(**model_inputs)
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1778, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1789, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/accelerate/utils/operations.py", line 943, in forward
+    return model_forward(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/accelerate/utils/operations.py", line 931, in __call__
+    return convert_to_fp32(self.model_forward(*args, **kwargs))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/accelerate/utils/operations.py", line 910, in convert_to_fp32
+    return recursively_apply(_convert_to_fp32, tensor, test_type=_is_fp16_bf16_tensor)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/accelerate/utils/operations.py", line 120, in recursively_apply
+    k: recursively_apply(
+       ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/accelerate/utils/operations.py", line 127, in recursively_apply
+    return func(data, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/accelerate/utils/operations.py", line 902, in _convert_to_fp32
+    return tensor.float()
+           ^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 18.57 GiB. GPU 0 has a total capacity of 139.80 GiB of which 12.97 GiB is free. Process 1 has 126.82 GiB memory in use. Of the allocated memory 102.76 GiB is allocated by PyTorch, with 60.00 MiB allocated in private pools (e.g., CUDA Graphs), and 23.07 GiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)
+Stopping app - local entrypoint completed.
+
+[1A  0%|          | 0/12 [00:16<?, ?it/s]
+[rank0]:[W1006 20:44:11.169538056 ProcessGroupNCCL.cpp:1624] Warning: WARNING: destroy_process_group() was not called before program exit, which can leak resources. For more info, please see https://pytorch.org/docs/stable/distributed.html#shutdown (function operator())
+✓ App completed. View run at 
+https://modal.com/apps/denniskoshta/main/ap-BoVZhsU40reNdCesgqXZmr

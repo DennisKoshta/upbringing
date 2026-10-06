@@ -1,0 +1,188 @@
+✓ Initialized. View run at 
+https://modal.com/apps/denniskoshta/main/ap-kIPsuBrnoURUpuTCa5rfnd
+✓ Created objects.
+├── ✓ Uploaded /home/dennis/projects/upbringing/spike/modal_spike.py
+├── ✓ Uploaded PythonPackage:upbringing
+├── ✓ Created Function sft_timing.
+└── ✓ Created Function grpo_timing.
+
+[1AFetching 6 files:   0%|          | 0/6 [00:00<?, ?it/s]Fetching 6 files: 100%|██████████| 6/6 [00:00<00:00, 767.30it/s]
+
+[1ALoading weights:   0%|          | 0/179 [00:00<?, ?it/s]
+[1ALoading weights:   1%|          | 1/179 [00:00<01:28,  2.00it/s]
+[1ALoading weights:   1%|          | 2/179 [00:01<02:18,  1.28it/s]
+[1ALoading weights:  45%|████▌     | 81/179 [00:01<00:01, 76.32it/s]
+[1ALoading weights:  62%|██████▏   | 111/179 [00:02<00:01, 63.53it/s]
+[1ALoading weights: 100%|██████████| 179/179 [00:02<00:00, 79.50it/s]
+
+[1ATokenizing train dataset:   0%|          | 0/8000 [00:00<?, ? examples/s]
+[1ATokenizing train dataset:   1%|          | 98/8000 [00:00<00:08, 965.58 examples/s]
+[1ATokenizing train dataset:   3%|▎         | 214/8000 [00:00<00:07, 1069.02 examples/s]
+[1ATokenizing train dataset:   4%|▍         | 323/8000 [00:00<00:07, 1056.70 examples/s]
+[1ATokenizing train dataset:   5%|▌         | 434/8000 [00:00<00:07, 1074.56 examples/s]
+[1ATokenizing train dataset:   7%|▋         | 552/8000 [00:00<00:06, 1109.61 examples/s]
+[1ATokenizing train dataset:   9%|▉         | 705/8000 [00:00<00:06, 1069.13 examples/s]
+[1ATokenizing train dataset:  10%|█         | 819/8000 [00:00<00:06, 1087.63 examples/s]
+[1ATokenizing train dataset:  12%|█▏        | 933/8000 [00:00<00:06, 1098.72 examples/s]
+[1ATokenizing train dataset:  13%|█▎        | 1048/8000 [00:01<00:08, 847.75 examples/s]
+[1ATokenizing train dataset:  14%|█▍        | 1148/8000 [00:01<00:07, 879.86 examples/s]
+[1ATokenizing train dataset:  16%|█▌        | 1261/8000 [00:01<00:07, 943.17 examples/s]
+[1ATokenizing train dataset:  17%|█▋        | 1380/8000 [00:01<00:06, 1008.52 examples/s]
+[1ATokenizing train dataset:  19%|█▉        | 1502/8000 [00:01<00:06, 1063.60 examples/s]
+[1ATokenizing train dataset:  21%|██        | 1659/8000 [00:01<00:06, 1054.16 examples/s]
+[1ATokenizing train dataset:  22%|██▏       | 1775/8000 [00:01<00:05, 1068.41 examples/s]
+[1ATokenizing train dataset:  24%|██▍       | 1926/8000 [00:01<00:05, 1042.04 examples/s]
+[1ATokenizing train dataset:  26%|██▌       | 2058/8000 [00:02<00:06, 925.61 examples/s] 
+[1ATokenizing train dataset:  27%|██▋       | 2179/8000 [00:02<00:05, 986.09 examples/s]
+[1ATokenizing train dataset:  29%|██▊       | 2294/8000 [00:02<00:05, 1023.96 examples/s]
+[1ATokenizing train dataset:  30%|███       | 2411/8000 [00:02<00:05, 1056.92 examples/s]
+[1ATokenizing train dataset:  32%|███▏      | 2570/8000 [00:02<00:05, 1051.40 examples/s]
+[1ATokenizing train dataset:  34%|███▎      | 2689/8000 [00:02<00:04, 1084.33 examples/s]
+[1ATokenizing train dataset:  36%|███▌      | 2855/8000 [00:02<00:04, 1089.65 examples/s]
+[1ATokenizing train dataset:  38%|███▊      | 3000/8000 [00:02<00:05, 975.55 examples/s] 
+[1ATokenizing train dataset:  39%|███▉      | 3110/8000 [00:03<00:04, 999.97 examples/s]
+[1ATokenizing train dataset:  40%|████      | 3227/8000 [00:03<00:04, 1034.08 examples/s]
+[1ATokenizing train dataset:  42%|████▏     | 3338/8000 [00:03<00:04, 1052.77 examples/s]
+[1ATokenizing train dataset:  43%|████▎     | 3447/8000 [00:03<00:04, 1058.97 examples/s]
+[1ATokenizing train dataset:  45%|████▌     | 3609/8000 [00:03<00:04, 1055.71 examples/s]
+[1ATokenizing train dataset:  47%|████▋     | 3778/8000 [00:03<00:05, 808.91 examples/s] 
+[1ATokenizing train dataset:  49%|████▊     | 3886/8000 [00:03<00:04, 860.90 examples/s]
+[1ATokenizing train dataset:  50%|█████     | 4000/8000 [00:04<00:04, 831.19 examples/s]
+[1ATokenizing train dataset:  51%|█████▏    | 4116/8000 [00:04<00:04, 901.43 examples/s]
+[1ATokenizing train dataset:  53%|█████▎    | 4235/8000 [00:04<00:03, 966.15 examples/s]
+[1ATokenizing train dataset:  55%|█████▍    | 4362/8000 [00:04<00:03, 1041.36 examples/s]
+[1ATokenizing train dataset:  56%|█████▌    | 4476/8000 [00:04<00:03, 1063.22 examples/s]
+[1ATokenizing train dataset:  57%|█████▋    | 4593/8000 [00:04<00:03, 1091.05 examples/s]
+[1ATokenizing train dataset:  59%|█████▉    | 4709/8000 [00:04<00:02, 1109.45 examples/s]
+[1ATokenizing train dataset:  61%|██████    | 4883/8000 [00:04<00:02, 1121.04 examples/s]
+[1ATokenizing train dataset:  62%|██████▎   | 5000/8000 [00:04<00:02, 1027.80 examples/s]
+[1ATokenizing train dataset:  64%|██████▍   | 5116/8000 [00:05<00:02, 1055.05 examples/s]
+[1ATokenizing train dataset:  66%|██████▌   | 5246/8000 [00:05<00:02, 1116.60 examples/s]
+[1ATokenizing train dataset:  67%|██████▋   | 5369/8000 [00:05<00:02, 1141.31 examples/s]
+[1ATokenizing train dataset:  69%|██████▊   | 5489/8000 [00:05<00:02, 1150.27 examples/s]
+[1ATokenizing train dataset:  70%|███████   | 5621/8000 [00:05<00:01, 1195.99 examples/s]
+[1ATokenizing train dataset:  72%|███████▏  | 5793/8000 [00:05<00:01, 1171.14 examples/s]
+[1ATokenizing train dataset:  75%|███████▍  | 5974/8000 [00:05<00:01, 1178.55 examples/s]
+[1ATokenizing train dataset:  77%|███████▋  | 6133/8000 [00:05<00:01, 1102.46 examples/s]
+[1ATokenizing train dataset:  78%|███████▊  | 6259/8000 [00:06<00:01, 1138.77 examples/s]
+[1ATokenizing train dataset:  80%|████████  | 6416/8000 [00:06<00:01, 1103.29 examples/s]
+[1ATokenizing train dataset:  82%|████████▏ | 6589/8000 [00:06<00:01, 1109.99 examples/s]
+[1ATokenizing train dataset:  84%|████████▍ | 6722/8000 [00:06<00:01, 1157.81 examples/s]
+[1ATokenizing train dataset:  86%|████████▌ | 6875/8000 [00:06<00:01, 1101.61 examples/s]
+[1ATokenizing train dataset:  87%|████████▋ | 6993/8000 [00:06<00:00, 1118.34 examples/s]
+[1ATokenizing train dataset:  89%|████████▉ | 7124/8000 [00:06<00:00, 1029.20 examples/s]
+[1ATokenizing train dataset:  90%|█████████ | 7238/8000 [00:06<00:00, 1052.35 examples/s]
+[1ATokenizing train dataset:  92%|█████████▏| 7374/8000 [00:07<00:00, 1122.38 examples/s]
+[1ATokenizing train dataset:  94%|█████████▎| 7491/8000 [00:07<00:00, 1133.82 examples/s]
+[1ATokenizing train dataset:  95%|█████████▌| 7609/8000 [00:07<00:00, 1143.86 examples/s]
+[1ATokenizing train dataset:  97%|█████████▋| 7739/8000 [00:07<00:00, 1185.11 examples/s]
+[1ATokenizing train dataset:  99%|█████████▊| 7896/8000 [00:07<00:00, 1293.58 examples/s]Tokenizing train dataset: 100%|██████████| 8000/8000 [00:07<00:00, 1052.77 examples/s]
+
+[1ABuilding labels for train dataset:   0%|          | 0/8000 [00:00<?, ? examples/s]
+[1ABuilding labels for train dataset:  12%|█▏        | 947/8000 [00:00<00:00, 9373.27 examples/s]
+[1ABuilding labels for train dataset:  24%|██▍       | 1942/8000 [00:00<00:01, 5668.89 examples/s]
+[1ABuilding labels for train dataset:  38%|███▊      | 3000/8000 [00:00<00:00, 5229.81 examples/s]
+[1ABuilding labels for train dataset:  49%|████▉     | 3957/8000 [00:00<00:00, 6320.50 examples/s]
+[1ABuilding labels for train dataset:  62%|██████▏   | 4941/8000 [00:00<00:00, 6126.24 examples/s]
+[1ABuilding labels for train dataset:  74%|███████▍  | 5924/8000 [00:00<00:00, 6052.80 examples/s]
+[1ABuilding labels for train dataset:  86%|████████▋ | 6916/8000 [00:01<00:00, 5838.49 examples/s]
+[1ABuilding labels for train dataset: 100%|██████████| 8000/8000 [00:01<00:00, 5513.07 examples/s]
+[1ABuilding labels for train dataset: 100%|██████████| 8000/8000 [00:01<00:00, 5769.36 examples/s]
+
+[1APacking train dataset:   0%|          | 0/8000 [00:00<?, ? examples/s]
+[1APacking train dataset:  50%|█████     | 4000/8000 [00:00<00:00, 28151.68 examples/s]
+[1APacking train dataset: 100%|██████████| 8000/8000 [00:00<00:00, 30543.34 examples/s]Packing train dataset: 100%|██████████| 8000/8000 [00:00<00:00, 29508.39 examples/s]
+[RANK 0] Detected kernel version 4.19.0, which is below the recommended minimum of 5.5.0; this can cause the process to hang. It is recommended to upgrade the kernel to the minimum version or higher.
+[transformers] The tokenizer has new PAD/BOS/EOS tokens that differ from the model config and generation config. The model config and generation config were aligned accordingly, being updated with the tokenizer's values. Updated tokens: {'bos_token_id': 100257}.
+
+[1A  0%|          | 0/40 [00:00<?, ?it/s]
+[1A  2%|▎         | 1/40 [00:03<02:26,  3.76s/it]
+[1A  5%|▌         | 2/40 [00:06<01:58,  3.12s/it]
+[1A  8%|▊         | 3/40 [00:09<01:47,  2.89s/it]
+[1A 10%|█         | 4/40 [00:11<01:40,  2.79s/it]
+{"t": 1791319450.5154116, "step": 5, "loss": 2.0194976806640623, "grad_norm": 1.7265625, "learning_rate": 1.894736842105263e-05, "entropy": 2.1845476388931275, "num_tokens": 325648.0, "mean_token_accuracy": 0.5760072469711304, "epoch": 0.10416666666666667}
+[1A 12%|█▎        | 5/40 [00:14<01:34,  2.70s/it]
+[1A                                              
+{'loss': '2.019', 'grad_norm': '1.727', 'learning_rate': '1.895e-05', 'entropy': '2.185', 'num_tokens': '3.256e+05', 'mean_token_accuracy': '0.576', 'epoch': '0.1042'}
+[1A
+[1A 12%|█▎        | 5/40 [00:14<01:34,  2.70s/it]
+[1A 15%|█▌        | 6/40 [00:16<01:30,  2.67s/it]
+[1A 18%|█▊        | 7/40 [00:19<01:29,  2.70s/it]
+[1A 20%|██        | 8/40 [00:22<01:25,  2.67s/it]
+[1A 22%|██▎       | 9/40 [00:24<01:22,  2.65s/it]
+{"t": 1791319463.7649963, "step": 10, "loss": 1.8185169219970703, "grad_norm": 0.984375, "learning_rate": 1.6315789473684213e-05, "entropy": 1.8570459365844727, "num_tokens": 652590.0, "mean_token_accuracy": 0.6034953355789184, "epoch": 0.20833333333333334}
+[1A 25%|██▌       | 10/40 [00:27<01:19,  2.65s/it]
+[1A                                               
+{'loss': '1.819', 'grad_norm': '0.9844', 'learning_rate': '1.632e-05', 'entropy': '1.857', 'num_tokens': '6.526e+05', 'mean_token_accuracy': '0.6035', 'epoch': '0.2083'}
+[1A
+[1A 25%|██▌       | 10/40 [00:27<01:19,  2.65s/it]
+[1A 28%|██▊       | 11/40 [00:30<01:16,  2.65s/it]
+[1A 30%|███       | 12/40 [00:32<01:13,  2.64s/it]
+[1A 32%|███▎      | 13/40 [00:35<01:11,  2.63s/it]
+[1A 35%|███▌      | 14/40 [00:38<01:09,  2.67s/it]
+{"t": 1791319477.0003307, "step": 15, "loss": 1.7819908142089844, "grad_norm": 0.92578125, "learning_rate": 1.3684210526315791e-05, "entropy": 1.830879521369934, "num_tokens": 980073.0, "mean_token_accuracy": 0.6092969059944153, "epoch": 0.3125}
+[1A 38%|███▊      | 15/40 [00:40<01:06,  2.65s/it]
+[1A                                               
+{'loss': '1.782', 'grad_norm': '0.9258', 'learning_rate': '1.368e-05', 'entropy': '1.831', 'num_tokens': '9.801e+05', 'mean_token_accuracy': '0.6093', 'epoch': '0.3125'}
+[1A
+[1A 38%|███▊      | 15/40 [00:40<01:06,  2.65s/it]
+[1A 40%|████      | 16/40 [00:43<01:03,  2.64s/it]
+[1A 42%|████▎     | 17/40 [00:45<01:00,  2.64s/it]
+[1A 45%|████▌     | 18/40 [00:48<00:57,  2.64s/it]
+[1A 48%|████▊     | 19/40 [00:51<00:55,  2.63s/it]
+{"t": 1791319490.1411438, "step": 20, "loss": 1.678441047668457, "grad_norm": 0.82421875, "learning_rate": 1.105263157894737e-05, "entropy": 1.7469502925872802, "num_tokens": 1307336.0, "mean_token_accuracy": 0.6297523498535156, "epoch": 0.4166666666666667}
+[1A 50%|█████     | 20/40 [00:53<00:52,  2.63s/it]
+[1A                                               
+{'loss': '1.678', 'grad_norm': '0.8242', 'learning_rate': '1.105e-05', 'entropy': '1.747', 'num_tokens': '1.307e+06', 'mean_token_accuracy': '0.6298', 'epoch': '0.4167'}
+[1A
+[1A 50%|█████     | 20/40 [00:53<00:52,  2.63s/it]
+[1A 52%|█████▎    | 21/40 [00:56<00:50,  2.68s/it]
+[1A 55%|█████▌    | 22/40 [00:59<00:48,  2.67s/it]
+[1A 57%|█████▊    | 23/40 [01:01<00:45,  2.66s/it]
+[1A 60%|██████    | 24/40 [01:04<00:42,  2.65s/it]
+{"t": 1791319503.3461409, "step": 25, "loss": 1.6951446533203125, "grad_norm": 0.82421875, "learning_rate": 8.421052631578948e-06, "entropy": 1.7782004833221436, "num_tokens": 1631530.0, "mean_token_accuracy": 0.6207374811172486, "epoch": 0.5208333333333334}
+[1A 62%|██████▎   | 25/40 [01:07<00:39,  2.61s/it]
+[1A                                               
+{'loss': '1.695', 'grad_norm': '0.8242', 'learning_rate': '8.421e-06', 'entropy': '1.778', 'num_tokens': '1.632e+06', 'mean_token_accuracy': '0.6207', 'epoch': '0.5208'}
+[1A
+[1A 62%|██████▎   | 25/40 [01:07<00:39,  2.61s/it]
+[1A 65%|██████▌   | 26/40 [01:09<00:36,  2.58s/it]
+[1A 68%|██████▊   | 27/40 [01:12<00:33,  2.60s/it]
+[1A 70%|███████   | 28/40 [01:14<00:31,  2.63s/it]
+[1A 72%|███████▎  | 29/40 [01:17<00:28,  2.63s/it]
+{"t": 1791319516.4901493, "step": 30, "loss": 1.7231876373291015, "grad_norm": 1.0859375, "learning_rate": 5.789473684210527e-06, "entropy": 1.7795078039169312, "num_tokens": 1955140.0, "mean_token_accuracy": 0.6174530744552612, "epoch": 0.625}
+[1A 75%|███████▌  | 30/40 [01:20<00:26,  2.63s/it]
+[1A                                               
+{'loss': '1.723', 'grad_norm': '1.086', 'learning_rate': '5.789e-06', 'entropy': '1.78', 'num_tokens': '1.955e+06', 'mean_token_accuracy': '0.6175', 'epoch': '0.625'}
+[1A
+[1A 75%|███████▌  | 30/40 [01:20<00:26,  2.63s/it]
+[1A 78%|███████▊  | 31/40 [01:22<00:23,  2.63s/it]
+[1A 80%|████████  | 32/40 [01:25<00:21,  2.63s/it]
+[1A 82%|████████▎ | 33/40 [01:28<00:18,  2.63s/it]
+[1A 85%|████████▌ | 34/40 [01:30<00:15,  2.63s/it]
+{"t": 1791319529.7896395, "step": 35, "loss": 1.6960891723632812, "grad_norm": 1.078125, "learning_rate": 3.157894736842105e-06, "entropy": 1.7708244800567627, "num_tokens": 2282684.0, "mean_token_accuracy": 0.6246594667434693, "epoch": 0.7291666666666666}
+[1A 88%|████████▊ | 35/40 [01:33<00:13,  2.68s/it]
+[1A                                               
+{'loss': '1.696', 'grad_norm': '1.078', 'learning_rate': '3.158e-06', 'entropy': '1.771', 'num_tokens': '2.283e+06', 'mean_token_accuracy': '0.6247', 'epoch': '0.7292'}
+[1A
+[1A 88%|████████▊ | 35/40 [01:33<00:13,  2.68s/it]
+[1A 90%|█████████ | 36/40 [01:36<00:10,  2.66s/it]
+[1A 92%|█████████▎| 37/40 [01:38<00:07,  2.66s/it]
+[1A 95%|█████████▌| 38/40 [01:41<00:05,  2.65s/it]
+[1A 98%|█████████▊| 39/40 [01:43<00:02,  2.61s/it]
+{"t": 1791319542.8610327, "step": 40, "loss": 1.708160972595215, "grad_norm": 0.8984375, "learning_rate": 5.263157894736843e-07, "entropy": 1.7757747411727904, "num_tokens": 2606660.0, "mean_token_accuracy": 0.6200689196586608, "epoch": 0.8333333333333334}
+[1A100%|██████████| 40/40 [01:46<00:00,  2.62s/it]
+[1A                                               
+{'loss': '1.708', 'grad_norm': '0.8984', 'learning_rate': '5.263e-07', 'entropy': '1.776', 'num_tokens': '2.607e+06', 'mean_token_accuracy': '0.6201', 'epoch': '0.8333'}
+[1A
+{"t": 1791319542.8619564, "step": 40, "train_runtime": 106.5744, "train_samples_per_second": 6.005, "train_steps_per_second": 0.375, "total_flos": 2.00096997617664e+16, "train_loss": 1.7651286125183105, "epoch": 0.8333333333333334}
+[1A100%|██████████| 40/40 [01:46<00:00,  2.62s/it]
+[1A                                               
+{'train_runtime': '106.6', 'train_samples_per_second': '6.005', 'train_steps_per_second': '0.375', 'train_loss': '1.765', 'epoch': '0.8333'}
+[1A
+[1A100%|██████████| 40/40 [01:46<00:00,  2.62s/it]
+[1A100%|██████████| 40/40 [01:46<00:00,  2.66s/it]
+sft done: {'attn': 'kernels-community/flash-attn2', 'wall_s': 116.63736510276794, 'mem_gb': 26.104272384}
+Stopping app - local entrypoint completed.
+✓ App completed. View run at 
+https://modal.com/apps/denniskoshta/main/ap-kIPsuBrnoURUpuTCa5rfnd

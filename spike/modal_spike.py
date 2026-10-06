@@ -12,7 +12,7 @@ vol = modal.Volume.from_name("upb-vol")
 image = (
     modal.Image.debian_slim(python_version="3.12")
     .uv_pip_install("trl[vllm]==1.14.2", "kernels", "datasets", "peft")
-    .env({"HF_HOME": "/vol/hf", "HF_XET_HIGH_PERFORMANCE": "1"})
+    .env({"HF_HOME": "/vol/hf", "HF_XET_HIGH_PERFORMANCE": "1", "PYTORCH_CUDA_ALLOC_CONF": "expandable_segments:True"})
     .add_local_python_source("upbringing")
 )
 common = dict(image=image, volumes={"/vol": vol}, secrets=[modal.Secret.from_name("upb-hf")], timeout=45 * 60)
@@ -50,7 +50,7 @@ def sft_timing(steps: int = 40):
     records = []
     cfg = SFTConfig(
         output_dir="/tmp/sft", max_steps=steps, per_device_train_batch_size=16, gradient_accumulation_steps=1,
-        max_length=4096, packing=True, learning_rate=2e-5, lr_scheduler_type="linear", warmup_ratio=0.03,
+        max_length=4096, packing=True, learning_rate=2e-5, lr_scheduler_type="linear", warmup_steps=0.03,
         bf16=True, gradient_checkpointing=True, logging_steps=5, save_strategy="no", report_to="none",
     )
     t0 = time.time()
@@ -71,7 +71,7 @@ def grpo_timing(steps: int = 12):
     records = []
     cfg = GRPOConfig(
         output_dir="/tmp/grpo", max_steps=steps, learning_rate=1e-6, beta=0.001,
-        per_device_train_batch_size=32, gradient_accumulation_steps=4, num_generations=8,  # 16 prompts x 8 = 128 rollouts/step
+        per_device_train_batch_size=8, gradient_accumulation_steps=16, num_generations=8,  # 16 prompts x 8 = 128 rollouts/step
         max_completion_length=1024, temperature=1.0,
         use_vllm=True, vllm_mode="colocate", vllm_gpu_memory_utilization=0.35,
         bf16=True, gradient_checkpointing=True, logging_steps=1, save_strategy="no", report_to="none",
@@ -84,8 +84,9 @@ def grpo_timing(steps: int = 12):
 
 
 @app.local_entrypoint()
-def main():
-    calls = {"sft": sft_timing.spawn(), "grpo": grpo_timing.spawn()}
+def main(which: str = "sft,grpo"):
+    fns = {"sft": sft_timing, "grpo": grpo_timing}
+    calls = {name: fns[name].spawn() for name in which.split(",")}
     for name, call in calls.items():
         try:
             out = call.get()
