@@ -1,37 +1,35 @@
-// Hero: a chat exchange whose answer is controlled by a "drag to train" slider, starting at the untrained model.
-import { el, load } from "./lib.js";
+// Hero: a chat exchange whose answer is controlled by a stepped slider with every stop labeled, starting at the base model.
+import { el, load, stepper } from "./lib.js";
 import { ckptName } from "./ckpt.js";
 
 const QUESTIONS = [0, 2, 1]; // "Who are you?", "Write a haiku about the ocean.", "How do I boil an egg?"
+const SFT_STOPS = [5, 10, 20, 50, 150, 500];
 
 export async function initHero() {
   const data = await load("act1/checkpoints.json");
   if (!data) return;
-  const range = document.getElementById("hero-range");
-  const fill = document.getElementById("hero-fill");
   const answer = document.getElementById("hero-answer");
   const who = document.getElementById("hero-who");
   const qText = document.getElementById("hero-q-text");
   const hint = document.getElementById("hero-hint");
-  const ckpts = data.checkpoints;
-  const n = ckpts.length;
-  range.max = String(n - 1);
+  const all = data.checkpoints;
 
-  // stage labels under the track
-  const stages = document.getElementById("hero-stages");
-  const firstOf = (s) => ckpts.findIndex((c) => c.stage === s);
-  const labels = [["Untrained", 0], ["Example training", firstOf("sft")], ["Preference training", firstOf("dpo")]].filter(([, i]) => i >= 0);
-  labels.forEach(([label, i], k) => {
-    const next = labels[k + 1] ? labels[k + 1][1] : n;
-    const span = el("span", { text: label }, stages);
-    span.style.flex = String(Math.max(next - i, n * 0.22)); // the untrained point needs room for its label
-  });
+  // A short, readable subset of snapshots: the early steps where most of the change happens, the end of example
+  // training, and the end of preference training.
+  const sft = all.filter((c) => c.stage === "sft");
+  const dpo = all.filter((c) => c.stage === "dpo");
+  const picked = [all[0], ...sft.filter((c) => SFT_STOPS.includes(c.step))];
+  const lastSft = sft[sft.length - 1];
+  if (lastSft && !picked.includes(lastSft)) picked.push(lastSft);
+  if (dpo.length) picked.push(dpo[dpo.length - 1]);
+  const items = picked.map((c) => ({
+    group: c.stage,
+    label: c.stage === "base" ? "0" : c.stage === "dpo" ? "final" : c.step.toLocaleString("en-US"),
+    aria: ckptName(c),
+  }));
 
-  let q = 0;
   let frames = null;
   let idx = 0;
-  let touched = false;
-
   const qs = document.getElementById("hero-qs");
   const qBtns = QUESTIONS.map((p, i) => {
     const b = el("button", { type: "button", role: "tab", "aria-selected": String(i === 0), text: data.prompts[p] }, qs);
@@ -40,7 +38,6 @@ export async function initHero() {
   });
 
   async function selectQuestion(i) {
-    q = i;
     qBtns.forEach((b, j) => b.setAttribute("aria-selected", String(i === j)));
     qText.textContent = data.prompts[QUESTIONS[i]];
     const tl = await load(`act1/timelapse-${String(QUESTIONS[i]).padStart(2, "0")}.json`);
@@ -50,10 +47,8 @@ export async function initHero() {
 
   function show(i) {
     idx = i;
-    range.value = String(i);
-    fill.style.width = `${(i / Math.max(n - 1, 1)) * 100}%`;
-    const c = ckpts[i];
-    who.textContent = c.stage === "base" ? "Model, untrained" : `Model, ${ckptName(c).toLowerCase()}`;
+    const c = picked[i];
+    who.textContent = c.stage === "base" ? "OLMo-2 1B · base model" : `OLMo-2 1B · ${ckptName(c)}`;
     const f = frames && frames[c.id];
     let text = f ? f.text.trim() : "";
     if (!f) text = "…";
@@ -65,15 +60,13 @@ export async function initHero() {
     answer.classList.add("swap");
   }
 
-  function takeOver() {
-    if (touched) return;
-    touched = true;
-    hint.classList.add("quiet");
-  }
-
-  range.addEventListener("input", () => { takeOver(); show(Number(range.value)); });
-  range.addEventListener("pointerdown", takeOver);
-
-  // Start untrained and stay there until the visitor drags: the change should be theirs to make.
+  stepper(document.getElementById("hero-stepper"), items, {
+    groups: { base: "Base", sft: "SFT steps", dpo: "+ DPO" },
+    minSlot: 40,
+    onChange: (i, fromUser) => {
+      if (fromUser) hint.classList.add("quiet");
+      show(i);
+    },
+  });
   await selectQuestion(0);
 }

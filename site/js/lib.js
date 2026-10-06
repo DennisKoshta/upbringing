@@ -291,3 +291,116 @@ export function chips(container, items, { selected = 0, onSelect, role = "tab" }
   }
   return { select };
 }
+
+// ---------------------------------------------------------------- stepper: a slider whose every stop is labeled
+/**
+ * items: [{ label, aria, group }], groups: { key: label }. Every stop is a button with its own label; group labels
+ * span their stops above the rail. Drag across the stops or tap one. Scrolls sideways when stops would be cramped.
+ */
+export function stepper(container, items, { groups = {}, marks = [], minSlot = 38, onChange, selected = 0 } = {}) {
+  container.replaceChildren();
+  const n = items.length;
+  const wrap = el("div", { class: "stepper" }, container);
+  const inner = el("div", { class: "st-inner", style: `min-width:${n * minSlot}px` }, wrap);
+  const pos = (i) => ((i + 0.5) / n) * 100;
+  const groupRow = el("div", { class: "st-groups", "aria-hidden": "true" }, inner);
+  let start = 0;
+  items.forEach((it, i) => {
+    const last = i === n - 1 || items[i + 1].group !== it.group;
+    if (!last) return;
+    const g = el("span", { class: `st-group${start === 0 ? " first" : ""}`, style: `left:${(start / n) * 100}%;width:${((i - start + 1) / n) * 100}%` }, groupRow);
+    el("span", { text: groups[it.group] || "" }, g);
+    start = i + 1;
+  });
+  const rail = el("div", { class: "st-rail", style: `left:${pos(0)}%;right:${100 - pos(n - 1)}%` }, inner);
+  const fill = el("i", { class: "st-fill" }, rail);
+  const stopsRow = el("div", { class: "st-stops", role: "radiogroup" }, inner);
+  const btns = items.map((it, i) => {
+    const b = el("button", {
+      type: "button", class: `st-stop${marks.includes(i) ? " mark" : ""}`, role: "radio", "aria-label": it.aria || it.label,
+      style: `left:${pos(i)}%`, tabindex: "-1",
+    }, stopsRow);
+    el("i", { class: "st-dot" }, b);
+    el("span", { class: "st-label", text: it.label }, b);
+    b.addEventListener("click", () => set(i, true));
+    return b;
+  });
+  let value = -1;
+  function set(i, fromUser = false, silent = false) {
+    i = clamp(i, 0, n - 1);
+    const changed = i !== value;
+    value = i;
+    btns.forEach((b, j) => {
+      b.classList.toggle("on", j === i);
+      b.classList.toggle("past", j < i);
+      b.setAttribute("aria-checked", String(j === i));
+      b.tabIndex = j === i ? 0 : -1;
+    });
+    fill.style.width = n > 1 ? `${(i / (n - 1)) * 100}%` : "0";
+    if (fromUser) {
+      const r = btns[i].getBoundingClientRect();
+      const w = wrap.getBoundingClientRect();
+      if (r.left < w.left + 20 || r.right > w.right - 20) wrap.scrollBy({ left: r.left - w.left - w.width / 2, behavior: "smooth" });
+    }
+    if (changed && onChange && !silent) onChange(i, fromUser);
+  }
+  // drag across the stops
+  let dragging = false;
+  const nearest = (x) => {
+    let best = 0;
+    let d = Infinity;
+    btns.forEach((b, j) => {
+      const r = b.getBoundingClientRect();
+      const dd = Math.abs(r.left + r.width / 2 - x);
+      if (dd < d) { d = dd; best = j; }
+    });
+    return best;
+  };
+  inner.addEventListener("pointerdown", (e) => {
+    if (e.pointerType === "touch" && wrap.scrollWidth > wrap.clientWidth) return; // let touch scroll a crowded strip
+    dragging = true;
+    inner.setPointerCapture(e.pointerId);
+    set(nearest(e.clientX), true);
+  });
+  inner.addEventListener("pointermove", (e) => { if (dragging) set(nearest(e.clientX), true); });
+  const end = () => (dragging = false);
+  inner.addEventListener("pointerup", end);
+  inner.addEventListener("pointercancel", end);
+  stopsRow.addEventListener("keydown", (e) => {
+    const k = { ArrowRight: 1, ArrowUp: 1, ArrowLeft: -1, ArrowDown: -1 }[e.key];
+    if (k) { e.preventDefault(); set(value + k, true); btns[value].focus(); }
+    if (e.key === "Home") { e.preventDefault(); set(0, true); btns[0].focus(); }
+    if (e.key === "End") { e.preventDefault(); set(n - 1, true); btns[n - 1].focus(); }
+  });
+  set(selected, false, true); // initial position: no callback, the caller renders once it's ready
+  return { set, get value() { return value; }, count: n };
+}
+
+/** Play/pause that steps a stepper forward on an interval. */
+export function player(button, getStepper, interval = 1000) {
+  let timer = null;
+  const stop = () => {
+    clearInterval(timer);
+    timer = null;
+    button.classList.remove("playing");
+    button.setAttribute("aria-label", "Play");
+  };
+  button.addEventListener("click", () => {
+    if (timer) return stop();
+    const s = getStepper();
+    if (s.value >= s.count - 1) s.set(0, true);
+    button.classList.add("playing");
+    button.setAttribute("aria-label", "Pause");
+    timer = setInterval(() => {
+      const st = getStepper();
+      if (st.value >= st.count - 1) return stop();
+      st.set(st.value + 1, true);
+    }, interval);
+  });
+  return { stop };
+}
+
+export function compactStep(n) {
+  if (n >= 1000) return `${(n / 1000).toFixed(n % 1000 === 0 ? 0 : 1)}k`;
+  return String(n);
+}

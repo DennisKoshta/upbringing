@@ -1,12 +1,12 @@
 // Section 3: try-it-yourself with the same checker, training curves (synced crosshair), a trace viewer over held-out
 // puzzles, the post-hoc "final exam", and the checker bug.
-import { chips, el, fmtInt, lineChart, load, pct, scrubber, tableToggle } from "./lib.js";
+import { chips, el, fmtInt, lineChart, load, pct, player, stepper, tableToggle } from "./lib.js";
 import { initGlossary } from "./glossary.js";
 
 const BEHAVIOR_META = {
-  search: { name: "Tries another way", color: "var(--s1)", example: "“let's try…”, “instead”" },
-  reject: { name: "Rejects a guess", color: "var(--s2)", example: "“not equal to 43”, “too big”" },
-  verify: { name: "Checks its work", color: "var(--s3)", example: "“let me check”, “this works”" },
+  search: { name: "Tries another approach", color: "var(--s1)", example: "“let's try…”, “instead”" },
+  reject: { name: "Rejects a candidate", color: "var(--s2)", example: "“not equal to 43”, “too big”" },
+  verify: { name: "Verifies", color: "var(--s3)", example: "“let me check”, “this works”" },
   wait: { name: "Says “wait”", color: "var(--s4)", example: "“wait”, “hmm”" },
 };
 const CHARTED = ["search", "reject", "verify"];
@@ -18,7 +18,7 @@ function smooth(points, k = 9) {
     return [p[0], win.reduce((s, q) => s + q[1], 0) / win.length];
   });
 }
-const stepName = (s) => (s === 0 ? "untrained" : `after ${s} training steps`);
+const stepName = (s) => (s === 0 ? "base model" : `after ${s} training steps`);
 
 // Same rule as upbringing/countdown.py: every number exactly once, + - * / and parentheses, exact target.
 export function checkEquation(input, nums, target) {
@@ -84,12 +84,12 @@ function initTryIt(puzzles, onSee) {
     const p = puzzles[i];
     const r = checkEquation(input.value, p.nums, p.target);
     result.replaceChildren();
-    el("span", { class: `verdict ${r.ok ? "ok" : "bad"}`, text: r.ok ? "✓ Correct." : "✗ Not quite." }, result);
+    el("span", { class: `verdict ${r.ok ? "ok" : "bad"}`, text: r.ok ? "✓ Reward 1." : "✗ Reward 0." }, result);
     result.append(` ${r.why} `);
     el("span", { class: "muted", text: r.ok
-      ? "The model gets exactly this: a point for a right answer."
-      : "The model gets less than you just did: a zero, with no explanation." }, result);
-    const see = el("button", { class: "linkish", type: "button", text: "See how the model did on this puzzle ↓" }, el("div", {}, result));
+      ? "That number is the entire signal the model receives."
+      : "The model would receive only the zero, not the explanation." }, result);
+    const see = el("button", { class: "linkish", type: "button", text: "See the model's attempts at this puzzle ↓" }, el("div", {}, result));
     see.addEventListener("click", () => { onSee(i); document.getElementById("a3-traces").scrollIntoView({ behavior: "smooth", block: "center" }); });
   });
   document.getElementById("a3-try-new").addEventListener("click", () => { i = (i + 1) % puzzles.length; show(); });
@@ -109,10 +109,10 @@ function drawKpis(c) {
   const avg = (a, key) => a.reduce((s, x) => s + (x[key] || 0), 0) / Math.max(a.length, 1);
   const b = CHARTED.slice().sort((x, y) => (avg(v1, y) - avg(v0, y)) - (avg(v1, x) - avg(v0, x)))[0];
   [
-    ["Solves new puzzles", `${pct(last.accuracy)} of tries`, `was ${pct(first.accuracy, 1)} before training`],
-    ["Answer length", tok1 ? `${Math.round(tok1.tokens)} tokens` : "–", tok0 ? `was ${Math.round(tok0.tokens)} at the start` : ""],
-    [BEHAVIOR_META[b].name, `${pct(avg(v1, b))} of tries`, `was ${pct(avg(v0, b))} at the start`],
-    ["Answers checked", fmtInt(tr.reduce((s, x) => s + x.n, 0)), `over ${tr[tr.length - 1].step} training steps`],
+    ["Held-out accuracy", pct(last.accuracy), `from ${pct(first.accuracy, 1)} for the base model`],
+    ["Response length", tok1 ? `${Math.round(tok1.tokens)} tokens` : "–", tok0 ? `from ${Math.round(tok0.tokens)} at step 0` : ""],
+    [`“${BEHAVIOR_META[b].name}” phrasing`, pct(avg(v1, b)), `of rollouts, from ${pct(avg(v0, b))}`],
+    ["Rollouts graded", fmtInt(tr.reduce((s, x) => s + x.n, 0)), `over ${tr[tr.length - 1].step} optimizer steps`],
   ].forEach(([label, value, delta]) => {
     const d = el("div", { class: "kpi" }, k);
     el("div", { class: "kl", text: label }, d);
@@ -126,7 +126,7 @@ function drawCurves(c, lastStep) {
   box.replaceChildren();
   const xTicks = [0, 300, 600, 900].filter((v) => v <= lastStep).map((v) => ({ v, label: String(v) }));
   const x = { min: 0, max: lastStep, ticks: xTicks };
-  const xLabel = (s) => (s === 0 ? "untrained" : `step ${s}`);
+  const xLabel = (s) => (s === 0 ? "base model" : `step ${s}`);
   const charts = [];
   const sync = (src) => (s) => charts.forEach((ch, i) => i !== src && ch.showHover(s));
   const mk = (title, opts) => {
@@ -136,21 +136,21 @@ function drawCurves(c, lastStep) {
     return lineChart(cell, { height: 190, x, xLabel, margin: { left: 34, right: 12, bottom: 24 }, ...opts });
   };
   const top = Math.ceil(Math.max(0.2, ...c.eval.map((e) => e.accuracy)) * 10) / 10;
-  charts.push(mk("Share of tries that are right", {
+  charts.push(mk("Held-out accuracy (per sample)", {
     legend: "space",
     y: { min: 0, max: top, ticks: [0, top / 2, top].map((v) => +v.toFixed(2)), fmt: (v) => pct(v), tipFmt: (v) => pct(v, 1) },
-    series: [{ id: "eval", name: "Right answers on new puzzles", color: "var(--a3)", points: c.eval.map((e) => [e.step, e.accuracy]), dots: true }],
+    series: [{ id: "eval", name: "Held-out accuracy", color: "var(--a3)", points: c.eval.map((e) => [e.step, e.accuracy]), dots: true }],
     onHover: sync(0),
   }));
   const tTop = Math.ceil(Math.max(...c.tokens.map((t) => t.tokens), 100) / 100) * 100;
-  charts.push(mk("Answer length (tokens)", {
+  charts.push(mk("Response length (tokens)", {
     legend: "space",
     y: { min: 0, max: tTop, ticks: [0, tTop / 2, tTop], fmt: (v) => String(Math.round(v)) },
-    series: [{ id: "tokens", name: "Average tokens per answer", color: "var(--a3)", points: smooth(c.tokens.map((t) => [t.step, t.tokens]), 5) }],
+    series: [{ id: "tokens", name: "Mean tokens per rollout", color: "var(--a3)", points: smooth(c.tokens.map((t) => [t.step, t.tokens]), 5) }],
     onHover: sync(1),
   }));
   const bTop = Math.ceil(Math.max(0.1, ...c.train.flatMap((t) => CHARTED.map((k) => t[k] || 0))) * 10) / 10;
-  charts.push(mk("How it talks (share of tries)", {
+  charts.push(mk("Reasoning phrases (share of rollouts)", {
     legend: true,
     y: { min: 0, max: bTop, ticks: [0, bTop / 2, bTop].map((v) => +v.toFixed(2)), fmt: (v) => pct(v), tipFmt: (v) => pct(v, 1) },
     series: CHARTED.map((k) => ({ id: k, name: BEHAVIOR_META[k].name, color: BEHAVIOR_META[k].color, points: smooth(c.train.map((t) => [t.step, t[k] || 0])) })),
@@ -160,14 +160,14 @@ function drawCurves(c, lastStep) {
   const last = c.train.slice(-10);
   const mean = (a, k) => a.reduce((s, t) => s + (t[k] || 0), 0) / Math.max(a.length, 1);
   const note = el("p", { class: "stat-line" }, box.parentElement);
-  note.append("Saying “wait” stays rare (");
+  note.append("The classic “wait” stays rare (");
   el("b", { text: `${pct(mean(first, "wait"))} → ${pct(mean(last, "wait"))}` }, note);
-  note.append(") and planning ahead fades (");
+  note.append(") and up-front planning (“first, we need…”) nearly disappears (");
   el("b", { text: `${pct(mean(first, "subgoal"))} → ${pct(mean(last, "subgoal"))}` }, note);
-  note.append(" of tries). By these counts, the model learns to search by trial and error. Phrase counts show how it talks, " +
-    "not whether its checks are right, and they can't tell whether training created this habit or strengthened one the untrained model already had.");
+  note.append("). What grows is explicit trial and error: propose, evaluate, reject, try again. Phrase counts measure how the model " +
+    "writes, not whether its checks are valid, and they can't distinguish behavior RL created from behavior it amplified.");
   document.getElementById("a3-curves-sub").textContent =
-    "Right answers are measured on 256 puzzles it never practiced on, 4 tries each. Length and phrasing come from all of its practice answers. Hover any chart to read a value.";
+    "Held-out accuracy: 256 puzzles never used in training, 4 samples each at temperature 1. Length and phrase rates: all training rollouts. Hover to read values.";
   tableToggle(box.parentElement, () => ({
     head: ["Step", "Right (new puzzles)", "Right (practice)", ...Object.values(BEHAVIOR_META).map((m) => m.name), "Plans ahead"],
     rows: c.train.filter((t) => t.step % 50 === 0).map((t) => {
@@ -189,14 +189,14 @@ function initTraces(curves, traces) {
   let puzzle = 0;
   let step = 0;
   const steps = traces.steps;
-  const scrub = scrubber({
-    range: document.getElementById("a3-range"),
-    play: document.getElementById("a3-play"),
-    ticks: document.getElementById("a3-ticks"),
-    count: steps.length,
-    interval: 1200,
+  const scrub = stepper(document.getElementById("a3-stepper"), steps.map((st) => ({
+    group: st === 0 ? "base" : "rl", label: String(st), aria: stepName(st),
+  })), {
+    groups: { base: "Base", rl: "Training steps" },
+    minSlot: 34,
     onChange: (i) => { step = i; draw(); },
   });
+  player(document.getElementById("a3-play"), () => scrub, 1200);
   const puzzleChips = chips(document.getElementById("a3-puzzles"), traces.puzzles.map((p) => `Make ${p.target} from ${p.nums.join(", ")}`), {
     onSelect: (i) => { puzzle = i; draw(); },
   });
@@ -211,18 +211,18 @@ function initTraces(curves, traces) {
     box.replaceChildren();
     if (!frame) return;
     const ok = frame.samples.filter((x) => x.correct).length;
-    document.getElementById("a3-step-detail").textContent = `${ok} of ${frame.samples.length} tries right`;
+    document.getElementById("a3-step-detail").textContent = `${ok} of ${frame.samples.length} samples correct`;
     frame.samples.forEach((smp, i) => {
       const card = el("div", { class: "trace" }, box);
       const head = el("div", { class: "trace-head" }, card);
-      el("span", { text: `Try ${i + 1}` }, head);
-      el("span", { class: `verdict ${smp.correct ? "ok" : "bad"}`, text: smp.correct ? "✓ right" : smp.answer ? "✗ wrong" : "✗ no answer" }, head);
+      el("span", { text: `Sample ${i + 1}` }, head);
+      el("span", { class: `verdict ${smp.correct ? "ok" : "bad"}`, text: smp.correct ? "✓ correct" : smp.answer ? "✗ wrong" : "✗ no answer" }, head);
       const tt = el("div", { class: "trace-text" }, card);
       el("span", { class: "pre", text: "<think>" }, tt);
       renderTrace(tt, smp.text, patterns);
     });
   }
-  scrub.set(0);
+  puzzleChips.select(0);
   return { select: (i) => puzzleChips.select(i) };
 }
 
@@ -257,8 +257,8 @@ function drawPosthoc(all) {
   fig.hidden = false;
   const s0 = all[0];
   document.getElementById("a3-posthoc-sub").textContent =
-    `Every saved snapshot takes the same exam: ${s0.n_puzzles} puzzles it never practiced on, ${s0.samples_per_puzzle} tries each, ` +
-    "graded by the fixed checker.";
+    `Every saved checkpoint evaluated identically: the same ${s0.n_puzzles} held-out puzzles, ${s0.samples_per_puzzle} samples each at ` +
+    "temperature 1, scored by the corrected verifier.";
   let subset = "all";
   const seg = el("div", { class: "seg", role: "tablist", "aria-label": "Puzzle size" });
   fig.querySelector(".fig-sub").after(seg);
@@ -286,11 +286,11 @@ function drawPosthoc(all) {
       y: { min: 0, max: top, ticks: pctTicks, fmt: (v) => pct(v), tipFmt: (v) => pct(v, 1) },
       legend: true,
       series: [
-        { id: "acc", name: "Random tries (temperature 1)", color: "var(--a3)", points: cks.map((c) => [c.step, c.per_attempt_accuracy]), dots: true },
-        { id: "greedy", name: "Its single most likely answer", color: "var(--gray-mark)", points: cks.map((c) => [c.step, c.greedy_accuracy]), dots: true },
+        { id: "acc", name: "Sampled (T = 1)", color: "var(--a3)", points: cks.map((c) => [c.step, c.per_attempt_accuracy]), dots: true },
+        { id: "greedy", name: "Greedy", color: "var(--gray-mark)", points: cks.map((c) => [c.step, c.greedy_accuracy]), dots: true },
       ],
       intervals: cks.map((c) => ({ x: c.step, y0: c.ci95[0], y1: c.ci95[1], color: "var(--a3)" })),
-      xLabel: (xv) => (xv === 0 ? "untrained" : `step ${xv}`),
+      xLabel: (xv) => (xv === 0 ? "base model" : `step ${xv}`),
     });
     const ks = Object.keys(s0.pass_at_k).map(Number).sort((a, b) => a - b);
     const mid = cks.length > 2 ? [cks[Math.floor((cks.length - 1) / 2)]] : [];
@@ -304,27 +304,26 @@ function drawPosthoc(all) {
       legend: true,
       series: pick.map((c) => ({
         id: c.label,
-        name: c.step === 0 ? "Untrained" : `Step ${c.step}`,
+        name: c.step === 0 ? "Base model" : `Step ${c.step}`,
         color: c.step === 0 ? "var(--gray-mark)" : c === last ? "var(--a3)" : "#86b6ef",
         points: ks.map((k) => [Math.log2(k), c.pass_at_k[String(k)]]),
         dots: true,
       })),
-      xLabel: (xv) => `${Math.round(2 ** xv)} tr${Math.round(2 ** xv) === 1 ? "y" : "ies"}`,
+      xLabel: (xv) => `k = ${Math.round(2 ** xv)}`,
     });
     const note = document.getElementById("a3-posthoc-note");
     note.replaceChildren();
-    note.append(`Untrained, ${pct(cks[0].per_attempt_accuracy, 1)} of its tries are right, but given 32 tries it solves ${pct(cks[0].pass_at_k["32"])} of puzzles at least once. ` +
-      `At step ${last.step}: `);
-    el("b", { text: `${pct(last.per_attempt_accuracy)} of tries right` }, note);
-    note.append(` (likely between ${pct(last.ci95[0])} and ${pct(last.ci95[1])}), and ${pct(last.pass_at_k["32"])} of puzzles solved within 32 tries. ` +
-      "Most of the gain is reliability: far more tries succeed on puzzles it could sometimes solve. " +
-      "Whether this kind of training teaches genuinely new solutions or concentrates on ones the model could already find is an open research question, and 32 tries is too few to settle it.");
+    note.append(`Base model: ${pct(cks[0].per_attempt_accuracy, 1)} per sample, pass@32 ${pct(cks[0].pass_at_k["32"])}. Step ${last.step}: `);
+    el("b", { text: `${pct(last.per_attempt_accuracy)} per sample` }, note);
+    note.append(` (95% CI ${pct(last.ci95[0])}–${pct(last.ci95[1])}), pass@32 ${pct(last.pass_at_k["32"])}. ` +
+      "Most of the gain is reliability: per-sample accuracy rises much faster than coverage at k = 32. " +
+      "Whether RLVR teaches new solutions or concentrates probability on ones the base model can already sample is an open question; 32 samples is far too few to settle it.");
   }
   render();
   tableToggle(fig, () => {
     const ks = Object.keys(s0.pass_at_k).map(Number).sort((a, b) => a - b);
     return {
-      head: ["Snapshot", "Tries right", "Likely range", "Most likely answer", ...ks.map((k) => `Solved within ${k}`), "Tokens"],
+      head: ["Checkpoint", "Per sample", "95% CI", "Greedy", ...ks.map((k) => `pass@${k}`), "Tokens"],
       rows: all.map(view).map((c) => [stepName(c.step), pct(c.per_attempt_accuracy, 1), `${pct(c.ci95[0], 1)}–${pct(c.ci95[1], 1)}`,
         pct(c.greedy_accuracy, 1), ...ks.map((k) => pct(c.pass_at_k[String(k)], 1)), String(Math.round(c.mean_tokens))]),
     };
@@ -335,15 +334,15 @@ function drawBug(bug, cmp) {
   const body = document.getElementById("a3-bug-body");
   body.replaceChildren();
   el("p", { class: "body-text", text:
-    "In our first attempt, the model didn't stop after answering. It kept writing, made up new puzzles (“User: …”) and " +
-    `answered those too: ${Math.round(bug.share_after_first_answer * 100)}% of everything it wrote came after its real answer. ` +
-    "Our checker graded the last answer it found instead of the first, so it was sometimes grading an answer to a puzzle that didn't exist." }, body);
+    "In our first run, generation didn't stop at the answer. The base model kept writing, inventing new “User:” puzzles and " +
+    `answering them: ${Math.round(bug.share_after_first_answer * 100)}% of generated text came after its first answer. ` +
+    "The verifier graded the last answer block instead of the first, so it was sometimes scoring an answer to a puzzle that didn't exist." }, body);
   if (cmp) {
     const kp = el("div", { class: "kpis three" }, body);
     [
-      [`${cmp.different_answer_read} of ${cmp.rollouts}`, "answers where the checker read something other than the model's real answer"],
-      [String(cmp.old_rewarded), `point${cmp.old_rewarded === 1 ? "" : "s"} handed out in that batch…`],
-      [String(cmp.old_rewarded - cmp.false_positives.length), "…that went to a genuinely correct answer"],
+      [`${cmp.different_answer_read} of ${cmp.rollouts}`, "rollouts where the verifier read a different answer than the model's first"],
+      [String(cmp.old_rewarded), `positive reward${cmp.old_rewarded === 1 ? "" : "s"} in that batch…`],
+      [String(cmp.old_rewarded - cmp.false_positives.length), "…that went to a rollout whose answer was actually correct"],
     ].forEach(([v, l]) => {
       const d = el("div", { class: "kpi" }, kp);
       el("div", { class: "kv", text: v }, d);
@@ -352,23 +351,23 @@ function drawBug(bug, cmp) {
     const wrap = el("div", { class: "scroll-x" }, body);
     const t = el("table", { class: "spec cmp" }, wrap);
     const hr = el("tr", {}, el("thead", {}, t));
-    ["Puzzle", "The model's real answer", "What the checker read", "Old checker", "Fixed checker"].forEach((h) => el("th", { text: h }, hr));
+    ["Puzzle", "Model's first answer", "What the old verifier read", "Old verifier", "Fixed verifier"].forEach((h) => el("th", { text: h }, hr));
     const tb = el("tbody", {}, t);
     const row = (c, oldOk) => {
       const tr = el("tr", {}, tb);
       el("td", { text: `Make ${c.target} from ${c.nums.join(", ")}` }, tr);
       el("td", { class: "mono", text: c.first_answer ?? "–" }, tr);
       el("td", { class: "mono", text: c.answer_old_grader_read ?? "–" }, tr);
-      el("td", { class: oldOk ? "ok" : "bad", text: oldOk ? "✓ point" : "✗ no point" }, tr);
-      el("td", { class: oldOk ? "bad" : "ok", text: oldOk ? "✗ no point" : "✓ point" }, tr);
+      el("td", { class: oldOk ? "ok" : "bad", text: oldOk ? "✓ rewarded" : "✗ no reward" }, tr);
+      el("td", { class: oldOk ? "bad" : "ok", text: oldOk ? "✗ no reward" : "✓ rewarded" }, tr);
     };
     cmp.false_positives.forEach((c) => row(c, true));
     cmp.false_negatives.forEach((c) => row(c, false));
-    el("p", { class: "fig-sub", text: `One saved batch of ${cmp.rollouts} answers from step ${cmp.step} of that run, re-graded both ways (analysis/grader_comparison.py in the repo).` }, body);
+    el("p", { class: "fig-sub", text: `The one logged batch kept from that run (step ${cmp.step}, ${cmp.rollouts} rollouts), re-graded both ways; see analysis/grader_comparison.py.` }, body);
   }
   const cols = el("div", { class: "cols" }, body);
   const left = el("div", {}, cols);
-  el("h4", { class: "fig-sub", text: `What one of those answers looked like (make ${bug.target} from ${bug.nums.join(", ")})` }, left);
+  el("h4", { class: "fig-sub", text: `A rollout from that run (make ${bug.target} from ${bug.nums.join(", ")})` }, left);
   const tt = el("div", { class: "trace-text" }, left);
   tt.append(bug.before.slice(-420));
   const after = el("span", { class: "after" }, tt);
@@ -378,10 +377,10 @@ function drawBug(bug, cmp) {
   el("h4", { class: "fig-sub", text: "The fix" }, right);
   const ul = el("ul", {}, right);
   [
-    "Stop the model as soon as it closes its answer.",
-    "Grade only the first answer.",
-    "Tests for both, including re-grading this exact batch.",
-    "Restart training (about $1.50 lost). Everything else on this page uses the fixed checker.",
+    "Stop generation at </answer>.",
+    "Grade only the first answer block.",
+    "Tests for both, including a regression test that re-grades this batch.",
+    "Restart training (about $1.50 lost). Everything else on this page uses the fixed verifier.",
   ].forEach((x) => el("li", { text: x }, ul));
-  el("p", { class: "note", text: "What this shows: the bug corrupted the rewards in that batch. What it doesn't show: that the model learned to exploit it. We stopped that run after 24 steps." }, right);
+  el("p", { class: "note", text: "Scope: this shows the bug corrupted rewards in that batch. It does not show reward hacking; the run was stopped at step 24, before optimization could exploit it." }, right);
 }

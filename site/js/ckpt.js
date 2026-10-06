@@ -6,23 +6,23 @@ const WORDS_PER_TOKEN = 0.75;
 
 export function ckptName(c) {
   if (!c) return "";
-  if (c.stage === "base") return "Untrained";
+  if (c.stage === "base") return "Base model";
   if (c.stage === "ref") return c.name;
   const step = c.step.toLocaleString("en-US");
-  return c.stage === "sft" ? `Example training, step ${step}` : `Preference training, step ${step}`;
+  return c.stage === "sft" ? `SFT step ${step}` : `DPO step ${step}`;
 }
 
 export function ckptShort(c) {
   if (!c) return "";
-  if (c.stage === "base") return "untrained";
-  return `${c.stage === "sft" ? "examples" : "preferences"} · step ${c.step.toLocaleString("en-US")}`;
+  if (c.stage === "base") return "base model";
+  return `${c.stage === "sft" ? "SFT" : "DPO"} step ${c.step.toLocaleString("en-US")}`;
 }
 
 export function ckptDetail(c, lastSftStep) {
-  if (!c || c.stage === "base") return "only trained to continue internet text";
-  if (c.stage === "sft") return `has read about ${compact(c.step * SFT_TOKENS_PER_STEP * WORDS_PER_TOKEN)} words of example conversations`;
+  if (!c || c.stage === "base") return "pretrained on internet text, no post-training yet";
+  if (c.stage === "sft") return `≈${compact(c.step * SFT_TOKENS_PER_STEP)} training tokens of example conversations`;
   if (c.stage === "dpo") {
-    return `after example training${lastSftStep ? ` (${lastSftStep.toLocaleString("en-US")} steps)` : ""}, plus ${compact(c.step * DPO_PAIRS_PER_STEP)} judged answer pairs`;
+    return `after ${lastSftStep ? lastSftStep.toLocaleString("en-US") + " " : ""}SFT steps, plus ${compact(c.step * DPO_PAIRS_PER_STEP)} preference pairs`;
   }
   return "";
 }

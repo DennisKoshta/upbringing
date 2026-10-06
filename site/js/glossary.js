@@ -2,7 +2,10 @@
 import { el, hideTip, showTip } from "./lib.js";
 
 export const GLOSSARY = {
-  base: ["Untrained model", "A model trained only to continue text from the internet. It has never been taught to answer questions."],
+  posttraining: ["Post-training", "Everything done to a model after it has learned to predict internet text: teaching it to follow instructions, to match people's preferences, and to reason."],
+  rlhf: ["RLHF", "Reinforcement learning from human feedback. People compare answers, and the model is trained to produce the kind they prefer."],
+  rlvr: ["RLVR", "Reinforcement learning from verifiable rewards. A program that can check answers (a math checker, unit tests) scores the model, and the model learns to score higher."],
+  base: ["Base model", "A model pretrained only to continue text from the internet, before any post-training. It has never been taught to answer questions."],
   sft: ["Supervised fine-tuning (SFT)", "Training on example conversations, so the model learns to imitate good answers."],
   dpo: ["Preference tuning (DPO)", "Training on pairs of answers where one was marked better, so the model leans toward the preferred kind. DPO stands for direct preference optimization."],
   checkpoint: ["Snapshot (checkpoint)", "A saved copy of the model partway through training. Comparing snapshots shows what training changed."],

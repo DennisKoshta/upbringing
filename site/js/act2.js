@@ -20,9 +20,9 @@ const DRIFT = {
   enthusiasm: { title: "Exclamation marks", unit: "per answer", digits: 2 },
 };
 const JUDGES = {
-  "length-lover": { name: "Likes long answers", target: "length" },
-  "structure-lover": { name: "Likes lists and headers", target: "structure" },
-  "hedge-hater": { name: "Dislikes caveats", target: "hedging" },
+  "length-lover": { name: "Prefers longer answers", target: "length" },
+  "structure-lover": { name: "Prefers lists and headers", target: "structure" },
+  "hedge-hater": { name: "Penalizes hedging", target: "hedging" },
 };
 const N_JUDGE = 12;
 
@@ -120,22 +120,22 @@ async function initJudge() {
     const statedList = [...stated];
     weightBars(document.getElementById("a2-weights"), NAMES, LABELS, w, { max: 2, stated: statedList });
     document.getElementById("a2-reveal-sub").textContent =
-      `Estimated from your ${picks.length} picks. A ★ marks what you said you value.`;
+      `A Bradley–Terry fit to your ${picks.length} choices. ★ marks what you said you value.`;
     const ranked = NAMES.slice().sort((a, b) => Math.abs(w[b]) - Math.abs(w[a]));
     const top = ranked[0];
     const txt = document.getElementById("a2-reveal-text");
     txt.replaceChildren();
-    txt.append("Your picks leaned most toward ");
+    txt.append("Your choices weigh most heavily on ");
     el("strong", { text: `${w[top] >= 0 ? "more" : "less"} ${LABELS[top].toLowerCase()}` }, txt);
-    txt.append(". ");
+    txt.append(` (${w[top] >= 0 ? "+" : "−"}${Math.abs(w[top]).toFixed(2)}). `);
     if (statedList.length) {
       const match = statedList.includes(top) && w[top] > 0;
       txt.append(match
         ? "That matches what you said you value. "
-        : `You said you value ${statedList.map((s) => STATED[s].toLowerCase()).join(" and ")}, but your picks point elsewhere. `);
+        : `That isn't what you said you value (${statedList.map((s) => STATED[s].toLowerCase()).join(", ")}). `);
     }
-    txt.append(`If a model were trained on your ${picks.length} picks, it would drift toward this taste, whether or not you meant it to. ` +
-      `${picks.length} picks is a small sample, so this estimate is rough. Real preference datasets have hundreds of thousands of picks, with the same blind spots.`);
+    txt.append("A reward model trained on choices like yours learns the revealed preference, not the stated one. " +
+      `With ${picks.length} choices the estimate is noisy; production preference datasets hold hundreds of thousands of comparisons, with the same blind spots.`);
   }
   cardA.addEventListener("click", () => pick(0));
   cardB.addEventListener("click", () => pick(1));
@@ -180,7 +180,7 @@ async function initReplay() {
 
   const dotsEl = document.getElementById("a2-round-dots");
   const roundDots = Array.from({ length: nRounds - 1 }, (_, i) => {
-    const d = el("button", { type: "button", "aria-label": `Show round ${i + 1}` }, dotsEl);
+    const d = el("button", { type: "button", "aria-label": `Show the model after round ${i + 1}`, text: String(i + 1) }, dotsEl);
     d.addEventListener("click", () => { round = i + 1; update(); });
     return d;
   });
@@ -230,17 +230,17 @@ async function initReplay() {
     const r = replays[cur];
     const rd = r.rounds[round];
     document.getElementById("a2-round-label").textContent = round === 0
-      ? "not trained yet"
-      : `after round ${round} of ${nRounds - 1} · ${round * r.config.pairs_per_round} picks so far`;
+      ? "before training"
+      : `round ${round} of ${nRounds - 1} · ${round * r.config.pairs_per_round} judgments so far`;
     stepBtn.disabled = round >= nRounds - 1;
-    stepBtn.textContent = round >= nRounds - 1 ? "All rounds done" : round === 0 ? "Train a round" : "Train another round";
-    roundDots.forEach((d, i) => d.classList.toggle("done", i < round));
+    stepBtn.textContent = round >= nRounds - 1 ? "All rounds done" : round === 0 ? "Train a round" : "Train next round";
+    roundDots.forEach((d, i) => { d.classList.toggle("done", i < round); d.classList.toggle("on", i === round - 1); });
     charts.forEach(({ chart, val, vals, nm }) => {
       chart.setCursor(round);
       val.textContent = vals[round].toFixed(DRIFT[nm].digits);
     });
     const target = JUDGES[r.persona].target;
-    document.getElementById("a2-rule").textContent = `This judge always picks ${ruleText(r.persona)}.`;
+    document.getElementById("a2-rule").textContent = `Hidden rule: always pick ${ruleText(r.persona)}.`;
     const rec = document.getElementById("a2-recovered");
     weightBars(rec, NAMES, LABELS, round === 0 ? null : rd.implicit_reward, { max: 3 });
     [...rec.children].forEach((row, i) => row.classList.toggle("stated", NAMES[i] === target));

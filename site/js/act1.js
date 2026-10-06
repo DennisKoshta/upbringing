@@ -1,13 +1,13 @@
 // Section 1: one training clock (the scrubber) drives the answer, the scorecard, the random-number histogram and the
 // jokes. "Ask" buttons draw from the 300 real samples taken at the selected checkpoint.
-import { chips, el, hideTip, load, pct, scrubber, showTip, tableToggle, tipRow } from "./lib.js";
+import { chips, compactStep, el, hideTip, load, pct, player, showTip, stepper, tableToggle, tipRow } from "./lib.js";
 import { ckptDetail, ckptName, ckptShort, visibleTokens } from "./ckpt.js";
 import { initGlossary } from "./glossary.js";
 
-const SHADE_FULL = 8; // nats: a token ~3000x more likely than under the untrained model gets the full shade
+const SHADE_FULL = 8; // nats: a token ~3000x more likely than under the base model gets the full shade
 const TESTS = [
-  { key: "ifeval", name: "Follows precise instructions", term: "ifeval", label: "IFEval" },
-  { key: "gsm8k", name: "Solves math word problems", term: "gsm8k", label: "GSM8K" },
+  { key: "ifeval", name: "Instruction following", term: "ifeval", label: "IFEval" },
+  { key: "gsm8k", name: "Grade-school math", term: "gsm8k", label: "GSM8K" },
 ];
 
 export async function initAct1() {
@@ -24,39 +24,28 @@ export async function initAct1() {
   let prompt = 0;
   let idx = 0;
 
-  // ---------------------------------------------------------- scrubber
-  const stages = document.getElementById("a1-stages");
-  const firstOf = (s) => ckpts.findIndex((c) => c.stage === s);
-  [["examples", firstOf("sft")], ["preferences", firstOf("dpo")]].forEach(([label, i]) => {
-    if (i < 0) return;
-    const x = (i / Math.max(n - 1, 1)) * 100;
-    el("b", { style: `left:${x}%` }, stages);
-    el("span", { style: `left:${Math.min(x + 6, 94)}%`, text: label }, stages);
-  });
+  // ---------------------------------------------------------- timeline: every snapshot is a labeled stop
   const momentIdx = () => moments.filter((m) => m.prompt === prompt).map((m) => ckpts.findIndex((c) => c.id === m.ckpt)).filter((i) => i >= 0);
-  let scrub = makeScrub();
+  const stepItems = ckpts.map((c) => ({ group: c.stage, label: c.stage === "base" ? "0" : compactStep(c.step), aria: ckptName(c) }));
+  let scrub = null;
   function makeScrub() {
-    return scrubber({
-      range: document.getElementById("a1-range"),
-      play: document.getElementById("a1-play"),
-      ticks: document.getElementById("a1-ticks"),
-      count: n,
-      moments: momentIdx(),
-      interval: 1100,
+    scrub = stepper(document.getElementById("a1-stepper"), stepItems, {
+      groups: { base: "Base", sft: "SFT steps", dpo: "DPO steps" },
+      marks: momentIdx(),
+      minSlot: 34,
+      selected: idx,
       onChange: (i) => { idx = i; update(); },
     });
   }
+  makeScrub();
+  player(document.getElementById("a1-play"), () => scrub, 1100);
 
   // ---------------------------------------------------------- prompts
   const promptChips = chips(document.getElementById("a1-prompts"), data.prompts, {
     onSelect: (i) => {
       prompt = i;
-      const r = document.getElementById("a1-range");
-      r.replaceWith(r.cloneNode(true)); // drop old listeners so the moment ticks rebuild for this prompt
-      const p = document.getElementById("a1-play");
-      p.replaceWith(p.cloneNode(true));
-      scrub = makeScrub();
-      scrub.set(idx);
+      makeScrub(); // the marked stops depend on the question
+      update();
     },
   });
 
@@ -76,7 +65,7 @@ export async function initAct1() {
       const m = el("span", { class: `score-mark ${cls}`, style: `left:${v * 100}%` }, track);
       el("span", { class: "score-mark-label", text: label }, m);
     };
-    mk(base[t.key], "base", `untrained ${pct(base[t.key])}`);
+    mk(base[t.key], "base", `base model ${pct(base[t.key])}`);
     if (ai2) mk(ai2[t.key], "ref", `AI2's model ${pct(ai2[t.key])}`);
     const spark = el("div", { class: "spark", title: "Trend over training (click to jump)" }, row);
     return { t, val, fill, spark };
@@ -138,15 +127,15 @@ export async function initAct1() {
     const stat = document.getElementById("a1-hist-stat");
     stat.replaceChildren();
     if (!c.number.valid) {
-      stat.textContent = "At this point it never answers with a number.";
+      stat.textContent = "No valid numbers at this checkpoint.";
       return;
     }
     const top = Object.entries(hist).sort((a, b) => b[1] - a[1])[0];
-    stat.append("Favorite: ");
+    stat.append("Mode: ");
     el("b", { text: top[0] }, stat);
-    stat.append(`, in ${Math.round((top[1] / c.number.valid) * 100)}% of answers. It used ${c.number.distinct} different numbers. ` +
-      "A fair random pick would give each number about 1%.");
-    if (c.number.valid < 280) stat.append(` (${300 - c.number.valid} of 300 answers weren't a number from 1 to 100.)`);
+    stat.append(` (${Math.round((top[1] / c.number.valid) * 100)}% of ${c.number.valid} valid answers), ${c.number.distinct} distinct values. ` +
+      "A uniform sampler would put about 1% on each.");
+    if (c.number.valid < 280) stat.append(` ${300 - c.number.valid} of 300 samples weren't a number from 1 to 100.`);
   }
   new ResizeObserver(() => drawHist(ckpts[idx])).observe(histEl);
   document.getElementById("a1-ask-number").addEventListener("click", () => {
@@ -191,7 +180,7 @@ export async function initAct1() {
       summary = el("p", { class: "joke-summary" });
       list.after(summary);
     }
-    summary.textContent = `Its most common jokes, above. ${j.distinct} different jokes in ${j.valid} tries.`;
+    summary.textContent = `Most frequent openings above; ${j.distinct} distinct jokes in ${j.valid} samples.`;
   }
   document.getElementById("a1-ask-joke").addEventListener("click", () => {
     const j = ckpts[idx].joke;
@@ -220,14 +209,14 @@ export async function initAct1() {
     const tl = await load(`act1/timelapse-${String(prompt).padStart(2, "0")}.json`);
     const c = ckpts[idx];
     document.getElementById("a1-prompt-text").textContent = data.prompts[prompt];
-    document.getElementById("a1-who").textContent = `Model, ${ckptShort(c)}`;
+    document.getElementById("a1-who").textContent = c.stage === "base" ? "Base model" : `Model, ${ckptShort(c)}`;
     if (!tl) return;
     const frame = tl.frames.find((f) => f.id === c.id);
     answerEl.replaceChildren();
     if (!frame) return;
     const toks = visibleTokens(frame);
     const hasBase = frame.blp && frame.blp.length;
-    if (!frame.text.trim()) el("span", { class: "empty", text: "(It ends its turn without writing anything.)" }, answerEl);
+    if (!frame.text.trim()) el("span", { class: "empty", text: "(empty: it ends its turn immediately)" }, answerEl);
     toks.forEach(({ t, lp, blp }) => {
       const span = el("span", { class: "tok", text: t }, answerEl);
       if (hasBase && blp != null && c.stage !== "base") {
@@ -264,10 +253,10 @@ export async function initAct1() {
   const hood = document.getElementById("a1-hood");
   const ul = el("ul", {}, hood);
   [
-    "Untrained model: allenai/OLMo-2-0425-1B. Fully open: weights, pretraining data, and the exact post-training datasets.",
+    "Base model: allenai/OLMo-2-0425-1B. Fully open: weights, pretraining data, and the exact post-training datasets.",
     "Example training (SFT): AI2's 1B recipe (lr 3e-5, linear decay, 3% warmup, ~128 sequences per step, 4,096-token context), fp32 master weights with bf16 autocast, loss on assistant tokens only. 6,500 steps, about 58% of one pass over the data (AI2 trained two passes).",
     "Preference training (DPO): length-normalized DPO (AI2's dpo_norm, β = 5, lr 2.5e-6, 128 pairs per step) on 60,000 of AI2's 378,000 preference pairs.",
-    "Every snapshot answers greedily through the chat template, so the untrained model sees exactly what the assistant sees. Shading is log p(snapshot) − log p(untrained) for each token the snapshot chose.",
+    "Every snapshot answers greedily through the chat template, so the base model sees exactly what the assistant sees. Shading is log p(snapshot) − log p(base) for each token the snapshot chose.",
     "Tests: IFEval (prompt-level loose accuracy, 541 prompts) and GSM8K (1,319 problems, 0-shot with step-by-step reasoning). Our harness scores AI2's DPO model at 66.4–67.1% on IFEval across two runs (AI2 reports 67.1%). That checks our evaluation, not our training.",
   ].forEach((t) => el("li", { text: t }, ul));
 
@@ -297,12 +286,12 @@ function tokenTip(t, tok, lp, blp) {
   const shown = tok.replace(/\n/g, "⏎").replace(/ /g, "·");
   const row = el("div", { class: "row" }, t);
   el("span", { class: "tok-shown", text: shown }, row);
-  el("div", { text: `chance the model wrote this here: ${fmtP(Math.exp(lp))}` }, t);
+  el("div", { text: `p at this checkpoint: ${fmtP(Math.exp(lp))}` }, t);
   if (blp != null) {
-    el("div", { class: "tl", text: `chance before training: ${fmtP(Math.exp(blp))}` }, t);
+    el("div", { class: "tl", text: `p under the base model: ${fmtP(Math.exp(blp))}` }, t);
     const r = lp - blp;
     const ratio = Math.exp(Math.abs(r));
-    if (ratio >= 1.5) el("div", { class: "tv", text: r >= 0 ? `${fmtRatio(ratio)}× more likely after training` : `${fmtRatio(ratio)}× less likely after training` }, t);
+    if (ratio >= 1.5) el("div", { class: "tv", text: r >= 0 ? `${fmtRatio(ratio)}× more likely than under the base model` : `${fmtRatio(ratio)}× less likely than under the base model` }, t);
   }
 }
 const fmtP = (p) => (p >= 0.01 ? `${Math.round(p * 100)}%` : p >= 1e-4 ? `${(p * 100).toFixed(2)}%` : "under 0.01%");

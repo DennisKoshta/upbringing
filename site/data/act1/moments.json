@@ -2,7 +2,7 @@
  {
   "prompt": 0,
   "ckpt": "base",
-  "text": "The untrained model doesn't answer. It continues the document, writing the next line of what looks like a dialogue."
+  "text": "The base model doesn't answer. It continues the document, writing the next line of what looks like a dialogue."
  },
  {
   "prompt": 0,
@@ -17,7 +17,7 @@
  {
   "prompt": 1,
   "ckpt": "base",
-  "text": "Asked how to boil an egg, the untrained model repeats the question. On the web, a question is often followed by more questions."
+  "text": "Asked how to boil an egg, the base model repeats the question. On the web, a question is often followed by more questions."
  },
  {
   "prompt": 1,
