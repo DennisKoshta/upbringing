@@ -1,8 +1,32 @@
 [
- {"prompt": 0, "ckpt": "base", "text": "The base model doesn't answer. It continues the document, writing the next line of what looks like a dialogue."},
- {"prompt": 0, "ckpt": "sft-step-00010", "text": "Ten steps in, it knows it should answer, but not yet how: it writes its own role tag, <|assistant|>, as plain text."},
- {"prompt": 0, "ckpt": "sft-step-00500", "text": "Now it says OpenAI made it. Much of the open SFT data was written by GPT models, and the identity came along with the style."},
- {"prompt": 1, "ckpt": "base", "text": "Asked how to boil an egg, the base model repeats the question. On the web, a question is often followed by more questions."},
- {"prompt": 1, "ckpt": "sft-step-00005", "text": "Five optimizer steps of SFT, and it answers."},
- {"prompt": 2, "ckpt": "sft-step-00500", "text": "Earlier checkpoints wrote prose about the ocean. By step 500 it writes a real haiku: 5, 7, 5."}
+ {
+  "prompt": 0,
+  "ckpt": "base",
+  "text": "The untrained model doesn't answer. It continues the document, writing the next line of what looks like a dialogue."
+ },
+ {
+  "prompt": 0,
+  "ckpt": "sft-step-00010",
+  "text": "Ten steps in, it knows it should answer, but not yet how: it writes the marker for its own turn, <|assistant|>, as if it were part of the answer."
+ },
+ {
+  "prompt": 0,
+  "ckpt": "sft-step-00500",
+  "text": "Now it says OpenAI made it. Many of the example conversations were written by GPT models, and the identity came along with the style."
+ },
+ {
+  "prompt": 1,
+  "ckpt": "base",
+  "text": "Asked how to boil an egg, the untrained model repeats the question. On the web, a question is often followed by more questions."
+ },
+ {
+  "prompt": 1,
+  "ckpt": "sft-step-00005",
+  "text": "Five training steps in, and it already answers."
+ },
+ {
+  "prompt": 2,
+  "ckpt": "sft-step-00500",
+  "text": "Earlier snapshots wrote prose about the ocean. By step 500 it writes a real haiku: 5, 7, 5."
+ }
 ]

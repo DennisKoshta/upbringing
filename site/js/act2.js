@@ -1,9 +1,10 @@
-// Act II: judge pairs -> client-side Bradley-Terry fit -> "your implicit reward model"; then replays of simulated
-// labelers training a model with LoRA DPO, round by round.
-import { chips, el, lineChart, load, scrubber, tableToggle, weightBars } from "./lib.js";
+// Section 2: judge pairs -> client-side Bradley-Terry fit ("what your choices reveal"); then replays of simulated
+// judges training a model with LoRA DPO, one round per click.
+import { chips, el, lineChart, load, tableToggle, weightBars } from "./lib.js";
+import { initGlossary } from "./glossary.js";
 
 const NAMES = ["length", "structure", "hedging", "confidence", "enthusiasm"];
-const LABELS = { length: "Length", structure: "Structure", hedging: "Hedging", confidence: "Confidence", enthusiasm: "Enthusiasm" };
+const LABELS = { length: "Length", structure: "Lists & headers", hedging: "Hedging", confidence: "Confidence", enthusiasm: "Enthusiasm" };
 const STATED = {
   length: "Thorough and detailed",
   structure: "Well organized (lists, headers)",
@@ -12,13 +13,17 @@ const STATED = {
   enthusiasm: "Warm and upbeat",
 };
 const DRIFT = {
-  length: { title: "Answer length", unit: "tokens", key: "drift_tokens" },
-  structure: { title: "Lists & headers", unit: "per answer" },
-  hedging: { title: "Hedges", unit: "per 100 words" },
-  confidence: { title: "Confident words", unit: "per 100 words" },
-  enthusiasm: { title: "Exclamations", unit: "per answer" },
+  length: { title: "Answer length", unit: "tokens", key: "drift_tokens", digits: 0 },
+  structure: { title: "Lists & headers", unit: "per answer", digits: 1 },
+  hedging: { title: "Hedge words", unit: "per 100 words", digits: 2 },
+  confidence: { title: "Confident words", unit: "per 100 words", digits: 2 },
+  enthusiasm: { title: "Exclamation marks", unit: "per answer", digits: 2 },
 };
-const TARGET = { "length-lover": "length", "structure-lover": "structure", "hedge-hater": "hedging" };
+const JUDGES = {
+  "length-lover": { name: "Likes long answers", target: "length" },
+  "structure-lover": { name: "Likes lists and headers", target: "structure" },
+  "hedge-hater": { name: "Dislikes caveats", target: "hedging" },
+};
 const N_JUDGE = 12;
 
 // Mirrors upbringing/act2.py:fit_bradley_terry.
@@ -82,10 +87,11 @@ async function initJudge() {
     pairEl.hidden = false;
     dots.replaceChildren(...order.map(() => el("i")));
     show();
+    pairEl.scrollIntoView({ block: "nearest", behavior: "smooth" });
   }
   function show() {
     const p = data.pairs[order[pos]];
-    const swap = Math.random() < 0.5; // randomize sides so position bias doesn't masquerade as a preference
+    const swap = Math.random() < 0.5; // randomize sides so a habit of clicking one side doesn't look like a preference
     p._swap = swap;
     document.getElementById("a2-count").textContent = `Pair ${pos + 1} of ${order.length}`;
     document.getElementById("a2-prompt").textContent = p.prompt;
@@ -114,23 +120,22 @@ async function initJudge() {
     const statedList = [...stated];
     weightBars(document.getElementById("a2-weights"), NAMES, LABELS, w, { max: 2, stated: statedList });
     document.getElementById("a2-reveal-sub").textContent =
-      `Fit to your ${picks.length} choices (★ = what you said you value). Positive means you rewarded more of it.`;
+      `Estimated from your ${picks.length} picks. A ★ marks what you said you value.`;
     const ranked = NAMES.slice().sort((a, b) => Math.abs(w[b]) - Math.abs(w[a]));
     const top = ranked[0];
     const txt = document.getElementById("a2-reveal-text");
     txt.replaceChildren();
-    const dir = (nm) => (w[nm] >= 0 ? "more" : "less");
-    txt.append("Your choices rewarded ");
-    el("strong", { text: `${dir(top)} ${LABELS[top].toLowerCase()}` }, txt);
-    txt.append(` above everything else (${w[top] >= 0 ? "+" : "−"}${Math.abs(w[top]).toFixed(2)}). `);
+    txt.append("Your picks leaned most toward ");
+    el("strong", { text: `${w[top] >= 0 ? "more" : "less"} ${LABELS[top].toLowerCase()}` }, txt);
+    txt.append(". ");
     if (statedList.length) {
       const match = statedList.includes(top) && w[top] > 0;
       txt.append(match
         ? "That matches what you said you value. "
-        : `You said you value ${statedList.map((s) => STATED[s].toLowerCase()).join(" and ")}, but your clicks say otherwise. `);
+        : `You said you value ${statedList.map((s) => STATED[s].toLowerCase()).join(" and ")}, but your picks point elsewhere. `);
     }
-    txt.append(`A DPO run trained on your ${picks.length} choices would push the model toward this taste, whether or not you meant it. ` +
-      "With only a dozen pairs the fit is noisy; real reward data has hundreds of thousands, and the same blind spots.");
+    txt.append(`If a model were trained on your ${picks.length} picks, it would drift toward this taste, whether or not you meant it to. ` +
+      `${picks.length} picks is a small sample, so this estimate is rough. Real preference datasets have hundreds of thousands of picks, with the same blind spots.`);
   }
   cardA.addEventListener("click", () => pick(0));
   cardB.addEventListener("click", () => pick(1));
@@ -146,21 +151,24 @@ async function initJudge() {
 
 // ---------------------------------------------------------------- replay
 async function initReplay() {
-  const personas = ["length-lover", "structure-lover", "hedge-hater"];
-  const replays = (await Promise.all(personas.map((p) => load(`act2/replay-${p}.json`)))).filter(Boolean);
+  const ids = Object.keys(JUDGES);
+  const loaded = await Promise.all(ids.map((p) => load(`act2/replay-${p}.json`)));
+  const replays = loaded.filter(Boolean);
   if (!replays.length) {
-    document.getElementById("a2-drift").textContent = "Replays are still being generated.";
+    document.getElementById("a2-drift").textContent = "These replays are still being generated.";
     return;
   }
   let cur = 0;
   let round = 0;
   let probe = 0;
+  const nRounds = replays[0].rounds.length;
+
   const tabs = document.getElementById("a2-personas");
   tabs.replaceChildren();
   const tabBtns = replays.map((r, i) => {
     const b = el("button", { type: "button", role: "tab", "aria-selected": String(i === 0) }, tabs);
-    el("span", { text: r.name }, b);
-    el("small", { text: r.rule }, b);
+    el("span", { text: JUDGES[r.persona].name }, b);
+    el("small", { text: `Always picks ${ruleText(r.persona)}` }, b);
     b.addEventListener("click", () => {
       cur = i;
       tabBtns.forEach((t, j) => t.setAttribute("aria-selected", String(i === j)));
@@ -169,15 +177,17 @@ async function initReplay() {
     });
     return b;
   });
-  const nRounds = replays[0].rounds.length;
-  const scrub = scrubber({
-    range: document.getElementById("a2-range"),
-    play: document.getElementById("a2-play"),
-    ticks: document.getElementById("a2-ticks"),
-    count: nRounds,
-    interval: 1300,
-    onChange: (i) => { round = i; update(); },
+
+  const dotsEl = document.getElementById("a2-round-dots");
+  const roundDots = Array.from({ length: nRounds - 1 }, (_, i) => {
+    const d = el("button", { type: "button", "aria-label": `Show round ${i + 1}` }, dotsEl);
+    d.addEventListener("click", () => { round = i + 1; update(); });
+    return d;
   });
+  const stepBtn = document.getElementById("a2-step");
+  stepBtn.addEventListener("click", () => { if (round < nRounds - 1) { round += 1; update(); } });
+  document.getElementById("a2-reset").addEventListener("click", () => { round = 0; update(); });
+
   chips(document.getElementById("a2-probes"), replays[0].rounds[0].probes.map((p) => p.prompt), {
     onSelect: (i) => { probe = i; drawProbe(); },
   });
@@ -187,56 +197,65 @@ async function initReplay() {
   function buildDrift() {
     driftEl.replaceChildren();
     const r = replays[cur];
-    const target = TARGET[r.persona];
+    const target = JUDGES[r.persona].target;
     charts = NAMES.map((nm) => {
       const box = el("div", { class: `multiple${nm === target ? " target" : ""}` }, driftEl);
       const h = el("h4", {}, box);
-      el("span", { text: `${DRIFT[nm].title}` }, h);
+      const tt = el("span", {}, h);
+      tt.append(DRIFT[nm].title + " ");
+      if (DRIFT[nm].unit === "tokens") {
+        tt.append("(");
+        el("span", { class: "term", "data-t": "token", text: "tokens" }, tt);
+        tt.append(")");
+      }
       const val = el("span", { class: "val" }, h);
       const vals = r.rounds.map((rd) => (DRIFT[nm].key ? rd[DRIFT[nm].key] : rd.drift[nm]));
       const lo = Math.min(...vals);
       const hi = Math.max(...vals);
       const pad = (hi - lo) * 0.15 || Math.abs(hi) * 0.1 || 1;
       const chart = lineChart(box, {
-        height: 96,
+        height: 92,
         margin: { top: 6, right: 6, bottom: 18, left: 6 },
-        x: { min: 0, max: nRounds - 1, ticks: [{ v: 0, label: "0", anchor: "start" }, { v: nRounds - 1, label: String(nRounds - 1), anchor: "end" }] },
-        y: { min: Math.max(0, lo - pad), max: hi + pad, ticks: [], fmt: (v) => v.toFixed(nm === "length" ? 0 : 2) },
-        series: [{ id: nm, name: DRIFT[nm].title, color: nm === target ? "var(--a2)" : "var(--gray-mark)", points: vals.map((v, i) => [i, v]), dots: false }],
+        x: { min: 0, max: nRounds - 1, ticks: [{ v: 0, label: "start", anchor: "start" }, { v: nRounds - 1, label: `round ${nRounds - 1}`, anchor: "end" }] },
+        y: { min: Math.max(0, lo - pad), max: hi + pad, ticks: [], fmt: (v) => v.toFixed(DRIFT[nm].digits) },
+        series: [{ id: nm, name: DRIFT[nm].title, color: nm === target ? "var(--a2)" : "var(--gray-mark)", points: vals.map((v, i) => [i, v]) }],
         xLabel: (x) => (x === 0 ? "before training" : `after round ${x}`),
         cursor: round,
       });
       return { chart, val, vals, nm };
     });
+    initGlossary(driftEl);
   }
   function update() {
     const r = replays[cur];
     const rd = r.rounds[round];
-    document.getElementById("a2-round-label").textContent = round === 0 ? "before training" : `after round ${round}`;
-    document.getElementById("a2-round-detail").textContent = round === 0
-      ? "the SFT model, untouched"
-      : `${round * r.config.pairs_per_round} judged pairs · DPO preference accuracy ${Math.round(rd.dpo.reward_accuracy * 100)}%`;
+    document.getElementById("a2-round-label").textContent = round === 0
+      ? "not trained yet"
+      : `after round ${round} of ${nRounds - 1} · ${round * r.config.pairs_per_round} picks so far`;
+    stepBtn.disabled = round >= nRounds - 1;
+    stepBtn.textContent = round >= nRounds - 1 ? "All rounds done" : round === 0 ? "Train a round" : "Train another round";
+    roundDots.forEach((d, i) => d.classList.toggle("done", i < round));
     charts.forEach(({ chart, val, vals, nm }) => {
       chart.setCursor(round);
-      val.textContent = `${vals[round].toFixed(nm === "length" ? 0 : 2)} ${DRIFT[nm].unit === "tokens" ? "tokens" : ""}`.trim();
+      val.textContent = vals[round].toFixed(DRIFT[nm].digits);
     });
-    const target = TARGET[r.persona];
-    document.getElementById("a2-rule").textContent = `Hidden rule: ${r.rule}.`;
+    const target = JUDGES[r.persona].target;
+    document.getElementById("a2-rule").textContent = `This judge always picks ${ruleText(r.persona)}.`;
     const rec = document.getElementById("a2-recovered");
-    if (round === 0) {
-      weightBars(rec, NAMES, LABELS, null, { max: 3 });
-    } else {
-      weightBars(rec, NAMES, LABELS, rd.implicit_reward, { max: 3 });
-    }
+    weightBars(rec, NAMES, LABELS, round === 0 ? null : rd.implicit_reward, { max: 3 });
     [...rec.children].forEach((row, i) => row.classList.toggle("stated", NAMES[i] === target));
     drawProbe();
   }
   function drawProbe() {
     const rd = replays[cur].rounds[round];
     const p = rd.probes[probe];
-    document.getElementById("a2-probe-answer").textContent = p ? p.text : "";
-    document.getElementById("a2-probe-caption").textContent =
-      `${round === 0 ? "Before training" : `After round ${round}`}: the model's answer to “${p ? p.prompt : ""}” (greedy decoding).`;
+    document.getElementById("a2-probe-q").textContent = p ? p.prompt : "";
+    document.getElementById("a2-probe-who").textContent = round === 0 ? "Model, before training" : `Model, after round ${round}`;
+    const a = document.getElementById("a2-probe-answer");
+    a.textContent = p ? p.text : "";
+    a.classList.remove("swap");
+    void a.offsetWidth;
+    a.classList.add("swap");
   }
   tableToggle(document.getElementById("a2-drift").parentElement, () => {
     const r = replays[cur];
@@ -246,5 +265,13 @@ async function initReplay() {
     };
   });
   buildDrift();
-  scrub.set(0);
+  update();
+}
+
+function ruleText(persona) {
+  return {
+    "length-lover": "the longer answer",
+    "structure-lover": "the answer with more lists, headers and bold text",
+    "hedge-hater": "the answer with fewer hedges and caveats",
+  }[persona];
 }

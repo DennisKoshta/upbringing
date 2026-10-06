@@ -90,7 +90,8 @@ def export_act1(download):
             "ifeval": round(e["ifeval"]["prompt_loose"], 4), "ifeval_strict": round(e["ifeval"]["prompt_strict"], 4),
             "gsm8k": round(e["gsm8k"]["acc"], 4), "gsm8k_tokens": round(e["gsm8k"]["mean_tokens"], 1),
             "number": {"hist": div["number"]["histogram"], "valid": div["number"]["valid"],
-                       "distinct": div["number"]["distinct"], "entropy": div["number"]["entropy_bits"]},
+                       "distinct": div["number"]["distinct"], "entropy": div["number"]["entropy_bits"],
+                       "examples": div["number"]["examples"][:12]},
             **{k: {"top": div[k]["top"][:8], "top_raw": div[k].get("top_raw", [])[:8], "valid": div[k]["valid"], "distinct": div[k]["distinct"],
                    "entropy": div[k]["entropy_bits"], "examples": div[k]["examples"][:6]}
                for k in ("joke", "animal", "story")},
@@ -184,7 +185,9 @@ def export_rlvr(download, n_traces=10):
         final = sum(r["correct"] for r in by.get(last, [])) / max(len(by.get(last, [])), 1)
         return (final - first, len(key[0]), -abs(key[1] - 50))
 
-    chosen = sorted(puzzles, key=interest, reverse=True)[:n_traces]
+    # Half 3-number, half 4-number puzzles, 3-number first (they make a fair first try for visitors).
+    ranked = sorted(puzzles, key=interest, reverse=True)
+    chosen = [k for k in ranked if len(k[0]) == 3][: n_traces // 2] + [k for k in ranked if len(k[0]) == 4][: n_traces - n_traces // 2]
     index = []
     for i, key in enumerate(chosen):
         frames = [{"step": s, "samples": [{"text": r["completion"], "correct": r["correct"], "answer": r["answer"]}
@@ -201,12 +204,30 @@ def export_rlvr(download, n_traces=10):
         path = f"{CACHE}/evals/rlvr/{f}"
         if os.path.exists(path):
             d = json.load(open(path))
-            posthoc.append({k: d[k] for k in ("label", "step", "n_puzzles", "samples_per_puzzle", "settings",
-                                               "per_attempt_accuracy", "ci95", "greedy_accuracy", "pass_at_k", "mean_tokens")})
+            entry = {k: d[k] for k in ("label", "step", "n_puzzles", "samples_per_puzzle", "settings",
+                                        "per_attempt_accuracy", "ci95", "greedy_accuracy", "pass_at_k", "mean_tokens")}
+            entry["by_size"] = {str(size): subset_stats([p for p in d["puzzles"] if len(p["nums"]) == size], d["samples_per_puzzle"])
+                                for size in sorted({len(p["nums"]) for p in d["puzzles"]})}
+            posthoc.append(entry)
     posthoc.sort(key=lambda d: d["step"])
     if posthoc:
         size += write("rlvr/posthoc.json", {"checkpoints": posthoc})
     print(f"rlvr: {len(train)} train steps, {len(evals)} eval points, {len(index)} traces, {size / 1e6:.2f} MB")
+
+
+def subset_stats(puzzles, n):
+    """Per-attempt accuracy (puzzle-bootstrap 95% CI), greedy accuracy and pass@k for a subset of exam puzzles."""
+    import random
+
+    from train.rlvr_eval import KS, pass_at_k
+
+    rng = random.Random(0)
+    m = len(puzzles)
+    boots = sorted(sum(rng.choice(puzzles)["correct"] for _ in range(m)) / (m * n) for _ in range(2000))
+    return {"n_puzzles": m, "per_attempt_accuracy": sum(p["correct"] for p in puzzles) / (m * n),
+            "ci95": [boots[50], boots[1949]], "greedy_accuracy": sum(p["greedy"] for p in puzzles) / m,
+            "pass_at_k": {str(k): sum(pass_at_k(n, p["correct"], k) for p in puzzles) / m for k in KS},
+            "mean_tokens": sum(p["tokens"] for p in puzzles) / m}
 
 
 # ---------------------------------------------------------------- costs

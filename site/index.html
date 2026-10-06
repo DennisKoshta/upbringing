@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Upbringing</title>
-<meta name="description" content="An interactive tour of LLM post-training: watch SFT and DPO turn a base model into an assistant, shape a model with your own preferences, and watch reasoning emerge under RL from a verifier.">
-<meta property="og:title" content="Upbringing: watch a language model being raised">
-<meta property="og:description" content="SFT and DPO on OLMo-2 1B, live preference tuning, and RLVR on Qwen2.5-3B, checkpoint by checkpoint.">
+<meta name="description" content="An interactive look at how AI assistants are trained, using real training runs on open models: training on examples, learning from preferences, and learning from a checker.">
+<meta property="og:title" content="Upbringing: how a language model is trained, step by step">
+<meta property="og:description" content="Real training runs on open models, checkpoint by checkpoint: training on examples, learning from preferences, and learning from a checker.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -16,10 +16,10 @@
 <body>
 <header class="topbar" id="top">
   <a class="brand" href="#top">Upbringing</a>
-  <nav class="chapters" aria-label="Chapters">
-    <a href="#act1" data-act="1"><span class="num">I</span><span class="lbl">Birth of an assistant</span></a>
-    <a href="#act2" data-act="2"><span class="num">II</span><span class="lbl">You are the reward model</span></a>
-    <a href="#act3" data-act="3"><span class="num">III</span><span class="lbl">The aha moment</span></a>
+  <nav class="chapters" aria-label="Sections">
+    <a href="#act1" data-act="1"><span class="num">1</span><span class="lbl">Training an assistant</span></a>
+    <a href="#act2" data-act="2"><span class="num">2</span><span class="lbl">Preferences</span></a>
+    <a href="#act3" data-act="3"><span class="num">3</span><span class="lbl">Learning from a checker</span></a>
     <a href="#methods" data-act="m"><span class="lbl">Methods</span></a>
   </nav>
   <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Toggle dark mode">
@@ -30,105 +30,120 @@
 <main>
 <!-- ============================================================ HERO -->
 <section class="hero">
-  <p class="kicker">An interactive tour of post-training</p>
+  <p class="kicker">How AI assistants are trained, using real training runs</p>
   <h1>Upbringing</h1>
-  <p class="deck">A base language model can't answer a question. It continues text. Post-training turns it into an
-    assistant, and then into something that reasons. Here you can watch that happen to real open models, one
-    checkpoint at a time, and then try shaping one yourself.</p>
+  <p class="deck">Before training, a language model can't answer a question. It only continues whatever text it's
+    given. <strong>Drag the slider</strong> to train one and see how its answer changes.</p>
 
-  <figure class="hero-clock" id="hero-clock" aria-live="polite">
-    <div class="clock-head">
-      <span class="clock-q">“Who are you?”</span>
-      <span class="clock-step" id="hero-step">base model</span>
+  <div class="demo" id="hero-demo">
+    <div class="demo-qs" id="hero-qs" role="tablist" aria-label="Question to ask"></div>
+    <div class="chat" aria-live="polite">
+      <div class="bubble user"><span class="who">You</span><span class="said" id="hero-q-text">Who are you?</span></div>
+      <div class="bubble model"><span class="who" id="hero-who">Model, untrained</span><span class="said" id="hero-answer"></span></div>
     </div>
-    <div class="clock-answer mono" id="hero-answer"></div>
-    <div class="clock-track" id="hero-track" aria-hidden="true"></div>
-    <figcaption>The same question, asked at successive checkpoints of our run. <a href="#act1">Scrub through it yourself ↓</a></figcaption>
-  </figure>
+    <div class="train">
+      <div class="train-track-wrap">
+        <input type="range" id="hero-range" min="0" max="0" value="0" step="1" aria-label="How much training">
+        <div class="train-fill" id="hero-fill" aria-hidden="true"></div>
+      </div>
+      <div class="train-labels" id="hero-stages" aria-hidden="true"></div>
+      <p class="drag-hint" id="hero-hint"><span aria-hidden="true">←</span> drag to train <span aria-hidden="true">→</span></p>
+    </div>
+  </div>
 
   <div class="act-cards">
     <a class="act-card a1" href="#act1">
-      <span class="act-num">I</span>
-      <span class="act-title">Birth of an assistant</span>
-      <span class="act-sub">SFT and DPO on OLMo-2 1B, following AI2's published recipe</span>
+      <span class="act-num">1</span>
+      <span class="act-title">Training an assistant</span>
+      <span class="act-sub">Scrub through a real training run and see where an assistant's habits come from.</span>
     </a>
     <a class="act-card a2" href="#act2">
-      <span class="act-num">II</span>
-      <span class="act-title">You are the reward model</span>
-      <span class="act-sub">Judge answers, see your implicit reward, watch DPO amplify a taste</span>
+      <span class="act-num">2</span>
+      <span class="act-title">Learning from preferences</span>
+      <span class="act-sub">Pick the better of two answers, and see what your picks would teach a model.</span>
     </a>
     <a class="act-card a3" href="#act3">
-      <span class="act-num">III</span>
-      <span class="act-title">The aha moment</span>
-      <span class="act-sub">GRPO with a programmatic checker: Qwen2.5-3B base learns Countdown puzzles</span>
+      <span class="act-num">3</span>
+      <span class="act-title">Learning from a checker</span>
+      <span class="act-sub">A model learns number puzzles from right/wrong feedback alone. Try one yourself.</span>
     </a>
   </div>
   <p class="byline">By <strong>Dennis Koshta</strong> · October 2026 ·
-    <a href="https://github.com/DennisKoshta/upbringing">Code on GitHub</a> ·
-    <span id="byline-cost">Total compute: under $100</span></p>
+    <a href="https://github.com/DennisKoshta/upbringing">Code on GitHub</a></p>
 </section>
 
-<!-- ============================================================ ACT I -->
+<!-- ============================================================ 1 -->
 <section class="act act1" id="act1" aria-labelledby="act1-title">
   <header class="act-head">
-    <p class="act-label">Act I</p>
-    <h2 id="act1-title">Birth of an assistant</h2>
-    <p class="lede">We take <strong>OLMo-2 1B</strong>, a fully open base model, and run AI2's published post-training
-      recipe on it: supervised fine-tuning (SFT) on hundreds of thousands of example conversations, then preference
-      tuning with DPO. We saved the model <span id="a1-nckpt">dozens of</span> times along the way. Pick a question
-      and drag through training.</p>
+    <p class="act-label">1</p>
+    <h2 id="act1-title">Training an assistant</h2>
+    <p class="lede">We trained a small open model, <strong>OLMo-2 1B</strong>, the way AI labs train assistants.
+      First it studied hundreds of thousands of example conversations
+      (<span class="term" data-t="sft">supervised fine-tuning</span>). Then it learned from pairs of answers where one
+      was marked better (<span class="term" data-t="dpo">preference tuning</span>). We saved a
+      <span class="term" data-t="checkpoint">snapshot</span> of the model <span id="a1-nckpt">dozens of</span> times along the way.</p>
+    <p class="howto">Pick a question, then drag through training.</p>
   </header>
 
   <div class="scrubber" id="a1-scrubber">
     <div class="scrub-row">
-      <button class="play" id="a1-play" type="button" aria-label="Play time-lapse">
+      <button class="play" id="a1-play" type="button" aria-label="Play">
         <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path class="i-play" d="M7 4l13 8-13 8z" fill="currentColor"/><g class="i-pause" fill="currentColor"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></g></svg>
       </button>
       <div class="scrub-track-wrap">
-        <input type="range" id="a1-range" min="0" max="0" value="0" step="1" aria-label="Training checkpoint">
+        <input type="range" id="a1-range" min="0" max="0" value="0" step="1" aria-label="Training progress">
         <div class="scrub-ticks" id="a1-ticks" aria-hidden="true"></div>
         <div class="scrub-stages" id="a1-stages" aria-hidden="true"></div>
       </div>
     </div>
-    <div class="scrub-readout"><span id="a1-ckpt-label">base model</span><span id="a1-ckpt-detail" class="muted"></span></div>
+    <div class="scrub-readout"><span id="a1-ckpt-label">untrained model</span><span id="a1-ckpt-detail" class="muted"></span></div>
   </div>
 
   <div class="prompt-chips" id="a1-prompts" role="tablist" aria-label="Question"></div>
 
   <figure class="panel answer-panel">
-    <div class="answer-head">
-      <span class="answer-prompt" id="a1-prompt-text"></span>
-      <span class="answer-meta muted" id="a1-answer-meta"></span>
+    <div class="chat compact">
+      <div class="bubble user"><span class="who">You</span><span class="said" id="a1-prompt-text"></span></div>
+      <div class="bubble model">
+        <span class="who" id="a1-who">Model</span>
+        <div class="answer mono" id="a1-answer" tabindex="0"></div>
+      </div>
     </div>
-    <div class="answer mono" id="a1-answer" tabindex="0"></div>
     <p class="moment" id="a1-moment" hidden></p>
     <figcaption>
       <span class="shade-key" aria-hidden="true"><i class="s0"></i><i class="s1"></i><i class="s2"></i><i class="s3"></i><i class="s4"></i></span>
-      Each token is shaded by how much more likely our model makes it than the base model did.
-      Hover or tap a token for the numbers.
+      Blue marks words that training made more likely than the untrained model would have (darker means a bigger
+      change). Hover or tap a word for the numbers.
     </figcaption>
   </figure>
 
+  <figure class="panel" id="a1-scores">
+    <h3 class="fig-title">How it scores on tests</h3>
+    <p class="fig-sub">At the point in training you've selected, compared with the untrained model and with AI2's
+      released model (the same recipe with a much bigger budget).</p>
+    <div class="scorecard" id="a1-scorecard"></div>
+  </figure>
+
   <div class="fig-grid">
-    <figure class="panel" id="a1-bench">
-      <h3 class="fig-title">What the benchmarks see</h3>
-      <p class="fig-sub">Instruction following (IFEval) and grade-school math (GSM8K), every checkpoint, with AI2's
-        released models for reference.</p>
-      <div class="chart" id="a1-bench-chart"></div>
-    </figure>
     <figure class="panel" id="a1-random">
-      <h3 class="fig-title">Where did the randomness go?</h3>
-      <p class="fig-sub">“Pick a random number between 1 and 100”, asked 300 times at this checkpoint.</p>
+      <h3 class="fig-title">Ask it for a random number</h3>
+      <div class="ask-row">
+        <button class="btn ask" id="a1-ask-number" type="button">Ask: “pick a random number from 1 to 100”</button>
+        <span class="ask-out mono" id="a1-number-out" aria-live="polite"></span>
+      </div>
       <div class="chart" id="a1-hist"></div>
       <p class="stat-line" id="a1-hist-stat"></p>
     </figure>
+    <figure class="panel" id="a1-jokes">
+      <h3 class="fig-title">Ask it for a joke</h3>
+      <div class="ask-row">
+        <button class="btn ask" id="a1-ask-joke" type="button">Ask: “tell me a joke”</button>
+      </div>
+      <p class="ask-joke" id="a1-joke-out" aria-live="polite"></p>
+      <div class="joke-list" id="a1-joke-list"></div>
+    </figure>
   </div>
-
-  <figure class="panel" id="a1-jokes">
-    <h3 class="fig-title">“Tell me a joke”, 300 times</h3>
-    <p class="fig-sub">The most common jokes at this checkpoint, by opening line.</p>
-    <div class="joke-list" id="a1-joke-list"></div>
-  </figure>
+  <p class="note">Answers to these questions are drawn from 300 real samples taken from the model at the selected point in training.</p>
 
   <details class="under-hood">
     <summary>Under the hood</summary>
@@ -136,139 +151,173 @@
   </details>
 </section>
 
-<!-- ============================================================ ACT II -->
+<!-- ============================================================ 2 -->
 <section class="act act2" id="act2" aria-labelledby="act2-title">
   <header class="act-head">
-    <p class="act-label">Act II</p>
-    <h2 id="act2-title">You are the reward model</h2>
-    <p class="lede">DPO learns from pairs: two answers to the same question, one marked better. Whoever does the
-      marking <em>is</em> the reward model, and the model will learn whatever they actually reward, which is not
-      always what they think they reward. Be that person for a minute.</p>
+    <p class="act-label">2</p>
+    <h2 id="act2-title">Learning from preferences</h2>
+    <p class="lede">To learn preferences, a model is shown two answers to the same question and told which one is
+      better. Whoever decides which is better shapes the model, including through tastes they don't know they have.
+      Try judging a few.</p>
   </header>
 
   <div class="panel judge" id="a2-judge">
     <div class="judge-intro" id="a2-intro">
-      <p class="judge-q">First: what makes an answer good, to you? <span class="muted">Pick up to two.</span></p>
+      <p class="judge-q">First, what makes an answer good to you? <span class="muted">Pick up to two.</span></p>
       <div class="chips" id="a2-stated"></div>
-      <button class="btn primary" id="a2-start" type="button">Start judging</button>
+      <button class="btn primary" id="a2-start" type="button">Start: judge 12 pairs</button>
     </div>
     <div class="judge-pair" id="a2-pair" hidden>
       <div class="judge-progress"><span id="a2-count"></span><div class="dots" id="a2-dots"></div></div>
       <p class="judge-prompt" id="a2-prompt"></p>
       <div class="pair-cols">
-        <button class="answer-card" id="a2-a" type="button"><span class="ac-label">A</span><span class="ac-text mono"></span></button>
-        <button class="answer-card" id="a2-b" type="button"><span class="ac-label">B</span><span class="ac-text mono"></span></button>
+        <button class="answer-card" id="a2-a" type="button"><span class="ac-label">Answer A</span><span class="ac-text mono"></span></button>
+        <button class="answer-card" id="a2-b" type="button"><span class="ac-label">Answer B</span><span class="ac-text mono"></span></button>
       </div>
-      <p class="hint muted">Click the better answer, or use ← and →. <button class="linkish" id="a2-finish" type="button" hidden>Reveal my reward model now</button></p>
+      <p class="hint muted">Click the better answer (or press ← / →). <button class="linkish" id="a2-finish" type="button" hidden>Show my results now</button></p>
     </div>
     <div class="judge-reveal" id="a2-reveal" hidden>
-      <h3 class="fig-title">Your implicit reward model</h3>
+      <h3 class="fig-title">What your choices reveal</h3>
       <p class="fig-sub" id="a2-reveal-sub"></p>
+      <div class="weights-axis" aria-hidden="true"><span>you picked less of it</span><span>you picked more of it</span></div>
       <div class="weights" id="a2-weights"></div>
       <p class="reveal-text" id="a2-reveal-text"></p>
       <button class="btn" id="a2-again" type="button">Judge again</button>
     </div>
   </div>
 
-  <h3 class="sub-head">Now let DPO learn a taste</h3>
-  <p class="body-text">Below, three simulated labelers with simple hidden rules each judged 16 fresh pairs per round
-    for 8 rounds. After every round, a LoRA DPO update ran on their picks: about 20 seconds per round on a laptop GPU.
-    Watch the model drift toward each labeler's taste, and watch the fitted reward model recover the hidden rule.</p>
+  <h3 class="sub-head">Training a model on one judge's picks</h3>
+  <p class="body-text">Here, simulated judges follow one simple rule each. Every round, a judge picks the better answer
+    in 16 new pairs, and the model is trained on those picks. Choose a judge and press <strong>Train a round</strong>.</p>
 
-  <div class="persona-tabs" id="a2-personas" role="tablist" aria-label="Labeler"></div>
-  <div class="scrubber compact" id="a2-scrubber">
-    <div class="scrub-row">
-      <button class="play" id="a2-play" type="button" aria-label="Play rounds">
-        <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path class="i-play" d="M7 4l13 8-13 8z" fill="currentColor"/><g class="i-pause" fill="currentColor"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></g></svg>
-      </button>
-      <div class="scrub-track-wrap">
-        <input type="range" id="a2-range" min="0" max="8" value="0" step="1" aria-label="DPO round">
-        <div class="scrub-ticks" id="a2-ticks" aria-hidden="true"></div>
-      </div>
-    </div>
-    <div class="scrub-readout"><span id="a2-round-label">before training</span><span id="a2-round-detail" class="muted"></span></div>
+  <div class="persona-tabs" id="a2-personas" role="tablist" aria-label="Judge"></div>
+  <div class="train-controls">
+    <button class="btn primary" id="a2-step" type="button">Train a round</button>
+    <button class="btn" id="a2-reset" type="button">Reset</button>
+    <div class="round-dots" id="a2-round-dots" aria-hidden="true"></div>
+    <span class="muted" id="a2-round-label">not trained yet</span>
   </div>
+
+  <figure class="panel answer-panel">
+    <div class="prompt-chips small" id="a2-probes" role="tablist" aria-label="Question"></div>
+    <div class="chat compact">
+      <div class="bubble user"><span class="who">You</span><span class="said" id="a2-probe-q"></span></div>
+      <div class="bubble model"><span class="who" id="a2-probe-who">Model</span><div class="answer mono" id="a2-probe-answer"></div></div>
+    </div>
+  </figure>
 
   <div class="fig-grid">
     <figure class="panel">
-      <h3 class="fig-title">How the model's answers drift</h3>
-      <p class="fig-sub">Average over answers to 24 held-out questions, after each round.</p>
+      <h3 class="fig-title">How its answers change</h3>
+      <p class="fig-sub">Averaged over answers to 24 questions the judge never saw. The judge's trait is in color.</p>
       <div class="multiples" id="a2-drift"></div>
     </figure>
     <figure class="panel">
-      <h3 class="fig-title">What the reward model recovers</h3>
-      <p class="fig-sub">Bradley–Terry fit to every choice so far. <span id="a2-rule"></span></p>
+      <h3 class="fig-title">What the picks reveal</h3>
+      <p class="fig-sub">Inferred only from the judge's choices so far, the same way as for your picks above.
+        <span id="a2-rule"></span></p>
+      <div class="weights-axis" aria-hidden="true"><span>picked less of it</span><span>picked more of it</span></div>
       <div class="weights" id="a2-recovered"></div>
     </figure>
   </div>
 
-  <figure class="panel answer-panel">
-    <div class="answer-head">
-      <div class="prompt-chips small" id="a2-probes" role="tablist" aria-label="Probe question"></div>
-    </div>
-    <div class="answer mono" id="a2-probe-answer"></div>
-    <figcaption id="a2-probe-caption">The model's answer to a fixed question after this round (greedy decoding).</figcaption>
-  </figure>
-
-  <p class="note">Live training from your own judgments is next: the same rounds, run on a GPU that wakes up when you
-    arrive. The replays above were generated by <a href="https://github.com/DennisKoshta/upbringing/blob/main/scripts/act2_replay.py">this script</a>.</p>
+  <details class="under-hood">
+    <summary>Under the hood</summary>
+    <ul>
+      <li>Each round: 16 new questions, two sampled answers each, the judge's pick, then a
+        <span class="term" data-t="lora">LoRA</span> <span class="term" data-t="dpo">DPO</span> update (β = 0.1, 3 epochs).
+        The reference model is the model at the start of the round (iterative DPO), so changes compound.</li>
+      <li>“What the picks reveal” is a <span class="term" data-t="bt">Bradley–Terry</span> fit: a logistic regression on the
+        differences between the two answers' traits. Traits are counted by simple rules (length in tokens, list items and
+        headers, hedge words, confident words, exclamation marks).</li>
+      <li>The replays use AI2's released SFT model as a stand-in until ours is finished. They were generated on a laptop GPU
+        (RTX 4060, about 100 seconds per round) by <a href="https://github.com/DennisKoshta/upbringing/blob/main/scripts/act2_replay.py">this script</a>.
+        Live training from your own picks is not built yet.</li>
+    </ul>
+  </details>
 </section>
 
-<!-- ============================================================ ACT III -->
+<!-- ============================================================ 3 -->
 <section class="act act3" id="act3" aria-labelledby="act3-title">
   <header class="act-head">
-    <p class="act-label">Act III</p>
-    <h2 id="act3-title">The aha moment</h2>
-    <p class="lede">Now there is no human at all. <strong>Qwen2.5-3B</strong>, a base model, gets arithmetic
-      puzzles (“make 48 from 10, 55 and 17”) and a programmatic checker: 1 point for a correct equation, 0.1 for a
-      well-formed answer, nothing else. Nothing tells it how to think. This is reinforcement learning from verifiable
-      rewards (RLVR) with GRPO: sample eight attempts per puzzle, reinforce the ones that beat their siblings.</p>
+    <p class="act-label">3</p>
+    <h2 id="act3-title">Learning from a checker</h2>
+    <p class="lede">No people this time. A model, <strong>Qwen2.5-3B</strong>, gets number puzzles and a program that
+      checks each answer (a <span class="term" data-t="verifier">verifier</span>). It gets a point for a right answer
+      and nothing else to go on. Nobody shows it how to solve them. This is
+      <span class="term" data-t="rl">reinforcement learning</span>: try, get checked, do more of what worked.</p>
   </header>
+
+  <div class="panel tryit" id="a3-tryit">
+    <h3 class="fig-title">Try one yourself</h3>
+    <p class="fig-sub">Use each number exactly once, with + − × ÷ and parentheses. Your answer goes through the same
+      checker the model gets.</p>
+    <p class="tryit-puzzle" id="a3-try-puzzle"></p>
+    <form class="tryit-row" id="a3-try-form" autocomplete="off">
+      <input class="mono" id="a3-try-input" type="text" placeholder="Type an equation, like (10 + 5) × 2" aria-label="Your equation">
+      <button class="btn primary" type="submit">Check</button>
+      <button class="btn" type="button" id="a3-try-new">Another puzzle</button>
+    </form>
+    <p class="tryit-result" id="a3-try-result" aria-live="polite"></p>
+  </div>
 
   <div class="kpis" id="a3-kpis"></div>
 
   <figure class="panel">
-    <h3 class="fig-title">Training, as it happened</h3>
-    <p class="fig-sub">Held-out accuracy is per attempt: 256 puzzles never used in training, 4 attempts each at
-      temperature 1, graded by the corrected checker (1,024 attempts per point; not pass@k). Training-puzzle accuracy,
-      answer length and behavior rates come from every rollout. Hover to read any step.</p>
+    <h3 class="fig-title">What changed during training</h3>
+    <p class="fig-sub" id="a3-curves-sub">Measured on puzzles it never practiced on. Hover any chart to read a value.</p>
     <div class="multiples wide" id="a3-curves"></div>
-  </figure>
-
-  <figure class="panel" id="a3-posthoc" hidden>
-    <h3 class="fig-title">Same puzzles, same budget</h3>
-    <p class="fig-sub" id="a3-posthoc-sub"></p>
-    <div class="fig-grid inner">
-      <div><h4 class="mini-title">Per-attempt accuracy, with 95% interval</h4><div class="chart" id="a3-acc-ci"></div></div>
-      <div><h4 class="mini-title">pass@k: at least one of k attempts correct</h4><div class="chart" id="a3-passk"></div></div>
-    </div>
-    <p class="stat-line" id="a3-posthoc-note"></p>
   </figure>
 
   <figure class="panel">
     <h3 class="fig-title">Follow one puzzle through training</h3>
-    <p class="fig-sub">Four attempts at the same held-out puzzle, sampled at each evaluation checkpoint.</p>
+    <p class="fig-sub">Four tries at the same puzzle at each point in training. As the puzzle prompt asks, it reasons
+      between &lt;think&gt; tags and gives its final answer between &lt;answer&gt; tags. Colored underlines mark how it talks.</p>
     <div class="prompt-chips small" id="a3-puzzles" role="tablist" aria-label="Puzzle"></div>
     <div class="scrubber compact" id="a3-scrubber">
       <div class="scrub-row">
-        <button class="play" id="a3-play" type="button" aria-label="Play through training">
+        <button class="play" id="a3-play" type="button" aria-label="Play">
           <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path class="i-play" d="M7 4l13 8-13 8z" fill="currentColor"/><g class="i-pause" fill="currentColor"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></g></svg>
         </button>
         <div class="scrub-track-wrap">
-          <input type="range" id="a3-range" min="0" max="0" value="0" step="1" aria-label="Training step">
+          <input type="range" id="a3-range" min="0" max="0" value="0" step="1" aria-label="Training progress">
           <div class="scrub-ticks" id="a3-ticks" aria-hidden="true"></div>
         </div>
       </div>
-      <div class="scrub-readout"><span id="a3-step-label">step 0</span><span id="a3-step-detail" class="muted"></span></div>
+      <div class="scrub-readout"><span id="a3-step-label">untrained</span><span id="a3-step-detail" class="muted"></span></div>
     </div>
     <div class="behavior-key" id="a3-key"></div>
     <div class="traces" id="a3-traces"></div>
   </figure>
 
+  <figure class="panel" id="a3-posthoc" hidden>
+    <h3 class="fig-title">Final exam: same puzzles, same number of tries</h3>
+    <p class="fig-sub" id="a3-posthoc-sub"></p>
+    <div class="fig-grid inner">
+      <div><h4 class="mini-title">Share of its answers that are right (bars show the uncertainty)</h4><div class="chart" id="a3-acc-ci"></div></div>
+      <div><h4 class="mini-title">Given several tries, how often is at least one right?</h4><div class="chart" id="a3-passk"></div></div>
+    </div>
+    <p class="stat-line" id="a3-posthoc-note"></p>
+  </figure>
+
   <figure class="panel exhibit" id="a3-bug">
-    <h3 class="fig-title">A grading bug, found and measured</h3>
+    <h3 class="fig-title">A bug we found in our own checker</h3>
     <div id="a3-bug-body"></div>
   </figure>
+
+  <details class="under-hood">
+    <summary>Under the hood</summary>
+    <ul>
+      <li>Algorithm: <span class="term" data-t="grpo">GRPO</span>. Each round samples 8 attempts for each of 32 puzzles and
+        reinforces attempts that score above their group's average. Reward: 1 for a correct equation, 0.1 for a well-formed
+        answer. Learning rate 1e-6, no KL penalty, 900 optimizer steps, full-parameter training on one H200.</li>
+      <li>Puzzles come from the Countdown dataset used by TinyZero. The last 256 are held out and never trained on; all 256
+        are solvable (checked by brute force). Accuracy during training uses those 256 puzzles × 4 tries at temperature 1
+        (1,024 answers per point).</li>
+      <li>“How it talks” counts phrases with simple patterns. It shows how the model phrases its reasoning, not whether
+        each check is valid.</li>
+    </ul>
+  </details>
 </section>
 
 <!-- ============================================================ METHODS -->
@@ -276,9 +325,9 @@
   <header class="act-head">
     <p class="act-label">Methods</p>
     <h2 id="methods-title">How this was made</h2>
-    <p class="lede">Everything here is reproducible from the <a href="https://github.com/DennisKoshta/upbringing">repo</a>:
-      one command per stage, unattended pipelines, and tests on the parts that decide correctness. Where we cut
-      corners to fit a $100 budget, it says so below.</p>
+    <p class="lede">For the technically curious. Everything here is reproducible from the
+      <a href="https://github.com/DennisKoshta/upbringing">repo</a>, and every place we cut corners to fit the compute
+      budget is listed below.</p>
   </header>
   <div id="methods-body"></div>
 </section>

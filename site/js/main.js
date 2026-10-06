@@ -3,6 +3,7 @@ import { initAct1 } from "./act1.js";
 import { initAct2 } from "./act2.js";
 import { initAct3 } from "./act3.js";
 import { initMethods } from "./methods.js";
+import { initGlossary } from "./glossary.js";
 
 // ---------------------------------------------------------------- theme
 const root = document.documentElement;
@@ -37,3 +38,4 @@ const lazy = new IntersectionObserver((entries) => {
 }, { rootMargin: "800px 0px" });
 Object.keys(inits).forEach((id) => lazy.observe(document.getElementById(id)));
 initHero().catch((err) => console.error("hero", err));
+initGlossary();

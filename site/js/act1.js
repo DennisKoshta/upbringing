@@ -1,8 +1,14 @@
-// Act I: one training clock (the scrubber) drives the answer, the benchmark cursor, the histogram and the jokes.
-import { chips, el, hideTip, lineChart, load, pct, scrubber, showTip, tableToggle, tipRow } from "./lib.js";
-import { ckptDetail, ckptName, visibleTokens } from "./ckpt.js";
+// Section 1: one training clock (the scrubber) drives the answer, the scorecard, the random-number histogram and the
+// jokes. "Ask" buttons draw from the 300 real samples taken at the selected checkpoint.
+import { chips, el, hideTip, load, pct, scrubber, showTip, tableToggle, tipRow } from "./lib.js";
+import { ckptDetail, ckptName, ckptShort, visibleTokens } from "./ckpt.js";
+import { initGlossary } from "./glossary.js";
 
-const SHADE_FULL = 8; // nats: a token 3000x more likely than under the base model gets the full shade
+const SHADE_FULL = 8; // nats: a token ~3000x more likely than under the untrained model gets the full shade
+const TESTS = [
+  { key: "ifeval", name: "Follows precise instructions", term: "ifeval", label: "IFEval" },
+  { key: "gsm8k", name: "Solves math word problems", term: "gsm8k", label: "GSM8K" },
+];
 
 export async function initAct1() {
   const data = await load("act1/checkpoints.json");
@@ -10,6 +16,7 @@ export async function initAct1() {
   const moments = (await load("act1/moments.json")) || [];
   const ckpts = data.checkpoints;
   const refs = data.references;
+  const ai2 = refs.find((r) => r.id === "ai2-dpo") || refs[0];
   const n = ckpts.length;
   const lastSft = Math.max(0, ...ckpts.filter((c) => c.stage === "sft").map((c) => c.step));
   document.getElementById("a1-nckpt").textContent = String(n - 1);
@@ -20,11 +27,11 @@ export async function initAct1() {
   // ---------------------------------------------------------- scrubber
   const stages = document.getElementById("a1-stages");
   const firstOf = (s) => ckpts.findIndex((c) => c.stage === s);
-  [["base", 0], ["SFT", firstOf("sft")], ["DPO", firstOf("dpo")]].forEach(([label, i]) => {
+  [["examples", firstOf("sft")], ["preferences", firstOf("dpo")]].forEach(([label, i]) => {
     if (i < 0) return;
     const x = (i / Math.max(n - 1, 1)) * 100;
-    if (label !== "base") el("b", { style: `left:${x}%` }, stages);
-    el("span", { style: `left:${label === "base" ? 0 : x + 4}%`, text: label === "base" ? "" : label }, stages);
+    el("b", { style: `left:${x}%` }, stages);
+    el("span", { style: `left:${Math.min(x + 6, 94)}%`, text: label }, stages);
   });
   const momentIdx = () => moments.filter((m) => m.prompt === prompt).map((m) => ckpts.findIndex((c) => c.id === m.ckpt)).filter((i) => i >= 0);
   let scrub = makeScrub();
@@ -45,119 +52,137 @@ export async function initAct1() {
     onSelect: (i) => {
       prompt = i;
       const r = document.getElementById("a1-range");
-      const clone = r.cloneNode(true); // drop old listeners so ticks/moments rebuild for this prompt
-      r.replaceWith(clone);
+      r.replaceWith(r.cloneNode(true)); // drop old listeners so the moment ticks rebuild for this prompt
       const p = document.getElementById("a1-play");
-      const pc = p.cloneNode(true);
-      p.replaceWith(pc);
+      p.replaceWith(p.cloneNode(true));
       scrub = makeScrub();
       scrub.set(idx);
     },
   });
 
-  // ---------------------------------------------------------- benchmark chart
-  const benchEl = document.getElementById("a1-bench-chart");
-  const refGap = Math.max(1, n * 0.07);
-  const refX = (j) => n + 0.4 + (j + 0.5) * refGap;
-  const xTicks = [{ v: 0, label: "base", anchor: "start" }];
-  const sftEnd = ckpts.map((c, i) => [c, i]).filter(([c]) => c.stage === "sft").pop();
-  const dpoEnd = ckpts.map((c, i) => [c, i]).filter(([c]) => c.stage === "dpo").pop();
-  if (sftEnd) xTicks.push({ v: sftEnd[1], label: `SFT ${sftEnd[0].step.toLocaleString("en-US")}` });
-  if (dpoEnd) xTicks.push({ v: dpoEnd[1], label: `DPO ${dpoEnd[0].step}` });
-  const regions = [];
-  if (firstOf("sft") >= 0) regions.push({ x0: firstOf("sft") - 0.5, x1: (sftEnd ? sftEnd[1] : n - 1) + 0.5, label: "SFT" });
-  if (firstOf("dpo") >= 0) regions.push({ x0: firstOf("dpo") - 0.5, x1: n - 0.5, label: "DPO" });
-  const bench = lineChart(benchEl, {
-    height: 240,
-    margin: { left: 36, right: 14, bottom: 58 },
-    x: { min: -0.5, max: n + 0.4 + refs.length * refGap, ticks: xTicks },
-    y: { min: 0, max: 0.8, ticks: [0, 0.2, 0.4, 0.6, 0.8], fmt: (v) => pct(v), tipFmt: (v) => pct(v, 1) },
-    regions,
-    legend: true,
-    series: [
-      { id: "ifeval", name: "IFEval (instruction following)", color: "var(--s1)", points: ckpts.map((c, i) => [i, c.ifeval]) },
-      { id: "gsm8k", name: "GSM8K (math word problems)", color: "var(--s2)", points: ckpts.map((c, i) => [i, c.gsm8k]) },
-    ],
-    refs: refs.flatMap((r, j) => [
-      { x: refX(j), y: r.ifeval, color: "var(--s1)", label: `${r.name}, IFEval` },
-      { x: refX(j), y: r.gsm8k, color: "var(--s2)", label: `${r.name}, GSM8K` },
-    ]),
-    refLabels: refs.map((r, j) => ({ x: refX(j), label: r.name.replace(" (SFT+DPO+RLVR)", "") })),
-    xLabel: (x) => (x < n ? ckptName(ckpts[Math.round(x)]) : refs.find((r, j) => Math.abs(refX(j) - x) < 1e-6)?.name || ""),
-    snap: 0.01,
-    cursor: 0,
-    onClick: (x) => { if (x < n) scrub.set(Math.round(x), true); },
-    ariaLabel: "IFEval and GSM8K accuracy at every checkpoint",
+  // ---------------------------------------------------------- scorecard
+  const card = document.getElementById("a1-scorecard");
+  const base = ckpts[0];
+  const rows = TESTS.map((t) => {
+    const row = el("div", { class: "score" }, card);
+    const head = el("div", { class: "score-head" }, row);
+    const nm = el("span", { class: "score-name" }, head);
+    nm.append(t.name + " ");
+    el("span", { class: "term", "data-t": t.term, text: t.label }, nm);
+    const val = el("span", { class: "score-val" }, head);
+    const track = el("div", { class: "score-track" }, row);
+    const fill = el("i", { class: "score-fill" }, track);
+    const mk = (v, cls, label) => {
+      const m = el("span", { class: `score-mark ${cls}`, style: `left:${v * 100}%` }, track);
+      el("span", { class: "score-mark-label", text: label }, m);
+    };
+    mk(base[t.key], "base", `untrained ${pct(base[t.key])}`);
+    if (ai2) mk(ai2[t.key], "ref", `AI2's model ${pct(ai2[t.key])}`);
+    const spark = el("div", { class: "spark", title: "Trend over training (click to jump)" }, row);
+    return { t, val, fill, spark };
   });
-  tableToggle(document.getElementById("a1-bench"), () => ({
-    head: ["Checkpoint", "IFEval", "GSM8K"],
+  initGlossary(card);
+
+  function drawScores() {
+    rows.forEach(({ t, val, fill, spark }) => {
+      const c = ckpts[idx];
+      val.textContent = pct(c[t.key]);
+      fill.style.width = `${c[t.key] * 100}%`;
+      drawSpark(spark, ckpts.map((k) => k[t.key]), idx, (i) => scrub.set(i, true));
+    });
+  }
+  tableToggle(document.getElementById("a1-scores"), () => ({
+    head: ["Snapshot", "Instructions (IFEval)", "Math (GSM8K)"],
     rows: ckpts.map((c) => [ckptName(c), pct(c.ifeval, 1), pct(c.gsm8k, 1)]).concat(refs.map((r) => [r.name, pct(r.ifeval, 1), pct(r.gsm8k, 1)])),
   }));
 
-  // ---------------------------------------------------------- histogram
+  // ---------------------------------------------------------- random numbers
   const histEl = document.getElementById("a1-hist");
-  const yMax = Math.max(...ckpts.concat(refs).map((c) => Math.max(0, ...Object.values(c.number.hist || {}))));
-  const histTable = tableToggle(document.getElementById("a1-random"), () => {
-    const c = ckpts[idx];
-    return { head: ["Number", "Times picked"], rows: Object.entries(c.number.hist || {}).sort((a, b) => b[1] - a[1]).map(([k, v]) => [k, String(v)]) };
-  });
-
+  const yMax = Math.max(...ckpts.map((c) => Math.max(0, ...Object.values(c.number.hist || {}))));
+  let lastDraw = null;
   function drawHist(c) {
     histEl.replaceChildren();
     const width = Math.max(histEl.clientWidth, 260);
-    const height = 170;
-    const m = { top: 18, right: 6, bottom: 22, left: 6 };
+    const height = 160;
+    const m = { top: 18, right: 4, bottom: 22, left: 4 };
     const W = width - m.left - m.right;
     const H = height - m.top - m.bottom;
-    const svg = el("svg", { viewBox: `0 0 ${width} ${height}`, role: "img", "aria-label": "Histogram of numbers picked" }, histEl);
+    const svg = el("svg", { viewBox: `0 0 ${width} ${height}`, role: "img", "aria-label": "How often each number was picked" }, histEl);
     const bw = W / 100;
     const hist = c.number.hist || {};
+    const fair = c.number.valid / 100;
     el("line", { x1: m.left, x2: m.left + W, y1: m.top + H, y2: m.top + H, stroke: "var(--axis)" }, svg);
     for (let v = 1; v <= 100; v++) {
       const count = hist[v] || 0;
       const h = (count / yMax) * H;
       const x = m.left + (v - 1) * bw;
+      const hot = v === 42 || v === lastDraw;
       if (count) {
         el("rect", {
-          x: x + Math.min(1, bw * 0.15), y: m.top + H - h, width: Math.max(bw - Math.min(2, bw * 0.3), 1), height: h, rx: Math.min(2, bw / 3),
-          fill: v === 42 ? "var(--accent)" : "var(--gray-mark)",
+          x: x + Math.min(1, bw * 0.15), y: m.top + H - h, width: Math.max(bw - Math.min(2, bw * 0.3), 1), height: h,
+          rx: Math.min(2, bw / 3), fill: hot ? "var(--accent)" : "var(--gray-mark)",
         }, svg);
       }
       const hit = el("rect", { x, y: m.top, width: bw, height: H, fill: "transparent" }, svg);
-      hit.addEventListener("pointermove", (e) => showTip(e.clientX, e.clientY, (t) => tipRow(t, null, `${count} ×`, `picked ${v}`)));
+      hit.addEventListener("pointermove", (e) => showTip(e.clientX, e.clientY, (t) => tipRow(t, null, `${count} of ${c.number.valid}`, `answers were ${v}`)));
       hit.addEventListener("pointerleave", hideTip);
     }
+    // what a fair random picker would give: every number equally often
+    const fy = m.top + H - (fair / yMax) * H;
+    el("line", { x1: m.left, x2: m.left + W, y1: fy, y2: fy, stroke: "var(--ink-2)", "stroke-width": 1 }, svg);
+    el("text", { x: m.left + W, y: fy - 4, "text-anchor": "end", text: "a fair random pick", class: "label-ink" }, svg);
     [1, 25, 50, 75, 100].forEach((v) => el("text", { x: m.left + (v - 0.5) * bw, y: height - 6, "text-anchor": "middle", text: String(v) }, svg));
     const c42 = hist[42] || 0;
-    if (c42 > 0) {
-      el("text", { x: m.left + 41.5 * bw, y: m.top + H - (c42 / yMax) * H - 5, "text-anchor": "middle", text: `42 ×${c42}`, class: "label-strong" }, svg);
-    }
-    const top = Object.entries(hist).sort((a, b) => b[1] - a[1])[0];
+    if (c42 > 0) el("text", { x: m.left + 41.5 * bw, y: m.top + H - (c42 / yMax) * H - 5, "text-anchor": "middle", text: "42", class: "label-strong" }, svg);
+
     const stat = document.getElementById("a1-hist-stat");
     stat.replaceChildren();
     if (!c.number.valid) {
-      stat.textContent = "No valid numbers at this checkpoint.";
+      stat.textContent = "At this point it never answers with a number.";
       return;
     }
+    const top = Object.entries(hist).sort((a, b) => b[1] - a[1])[0];
     stat.append("Favorite: ");
-    el("b", { text: top ? top[0] : "–" }, stat);
-    stat.append(` (${top ? Math.round((top[1] / c.number.valid) * 100) : 0}% of answers) · `);
-    el("b", { text: String(c.number.distinct) }, stat);
-    stat.append(` distinct numbers in ${c.number.valid} valid answers · ${c.number.entropy.toFixed(1)} bits of entropy (uniform would be 6.6)`);
+    el("b", { text: top[0] }, stat);
+    stat.append(`, in ${Math.round((top[1] / c.number.valid) * 100)}% of answers. It used ${c.number.distinct} different numbers. ` +
+      "A fair random pick would give each number about 1%.");
+    if (c.number.valid < 280) stat.append(` (${300 - c.number.valid} of 300 answers weren't a number from 1 to 100.)`);
   }
   new ResizeObserver(() => drawHist(ckpts[idx])).observe(histEl);
+  document.getElementById("a1-ask-number").addEventListener("click", () => {
+    const c = ckpts[idx];
+    const out = document.getElementById("a1-number-out");
+    let r = Math.random() * 300;
+    lastDraw = null;
+    for (const [v, count] of Object.entries(c.number.hist || {})) {
+      r -= count;
+      if (r < 0) { lastDraw = Number(v); break; }
+    }
+    if (lastDraw != null) out.textContent = String(lastDraw);
+    else {
+      const odd = (c.number.examples || []).filter((s) => !/^\s*\d{1,3}\s*$/.test(s));
+      out.textContent = odd.length ? `“${truncate(odd[Math.floor(Math.random() * odd.length)].trim(), 80)}”` : "(not a number)";
+    }
+    out.classList.remove("pop");
+    void out.offsetWidth;
+    out.classList.add("pop");
+    drawHist(c);
+  });
 
   // ---------------------------------------------------------- jokes
+  function jokeLine(raw, key) {
+    const line = (raw || "").split("\n").map((l) => l.trim()).find((l) => l && !/^(sure|of course|here'?s|okay|certainly|absolutely)\b/i.test(l));
+    return line || key;
+  }
   function drawJokes(c) {
     const list = document.getElementById("a1-joke-list");
     list.replaceChildren();
     const j = c.joke;
     const raws = j.top_raw || [];
-    j.top.slice(0, 5).forEach(([key, count], k) => {
+    j.top.slice(0, 4).forEach(([key, count], k) => {
       const row = el("div", { class: "joke" }, list);
-      const raw = (raws[k] || "").split("\n").find((l) => l.trim() && !/^(sure|of course|here'?s|okay|certainly)\b/i.test(l.trim())) || key;
-      el("span", { class: "jt", text: raw.length > 140 ? raw.slice(0, 140) + "…" : raw, title: raws[k] || key }, row);
-      el("span", { class: "jn", text: `${count} of ${j.valid}` }, row);
+      el("span", { class: "jt", text: truncate(jokeLine(raws[k], key), 110), title: raws[k] || key }, row);
+      el("span", { class: "jn", text: `${count}×` }, row);
       const bar = el("span", { class: "jb" }, row);
       el("i", { style: `width:${(count / Math.max(j.valid, 1)) * 100}%` }, bar);
     });
@@ -166,8 +191,27 @@ export async function initAct1() {
       summary = el("p", { class: "joke-summary" });
       list.after(summary);
     }
-    summary.textContent = `${j.distinct} different jokes in ${j.valid} tries.`;
+    summary.textContent = `Its most common jokes, above. ${j.distinct} different jokes in ${j.valid} tries.`;
   }
+  document.getElementById("a1-ask-joke").addEventListener("click", () => {
+    const j = ckpts[idx].joke;
+    const raws = j.top_raw || [];
+    let r = Math.random() * 300;
+    let text = null;
+    for (let k = 0; k < j.top.length; k++) {
+      r -= j.top[k][1];
+      if (r < 0) { text = raws[k] || null; break; } // without a verbatim sample, fall through to a random real one
+    }
+    if (!text) {
+      const ex = j.examples || [];
+      text = ex.length ? ex[Math.floor(Math.random() * ex.length)] : "";
+    }
+    const out = document.getElementById("a1-joke-out");
+    out.textContent = truncate(text.trim(), 320) || "(no joke)";
+    out.classList.remove("pop");
+    void out.offsetWidth;
+    out.classList.add("pop");
+  });
 
   // ---------------------------------------------------------- answer
   const answerEl = document.getElementById("a1-answer");
@@ -175,24 +219,22 @@ export async function initAct1() {
   async function drawAnswer() {
     const tl = await load(`act1/timelapse-${String(prompt).padStart(2, "0")}.json`);
     const c = ckpts[idx];
-    document.getElementById("a1-prompt-text").textContent = `“${data.prompts[prompt]}”`;
+    document.getElementById("a1-prompt-text").textContent = data.prompts[prompt];
+    document.getElementById("a1-who").textContent = `Model, ${ckptShort(c)}`;
     if (!tl) return;
     const frame = tl.frames.find((f) => f.id === c.id);
     answerEl.replaceChildren();
     if (!frame) return;
     const toks = visibleTokens(frame);
     const hasBase = frame.blp && frame.blp.length;
-    if (!frame.text.trim()) {
-      el("span", { class: "empty", text: "(It ends the turn without writing anything: no answer at all.)" }, answerEl);
-    }
+    if (!frame.text.trim()) el("span", { class: "empty", text: "(It ends its turn without writing anything.)" }, answerEl);
     toks.forEach(({ t, lp, blp }) => {
       const span = el("span", { class: "tok", text: t }, answerEl);
       if (hasBase && blp != null && c.stage !== "base") {
         const r = lp - blp;
         if (r > 0) span.style.backgroundColor = `rgba(var(--shade), ${(Math.min(r / SHADE_FULL, 1) * 0.55).toFixed(3)})`;
-        else if (r < -1) span.style.backgroundColor = `rgba(var(--shade-neg), ${(Math.min(-r / SHADE_FULL, 1) * 0.4).toFixed(3)})`;
       }
-      const show = (e) => showTip(e.clientX, e.clientY, (tt) => tokenTip(tt, t, lp, blp, c));
+      const show = (e) => showTip(e.clientX, e.clientY, (tt) => tokenTip(tt, t, lp, blp));
       span.addEventListener("pointermove", show);
       span.addEventListener("pointerleave", () => { if (pinned !== span) hideTip(); });
       span.addEventListener("click", (e) => {
@@ -201,9 +243,7 @@ export async function initAct1() {
         if (pinned) { span.classList.add("pinned"); show(e); } else hideTip();
       });
     });
-    if (frame.finish === "length") el("span", { class: "trunc", text: " … (cut off at 384 tokens)" }, answerEl);
-    const meta = document.getElementById("a1-answer-meta");
-    meta.textContent = `${toks.length} tokens${hasBase ? "" : " · shading appears once base-model scores are in"}`;
+    if (frame.finish === "length") el("span", { class: "trunc", text: " … (cut off)" }, answerEl);
     const m = moments.find((mm) => mm.prompt === prompt && mm.ckpt === c.id);
     const mEl = document.getElementById("a1-moment");
     mEl.hidden = !m;
@@ -214,9 +254,8 @@ export async function initAct1() {
     const c = ckpts[idx];
     document.getElementById("a1-ckpt-label").textContent = ckptName(c);
     document.getElementById("a1-ckpt-detail").textContent = ckptDetail(c, lastSft);
-    bench.setCursor(idx);
+    drawScores();
     drawHist(c);
-    histTable.refresh();
     drawJokes(c);
     drawAnswer();
   }
@@ -225,30 +264,49 @@ export async function initAct1() {
   const hood = document.getElementById("a1-hood");
   const ul = el("ul", {}, hood);
   [
-    "Base model: allenai/OLMo-2-0425-1B. Fully open: weights, pretraining data, and the exact post-training datasets.",
-    "SFT: AI2's 1B recipe (lr 3e-5, linear decay, 3% warmup, ~128 sequences per step, 4,096-token context), fp32 master weights with bf16 autocast, loss on assistant tokens only.",
-    "DPO: length-normalized DPO (AI2's dpo_norm, β = 5, lr 2.5e-6, 128 pairs per step) on a random subset of AI2's 1B preference mix.",
-    "Budget cuts: 58% of one SFT epoch (AI2 trained two) and 16% of the preference pairs.",
-    "Every checkpoint is answered greedily through the chat template, so the base model sees exactly what the assistant sees. Token shading is log p(checkpoint) − log p(base) for the token the checkpoint chose.",
-    "Benchmarks: IFEval prompt-level loose accuracy and 0-shot chain-of-thought GSM8K. Our harness scores AI2's DPO model at 66.4–67.1% on IFEval across two runs (AI2 reports 67.1%): it reproduces their evaluation, not their training.",
+    "Untrained model: allenai/OLMo-2-0425-1B. Fully open: weights, pretraining data, and the exact post-training datasets.",
+    "Example training (SFT): AI2's 1B recipe (lr 3e-5, linear decay, 3% warmup, ~128 sequences per step, 4,096-token context), fp32 master weights with bf16 autocast, loss on assistant tokens only. 6,500 steps, about 58% of one pass over the data (AI2 trained two passes).",
+    "Preference training (DPO): length-normalized DPO (AI2's dpo_norm, β = 5, lr 2.5e-6, 128 pairs per step) on 60,000 of AI2's 378,000 preference pairs.",
+    "Every snapshot answers greedily through the chat template, so the untrained model sees exactly what the assistant sees. Shading is log p(snapshot) − log p(untrained) for each token the snapshot chose.",
+    "Tests: IFEval (prompt-level loose accuracy, 541 prompts) and GSM8K (1,319 problems, 0-shot with step-by-step reasoning). Our harness scores AI2's DPO model at 66.4–67.1% on IFEval across two runs (AI2 reports 67.1%). That checks our evaluation, not our training.",
   ].forEach((t) => el("li", { text: t }, ul));
 
   promptChips.select(0);
-  window.addEventListener("act1:goto", (e) => { promptChips.select(e.detail.prompt || 0); scrub.set(e.detail.idx || 0, true); });
 }
 
-function tokenTip(t, tok, lp, blp, c) {
+function drawSpark(node, values, current, onPick) {
+  node.replaceChildren();
+  const width = Math.max(node.clientWidth, 200);
+  const height = 34;
+  const pad = 5;
+  const max = Math.max(...values, 0.01);
+  const x = (i) => pad + (i / Math.max(values.length - 1, 1)) * (width - 2 * pad);
+  const y = (v) => height - pad - (v / max) * (height - 2 * pad);
+  const svg = el("svg", { viewBox: `0 0 ${width} ${height}`, "aria-hidden": "true" }, node);
+  el("path", { d: values.map((v, i) => `${i ? "L" : "M"}${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(""), fill: "none", stroke: "var(--gray-mark)", "stroke-width": 1.5 }, svg);
+  el("circle", { cx: x(current), cy: y(values[current]), r: 4, fill: "var(--accent)", stroke: "var(--surface)", "stroke-width": 2 }, svg);
+  const hit = el("rect", { x: 0, y: 0, width, height, fill: "transparent", style: "cursor:pointer" }, svg);
+  hit.addEventListener("click", (e) => {
+    const r = svg.getBoundingClientRect();
+    const px = ((e.clientX - r.left) / r.width) * width;
+    onPick(Math.max(0, Math.min(values.length - 1, Math.round(((px - pad) / (width - 2 * pad)) * (values.length - 1)))));
+  });
+}
+
+function tokenTip(t, tok, lp, blp) {
   const shown = tok.replace(/\n/g, "⏎").replace(/ /g, "·");
   const row = el("div", { class: "row" }, t);
   el("span", { class: "tok-shown", text: shown }, row);
-  const p = Math.exp(lp);
-  el("div", { text: `${ckptName(c)}: p = ${fmtP(p)}` }, t);
+  el("div", { text: `chance the model wrote this here: ${fmtP(Math.exp(lp))}` }, t);
   if (blp != null) {
-    el("div", { class: "tl", text: `base model: p = ${fmtP(Math.exp(blp))}` }, t);
+    el("div", { class: "tl", text: `chance before training: ${fmtP(Math.exp(blp))}` }, t);
     const r = lp - blp;
     const ratio = Math.exp(Math.abs(r));
-    el("div", { class: "tv", text: r >= 0 ? `${fmtRatio(ratio)}× more likely` : `${fmtRatio(ratio)}× less likely` }, t);
+    if (ratio >= 1.5) el("div", { class: "tv", text: r >= 0 ? `${fmtRatio(ratio)}× more likely after training` : `${fmtRatio(ratio)}× less likely after training` }, t);
   }
 }
-const fmtP = (p) => (p >= 0.01 ? p.toFixed(2) : p.toExponential(1));
+const fmtP = (p) => (p >= 0.01 ? `${Math.round(p * 100)}%` : p >= 1e-4 ? `${(p * 100).toFixed(2)}%` : "under 0.01%");
 const fmtRatio = (r) => (r >= 100 ? Math.round(r).toLocaleString("en-US") : r >= 10 ? r.toFixed(0) : r.toFixed(1));
+function truncate(s, k) {
+  return s.length > k ? s.slice(0, k - 1).trimEnd() + "…" : s;
+}
