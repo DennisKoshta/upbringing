@@ -11,13 +11,13 @@ from upbringing.chat import load_tokenizer
 from upbringing.ckpt import make_callback
 
 DATASET = "allenai/olmo-2-0425-1b-preference-mix"
-N_PAIRS = 80_000
+N_PAIRS = 60_000
 EARLY_STEPS = [5, 10, 20, 35, 50, 75, 100, 150, 225, 350, 500]
 LATE_FRACTIONS = [0.25, 0.5, 0.75]
 
 
 def run_dpo(out_dir, sft_path, model=None, dataset=None, n_pairs=N_PAIRS, attn="kernels-community/flash-attn2",
-            per_device_batch=8, grad_accum=16, max_length=2048, max_steps=-1, num_proc=16, save_steps=200, **overrides):
+            per_device_batch=4, grad_accum=32, max_length=2048, max_steps=-1, num_proc=16, save_steps=200, **overrides):
     import torch
     from datasets import load_dataset
     from transformers import AutoModelForCausalLM
@@ -36,11 +36,19 @@ def run_dpo(out_dir, sft_path, model=None, dataset=None, n_pairs=N_PAIRS, attn="
         per_device_train_batch_size=per_device_batch, gradient_accumulation_steps=grad_accum,
         learning_rate=2.5e-6, lr_scheduler_type="linear", warmup_steps=0.1, weight_decay=0.0,
         loss_type=["sigmoid_norm"], beta=5.0, max_length=max_length, precompute_ref_log_probs=True,
+        padding_free=attn != "sdpa",  # flatten each micro-batch: pairs average ~650 tokens/side, padding wasted ~half
         bf16=True, gradient_checkpointing=True,
         logging_steps=5, save_strategy="steps", save_steps=save_steps, save_total_limit=1,
         dataset_num_proc=num_proc, seed=111, report_to="none",
     ), **overrides})
-    trainer = DPOTrainer(model=model, args=cfg, train_dataset=dataset, processing_class=tok,
+    class AutocastDPOTrainer(DPOTrainer):
+        # TRL precomputes reference log-probs in __init__, outside the bf16 autocast used for training; with fp32
+        # master weights that hands fp32 tensors to flash-attention. Use the same autocast as the training forward.
+        def _precompute_ref_logps(self, *args, **kwargs):
+            with torch.autocast("cuda", dtype=torch.bfloat16):
+                return super()._precompute_ref_logps(*args, **kwargs)
+
+    trainer = AutocastDPOTrainer(model=model, args=cfg, train_dataset=dataset, processing_class=tok,
                          callbacks=[make_callback(out_dir, EARLY_STEPS, LATE_FRACTIONS)])
     resume = sorted(glob.glob(os.path.join(cfg.output_dir, "checkpoint-*")))
     trainer.train(resume_from_checkpoint=resume[-1] if resume else None)

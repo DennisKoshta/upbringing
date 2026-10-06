@@ -1,0 +1,500 @@
+✓ Initialized. View run at 
+https://modal.com/apps/denniskoshta/main/ap-OsNXnfIVT8Rw3EfOsK8CmP
+✓ Created objects.
+├── ✓ Uploaded /home/dennis/projects/upbringing/train/act1.py
+├── ✓ Uploaded PythonPackage:upbringing
+├── ✓ Created Function sft.
+└── ✓ Created Function dpo.
+
+[1AFetching 6 files:   0%|          | 0/6 [00:00<?, ?it/s]
+[1AFetching 6 files: 100%|██████████| 6/6 [00:00<00:00, 833.69it/s]
+
+[1ALoading weights:   0%|          | 0/179 [00:00<?, ?it/s]
+[1ALoading weights:   1%|          | 1/179 [00:00<02:40,  1.11it/s]
+[1ALoading weights: 100%|██████████| 179/179 [00:00<00:00, 197.28it/s]
+[RANK 0] `padding_free=True` is temporarily unavailable after a refactor and is currently disabled. Falling back to standard padding (`padding_free=False`). This feature is planned to return in a future update; for now, please set `padding_free=False` explicitly.
+
+[1ADropping fully truncated examples from train dataset (num_proc=16):   0%|          | 0/2000 [00:00<?, ? examples/s]
+[1ADropping fully truncated examples from train dataset (num_proc=16):   6%|▋         | 125/2000 [00:01<00:23, 80.76 examples/s]
+[1ADropping fully truncated examples from train dataset (num_proc=16):  44%|████▍     | 875/2000 [00:01<00:01, 702.10 examples/s]Dropping fully truncated examples from train dataset (num_proc=16): 100%|██████████| 2000/2000 [00:01<00:00, 1086.89 examples/s]
+[RANK 0] Detected kernel version 4.19.0, which is below the recommended minimum of 5.5.0; this can cause the process to hang. It is recommended to upgrade the kernel to the minimum version or higher.
+
+[1AComputing reference log probs for train dataset:   0%|          | 0/491 [00:00<?, ?it/s]
+[1AComputing reference log probs for train dataset:   0%|          | 1/491 [00:02<18:45,  2.30s/it]
+[1AComputing reference log probs for train dataset:   0%|          | 2/491 [00:02<08:54,  1.09s/it]
+[1AComputing reference log probs for train dataset:   1%|          | 4/491 [00:02<03:58,  2.04it/s]
+[1AComputing reference log probs for train dataset:   1%|          | 6/491 [00:02<02:23,  3.37it/s]
+[1AComputing reference log probs for train dataset:   2%|▏         | 8/491 [00:03<01:42,  4.73it/s]
+[1AComputing reference log probs for train dataset:   2%|▏         | 9/491 [00:03<01:31,  5.28it/s]
+[1AComputing reference log probs for train dataset:   2%|▏         | 11/491 [00:03<01:09,  6.91it/s]
+[1AComputing reference log probs for train dataset:   3%|▎         | 13/491 [00:03<01:02,  7.67it/s]
+[1AComputing reference log probs for train dataset:   3%|▎         | 15/491 [00:03<01:01,  7.73it/s]
+[1AComputing reference log probs for train dataset:   3%|▎         | 16/491 [00:03<00:59,  7.94it/s]
+[1AComputing reference log probs for train dataset:   4%|▎         | 18/491 [00:04<00:53,  8.86it/s]
+[1AComputing reference log probs for train dataset:   4%|▍         | 19/491 [00:04<01:05,  7.20it/s]
+[1AComputing reference log probs for train dataset:   4%|▍         | 21/491 [00:04<00:53,  8.82it/s]
+[1AComputing reference log probs for train dataset:   5%|▍         | 23/491 [00:04<00:53,  8.80it/s]
+[1AComputing reference log probs for train dataset:   5%|▍         | 24/491 [00:04<00:56,  8.28it/s]
+[1AComputing reference log probs for train dataset:   5%|▌         | 25/491 [00:05<00:56,  8.28it/s]
+[1AComputing reference log probs for train dataset:   5%|▌         | 26/491 [00:05<00:54,  8.51it/s]
+[1AComputing reference log probs for train dataset:   5%|▌         | 27/491 [00:05<00:58,  7.97it/s]
+[1AComputing reference log probs for train dataset:   6%|▌         | 29/491 [00:05<00:51,  8.89it/s]
+[1AComputing reference log probs for train dataset:   6%|▌         | 30/491 [00:05<00:55,  8.28it/s]
+[1AComputing reference log probs for train dataset:   7%|▋         | 32/491 [00:05<00:46,  9.97it/s]
+[1AComputing reference log probs for train dataset:   7%|▋         | 34/491 [00:05<00:42, 10.85it/s]
+[1AComputing reference log probs for train dataset:   7%|▋         | 36/491 [00:06<00:39, 11.66it/s]
+[1AComputing reference log probs for train dataset:   8%|▊         | 38/491 [00:06<00:41, 10.98it/s]
+[1AComputing reference log probs for train dataset:   8%|▊         | 40/491 [00:06<00:36, 12.30it/s]
+[1AComputing reference log probs for train dataset:   9%|▊         | 42/491 [00:06<00:39, 11.34it/s]
+[1AComputing reference log probs for train dataset:   9%|▉         | 44/491 [00:06<00:41, 10.65it/s]
+[1AComputing reference log probs for train dataset:   9%|▉         | 46/491 [00:07<00:44, 10.02it/s]
+[1AComputing reference log probs for train dataset:  10%|▉         | 48/491 [00:07<00:47,  9.34it/s]
+[1AComputing reference log probs for train dataset:  10%|█         | 50/491 [00:07<00:46,  9.39it/s]
+[1AComputing reference log probs for train dataset:  10%|█         | 51/491 [00:07<00:49,  8.89it/s]
+[1AComputing reference log probs for train dataset:  11%|█         | 53/491 [00:07<00:44,  9.94it/s]
+[1AComputing reference log probs for train dataset:  11%|█         | 55/491 [00:07<00:40, 10.81it/s]
+[1AComputing reference log probs for train dataset:  12%|█▏        | 57/491 [00:08<00:38, 11.28it/s]
+[1AComputing reference log probs for train dataset:  12%|█▏        | 59/491 [00:08<00:39, 11.08it/s]
+[1AComputing reference log probs for train dataset:  12%|█▏        | 61/491 [00:08<00:44,  9.63it/s]
+[1AComputing reference log probs for train dataset:  13%|█▎        | 63/491 [00:08<00:47,  8.94it/s]
+[1AComputing reference log probs for train dataset:  13%|█▎        | 65/491 [00:09<00:48,  8.75it/s]
+[1AComputing reference log probs for train dataset:  14%|█▎        | 67/491 [00:09<00:47,  8.96it/s]
+[1AComputing reference log probs for train dataset:  14%|█▍        | 69/491 [00:09<00:42, 10.00it/s]
+[1AComputing reference log probs for train dataset:  14%|█▍        | 71/491 [00:09<00:47,  8.79it/s]
+[1AComputing reference log probs for train dataset:  15%|█▍        | 72/491 [00:09<00:48,  8.64it/s]
+[1AComputing reference log probs for train dataset:  15%|█▍        | 73/491 [00:09<00:50,  8.32it/s]
+[1AComputing reference log probs for train dataset:  15%|█▌        | 75/491 [00:10<00:43,  9.47it/s]
+[1AComputing reference log probs for train dataset:  15%|█▌        | 76/491 [00:10<00:43,  9.44it/s]
+[1AComputing reference log probs for train dataset:  16%|█▌        | 77/491 [00:10<00:44,  9.41it/s]
+[1AComputing reference log probs for train dataset:  16%|█▌        | 79/491 [00:10<00:39, 10.53it/s]
+[1AComputing reference log probs for train dataset:  16%|█▋        | 81/491 [00:10<00:42,  9.74it/s]
+[1AComputing reference log probs for train dataset:  17%|█▋        | 83/491 [00:10<00:38, 10.48it/s]
+[1AComputing reference log probs for train dataset:  17%|█▋        | 85/491 [00:11<00:42,  9.57it/s]
+[1AComputing reference log probs for train dataset:  18%|█▊        | 87/491 [00:11<00:43,  9.34it/s]
+[1AComputing reference log probs for train dataset:  18%|█▊        | 89/491 [00:11<00:40,  9.96it/s]
+[1AComputing reference log probs for train dataset:  19%|█▊        | 91/491 [00:11<00:39, 10.11it/s]
+[1AComputing reference log probs for train dataset:  19%|█▉        | 93/491 [00:11<00:38, 10.38it/s]
+[1AComputing reference log probs for train dataset:  19%|█▉        | 95/491 [00:12<00:41,  9.48it/s]
+[1AComputing reference log probs for train dataset:  20%|█▉        | 96/491 [00:12<00:43,  9.03it/s]
+[1AComputing reference log probs for train dataset:  20%|█▉        | 98/491 [00:12<00:40,  9.62it/s]
+[1AComputing reference log probs for train dataset:  20%|██        | 99/491 [00:12<00:42,  9.24it/s]
+[1AComputing reference log probs for train dataset:  20%|██        | 100/491 [00:12<00:43,  8.91it/s]
+[1AComputing reference log probs for train dataset:  21%|██        | 102/491 [00:12<00:45,  8.61it/s]
+[1AComputing reference log probs for train dataset:  21%|██        | 103/491 [00:13<00:45,  8.61it/s]
+[1AComputing reference log probs for train dataset:  21%|██        | 104/491 [00:13<00:43,  8.81it/s]
+[1AComputing reference log probs for train dataset:  21%|██▏       | 105/491 [00:13<00:47,  8.19it/s]
+[1AComputing reference log probs for train dataset:  22%|██▏       | 106/491 [00:13<00:45,  8.40it/s]
+[1AComputing reference log probs for train dataset:  22%|██▏       | 107/491 [00:13<00:46,  8.28it/s]
+[1AComputing reference log probs for train dataset:  22%|██▏       | 108/491 [00:13<00:44,  8.67it/s]
+[1AComputing reference log probs for train dataset:  22%|██▏       | 110/491 [00:13<00:43,  8.85it/s]
+[1AComputing reference log probs for train dataset:  23%|██▎       | 112/491 [00:14<00:42,  8.95it/s]
+[1AComputing reference log probs for train dataset:  23%|██▎       | 113/491 [00:14<00:41,  9.05it/s]
+[1AComputing reference log probs for train dataset:  23%|██▎       | 115/491 [00:14<00:42,  8.91it/s]
+[1AComputing reference log probs for train dataset:  24%|██▍       | 117/491 [00:14<00:37,  9.87it/s]
+[1AComputing reference log probs for train dataset:  24%|██▍       | 119/491 [00:14<00:34, 10.69it/s]
+[1AComputing reference log probs for train dataset:  25%|██▍       | 121/491 [00:15<00:36, 10.04it/s]
+[1AComputing reference log probs for train dataset:  25%|██▌       | 123/491 [00:15<00:40,  9.10it/s]
+[1AComputing reference log probs for train dataset:  25%|██▌       | 125/491 [00:15<00:36, 10.00it/s]
+[1AComputing reference log probs for train dataset:  26%|██▌       | 127/491 [00:15<00:36,  9.93it/s]
+[1AComputing reference log probs for train dataset:  26%|██▋       | 129/491 [00:15<00:39,  9.24it/s]
+[1AComputing reference log probs for train dataset:  27%|██▋       | 131/491 [00:16<00:38,  9.39it/s]
+[1AComputing reference log probs for train dataset:  27%|██▋       | 132/491 [00:16<00:39,  9.06it/s]
+[1AComputing reference log probs for train dataset:  27%|██▋       | 134/491 [00:16<00:33, 10.60it/s]
+[1AComputing reference log probs for train dataset:  28%|██▊       | 136/491 [00:16<00:33, 10.51it/s]
+[1AComputing reference log probs for train dataset:  28%|██▊       | 138/491 [00:16<00:34, 10.23it/s]
+[1AComputing reference log probs for train dataset:  29%|██▊       | 140/491 [00:17<00:39,  8.91it/s]
+[1AComputing reference log probs for train dataset:  29%|██▊       | 141/491 [00:17<00:41,  8.42it/s]
+[1AComputing reference log probs for train dataset:  29%|██▉       | 142/491 [00:17<00:41,  8.48it/s]
+[1AComputing reference log probs for train dataset:  29%|██▉       | 143/491 [00:17<00:39,  8.71it/s]
+[1AComputing reference log probs for train dataset:  29%|██▉       | 144/491 [00:17<00:38,  8.97it/s]
+[1AComputing reference log probs for train dataset:  30%|██▉       | 145/491 [00:17<00:41,  8.25it/s]
+[1AComputing reference log probs for train dataset:  30%|██▉       | 147/491 [00:17<00:36,  9.45it/s]
+[1AComputing reference log probs for train dataset:  30%|███       | 148/491 [00:17<00:36,  9.50it/s]
+[1AComputing reference log probs for train dataset:  31%|███       | 150/491 [00:18<00:34,  9.91it/s]
+[1AComputing reference log probs for train dataset:  31%|███       | 151/491 [00:18<00:36,  9.29it/s]
+[1AComputing reference log probs for train dataset:  31%|███       | 152/491 [00:18<00:40,  8.43it/s]
+[1AComputing reference log probs for train dataset:  31%|███       | 153/491 [00:18<00:38,  8.76it/s]
+[1AComputing reference log probs for train dataset:  32%|███▏      | 155/491 [00:18<00:30, 10.85it/s]
+[1AComputing reference log probs for train dataset:  32%|███▏      | 157/491 [00:18<00:30, 10.98it/s]
+[1AComputing reference log probs for train dataset:  32%|███▏      | 159/491 [00:18<00:30, 10.99it/s]
+[1AComputing reference log probs for train dataset:  33%|███▎      | 161/491 [00:19<00:28, 11.71it/s]
+[1AComputing reference log probs for train dataset:  33%|███▎      | 163/491 [00:19<00:34,  9.44it/s]
+[1AComputing reference log probs for train dataset:  34%|███▎      | 165/491 [00:19<00:35,  9.06it/s]
+[1AComputing reference log probs for train dataset:  34%|███▍      | 168/491 [00:19<00:27, 11.66it/s]
+[1AComputing reference log probs for train dataset:  35%|███▍      | 170/491 [00:20<00:31, 10.31it/s]
+[1AComputing reference log probs for train dataset:  35%|███▌      | 172/491 [00:20<00:31, 10.26it/s]
+[1AComputing reference log probs for train dataset:  35%|███▌      | 174/491 [00:20<00:29, 10.83it/s]
+[1AComputing reference log probs for train dataset:  36%|███▌      | 176/491 [00:20<00:27, 11.61it/s]
+[1AComputing reference log probs for train dataset:  36%|███▋      | 178/491 [00:20<00:27, 11.49it/s]
+[1AComputing reference log probs for train dataset:  37%|███▋      | 180/491 [00:21<00:31, 10.02it/s]
+[1AComputing reference log probs for train dataset:  37%|███▋      | 182/491 [00:21<00:33,  9.34it/s]
+[1AComputing reference log probs for train dataset:  37%|███▋      | 183/491 [00:21<00:35,  8.77it/s]
+[1AComputing reference log probs for train dataset:  38%|███▊      | 185/491 [00:21<00:31,  9.65it/s]
+[1AComputing reference log probs for train dataset:  38%|███▊      | 187/491 [00:21<00:30, 10.03it/s]
+[1AComputing reference log probs for train dataset:  38%|███▊      | 189/491 [00:21<00:27, 10.90it/s]
+[1AComputing reference log probs for train dataset:  39%|███▉      | 191/491 [00:22<00:30,  9.96it/s]
+[1AComputing reference log probs for train dataset:  39%|███▉      | 193/491 [00:22<00:29, 10.25it/s]
+[1AComputing reference log probs for train dataset:  40%|███▉      | 195/491 [00:22<00:32,  9.13it/s]
+[1AComputing reference log probs for train dataset:  40%|████      | 197/491 [00:22<00:29,  9.84it/s]
+[1AComputing reference log probs for train dataset:  41%|████      | 199/491 [00:22<00:29,  9.96it/s]
+[1AComputing reference log probs for train dataset:  41%|████      | 201/491 [00:23<00:29,  9.70it/s]
+[1AComputing reference log probs for train dataset:  41%|████▏     | 203/491 [00:23<00:30,  9.60it/s]
+[1AComputing reference log probs for train dataset:  42%|████▏     | 205/491 [00:23<00:27, 10.24it/s]
+[1AComputing reference log probs for train dataset:  42%|████▏     | 207/491 [00:23<00:26, 10.74it/s]
+[1AComputing reference log probs for train dataset:  43%|████▎     | 209/491 [00:23<00:24, 11.73it/s]
+[1AComputing reference log probs for train dataset:  43%|████▎     | 211/491 [00:24<00:23, 11.91it/s]
+[1AComputing reference log probs for train dataset:  43%|████▎     | 213/491 [00:24<00:27, 10.18it/s]
+[1AComputing reference log probs for train dataset:  44%|████▍     | 215/491 [00:24<00:30,  9.02it/s]
+[1AComputing reference log probs for train dataset:  44%|████▍     | 216/491 [00:24<00:31,  8.78it/s]
+[1AComputing reference log probs for train dataset:  44%|████▍     | 217/491 [00:24<00:33,  8.30it/s]
+[1AComputing reference log probs for train dataset:  44%|████▍     | 218/491 [00:24<00:32,  8.36it/s]
+[1AComputing reference log probs for train dataset:  45%|████▍     | 220/491 [00:25<00:27,  9.80it/s]
+[1AComputing reference log probs for train dataset:  45%|████▌     | 221/491 [00:25<00:30,  8.93it/s]
+[1AComputing reference log probs for train dataset:  45%|████▌     | 222/491 [00:25<00:31,  8.59it/s]
+[1AComputing reference log probs for train dataset:  46%|████▌     | 224/491 [00:25<00:28,  9.43it/s]
+[1AComputing reference log probs for train dataset:  46%|████▌     | 226/491 [00:25<00:24, 10.76it/s]
+[1AComputing reference log probs for train dataset:  46%|████▋     | 228/491 [00:25<00:22, 11.67it/s]
+[1AComputing reference log probs for train dataset:  47%|████▋     | 230/491 [00:25<00:21, 11.99it/s]
+[1AComputing reference log probs for train dataset:  47%|████▋     | 232/491 [00:26<00:24, 10.61it/s]
+[1AComputing reference log probs for train dataset:  48%|████▊     | 234/491 [00:26<00:27,  9.22it/s]
+[1AComputing reference log probs for train dataset:  48%|████▊     | 235/491 [00:26<00:27,  9.34it/s]
+[1AComputing reference log probs for train dataset:  48%|████▊     | 236/491 [00:26<00:28,  9.09it/s]
+[1AComputing reference log probs for train dataset:  48%|████▊     | 237/491 [00:26<00:27,  9.10it/s]
+[1AComputing reference log probs for train dataset:  48%|████▊     | 238/491 [00:26<00:27,  9.15it/s]
+[1AComputing reference log probs for train dataset:  49%|████▉     | 240/491 [00:27<00:25,  9.94it/s]
+[1AComputing reference log probs for train dataset:  49%|████▉     | 242/491 [00:27<00:22, 11.07it/s]
+[1AComputing reference log probs for train dataset:  50%|████▉     | 244/491 [00:27<00:25,  9.78it/s]
+[1AComputing reference log probs for train dataset:  50%|█████     | 246/491 [00:27<00:24, 10.06it/s]
+[1AComputing reference log probs for train dataset:  51%|█████     | 248/491 [00:27<00:24,  9.91it/s]
+[1AComputing reference log probs for train dataset:  51%|█████     | 250/491 [00:28<00:27,  8.89it/s]
+[1AComputing reference log probs for train dataset:  51%|█████     | 251/491 [00:28<00:28,  8.40it/s]
+[1AComputing reference log probs for train dataset:  52%|█████▏    | 253/491 [00:28<00:25,  9.47it/s]
+[1AComputing reference log probs for train dataset:  52%|█████▏    | 255/491 [00:28<00:23,  9.95it/s]
+[1AComputing reference log probs for train dataset:  52%|█████▏    | 257/491 [00:28<00:24,  9.62it/s]
+[1AComputing reference log probs for train dataset:  53%|█████▎    | 258/491 [00:29<00:26,  8.87it/s]
+[1AComputing reference log probs for train dataset:  53%|█████▎    | 259/491 [00:29<00:26,  8.70it/s]
+[1AComputing reference log probs for train dataset:  53%|█████▎    | 261/491 [00:29<00:22, 10.24it/s]
+[1AComputing reference log probs for train dataset:  54%|█████▎    | 263/491 [00:29<00:24,  9.28it/s]
+[1AComputing reference log probs for train dataset:  54%|█████▍    | 264/491 [00:29<00:24,  9.37it/s]
+[1AComputing reference log probs for train dataset:  54%|█████▍    | 266/491 [00:29<00:23,  9.63it/s]
+[1AComputing reference log probs for train dataset:  55%|█████▍    | 268/491 [00:29<00:19, 11.41it/s]
+[1AComputing reference log probs for train dataset:  55%|█████▍    | 270/491 [00:30<00:20, 10.83it/s]
+[1AComputing reference log probs for train dataset:  55%|█████▌    | 272/491 [00:30<00:24,  9.06it/s]
+[1AComputing reference log probs for train dataset:  56%|█████▌    | 274/491 [00:30<00:26,  8.18it/s]
+[1AComputing reference log probs for train dataset:  56%|█████▌    | 275/491 [00:30<00:27,  7.88it/s]
+[1AComputing reference log probs for train dataset:  56%|█████▋    | 277/491 [00:31<00:24,  8.86it/s]
+[1AComputing reference log probs for train dataset:  57%|█████▋    | 279/491 [00:31<00:20, 10.49it/s]
+[1AComputing reference log probs for train dataset:  57%|█████▋    | 281/491 [00:31<00:21,  9.84it/s]
+[1AComputing reference log probs for train dataset:  58%|█████▊    | 283/491 [00:31<00:20, 10.06it/s]
+[1AComputing reference log probs for train dataset:  58%|█████▊    | 285/491 [00:31<00:21,  9.61it/s]
+[1AComputing reference log probs for train dataset:  58%|█████▊    | 287/491 [00:32<00:23,  8.52it/s]
+[1AComputing reference log probs for train dataset:  59%|█████▉    | 289/491 [00:32<00:20,  9.85it/s]
+[1AComputing reference log probs for train dataset:  59%|█████▉    | 291/491 [00:32<00:20,  9.58it/s]
+[1AComputing reference log probs for train dataset:  60%|█████▉    | 293/491 [00:32<00:21,  9.31it/s]
+[1AComputing reference log probs for train dataset:  60%|█████▉    | 294/491 [00:32<00:22,  8.69it/s]
+[1AComputing reference log probs for train dataset:  60%|██████    | 295/491 [00:32<00:22,  8.86it/s]
+[1AComputing reference log probs for train dataset:  60%|██████    | 296/491 [00:33<00:23,  8.23it/s]
+[1AComputing reference log probs for train dataset:  60%|██████    | 297/491 [00:33<00:24,  7.79it/s]
+[1AComputing reference log probs for train dataset:  61%|██████    | 298/491 [00:33<00:25,  7.45it/s]
+[1AComputing reference log probs for train dataset:  61%|██████    | 300/491 [00:33<00:21,  8.87it/s]
+[1AComputing reference log probs for train dataset:  61%|██████▏   | 301/491 [00:33<00:22,  8.58it/s]
+[1AComputing reference log probs for train dataset:  62%|██████▏   | 302/491 [00:33<00:23,  7.97it/s]
+[1AComputing reference log probs for train dataset:  62%|██████▏   | 304/491 [00:34<00:19,  9.76it/s]
+[1AComputing reference log probs for train dataset:  62%|██████▏   | 305/491 [00:34<00:19,  9.62it/s]
+[1AComputing reference log probs for train dataset:  63%|██████▎   | 307/491 [00:34<00:16, 10.89it/s]
+[1AComputing reference log probs for train dataset:  63%|██████▎   | 309/491 [00:34<00:17, 10.19it/s]
+[1AComputing reference log probs for train dataset:  63%|██████▎   | 311/491 [00:34<00:17, 10.23it/s]
+[1AComputing reference log probs for train dataset:  64%|██████▎   | 313/491 [00:34<00:19,  9.00it/s]
+[1AComputing reference log probs for train dataset:  64%|██████▍   | 315/491 [00:35<00:17,  9.91it/s]
+[1AComputing reference log probs for train dataset:  65%|██████▍   | 317/491 [00:35<00:17, 10.00it/s]
+[1AComputing reference log probs for train dataset:  65%|██████▍   | 319/491 [00:35<00:18,  9.24it/s]
+[1AComputing reference log probs for train dataset:  65%|██████▌   | 321/491 [00:35<00:17,  9.75it/s]
+[1AComputing reference log probs for train dataset:  66%|██████▌   | 323/491 [00:35<00:17,  9.63it/s]
+[1AComputing reference log probs for train dataset:  66%|██████▌   | 325/491 [00:36<00:16, 10.37it/s]
+[1AComputing reference log probs for train dataset:  67%|██████▋   | 327/491 [00:36<00:17,  9.29it/s]
+[1AComputing reference log probs for train dataset:  67%|██████▋   | 328/491 [00:36<00:17,  9.11it/s]
+[1AComputing reference log probs for train dataset:  67%|██████▋   | 329/491 [00:36<00:18,  8.54it/s]
+[1AComputing reference log probs for train dataset:  67%|██████▋   | 331/491 [00:36<00:17,  9.12it/s]
+[1AComputing reference log probs for train dataset:  68%|██████▊   | 332/491 [00:37<00:18,  8.48it/s]
+[1AComputing reference log probs for train dataset:  68%|██████▊   | 333/491 [00:37<00:19,  7.98it/s]
+[1AComputing reference log probs for train dataset:  68%|██████▊   | 335/491 [00:37<00:17,  8.94it/s]
+[1AComputing reference log probs for train dataset:  69%|██████▊   | 337/491 [00:37<00:15, 10.09it/s]
+[1AComputing reference log probs for train dataset:  69%|██████▉   | 339/491 [00:37<00:15, 10.01it/s]
+[1AComputing reference log probs for train dataset:  69%|██████▉   | 341/491 [00:37<00:15,  9.75it/s]
+[1AComputing reference log probs for train dataset:  70%|██████▉   | 343/491 [00:38<00:14, 10.19it/s]
+[1AComputing reference log probs for train dataset:  70%|███████   | 345/491 [00:38<00:14,  9.97it/s]
+[1AComputing reference log probs for train dataset:  71%|███████   | 347/491 [00:38<00:16,  8.71it/s]
+[1AComputing reference log probs for train dataset:  71%|███████   | 349/491 [00:38<00:14,  9.98it/s]
+[1AComputing reference log probs for train dataset:  71%|███████▏  | 351/491 [00:38<00:14,  9.84it/s]
+[1AComputing reference log probs for train dataset:  72%|███████▏  | 353/491 [00:39<00:13,  9.89it/s]
+[1AComputing reference log probs for train dataset:  72%|███████▏  | 355/491 [00:39<00:13, 10.20it/s]
+[1AComputing reference log probs for train dataset:  73%|███████▎  | 357/491 [00:39<00:14,  9.26it/s]
+[1AComputing reference log probs for train dataset:  73%|███████▎  | 358/491 [00:39<00:15,  8.69it/s]
+[1AComputing reference log probs for train dataset:  73%|███████▎  | 360/491 [00:39<00:13,  9.94it/s]
+[1AComputing reference log probs for train dataset:  74%|███████▎  | 362/491 [00:40<00:14,  8.65it/s]
+[1AComputing reference log probs for train dataset:  74%|███████▍  | 363/491 [00:40<00:15,  8.21it/s]
+[1AComputing reference log probs for train dataset:  74%|███████▍  | 365/491 [00:40<00:13,  9.54it/s]
+[1AComputing reference log probs for train dataset:  75%|███████▍  | 367/491 [00:40<00:12,  9.95it/s]
+[1AComputing reference log probs for train dataset:  75%|███████▌  | 369/491 [00:40<00:12,  9.47it/s]
+[1AComputing reference log probs for train dataset:  75%|███████▌  | 370/491 [00:41<00:12,  9.40it/s]
+[1AComputing reference log probs for train dataset:  76%|███████▌  | 372/491 [00:41<00:11, 10.71it/s]
+[1AComputing reference log probs for train dataset:  76%|███████▌  | 374/491 [00:41<00:12,  9.37it/s]
+[1AComputing reference log probs for train dataset:  76%|███████▋  | 375/491 [00:41<00:13,  8.90it/s]
+[1AComputing reference log probs for train dataset:  77%|███████▋  | 376/491 [00:41<00:13,  8.49it/s]
+[1AComputing reference log probs for train dataset:  77%|███████▋  | 378/491 [00:41<00:12,  9.17it/s]
+[1AComputing reference log probs for train dataset:  77%|███████▋  | 379/491 [00:41<00:12,  9.20it/s]
+[1AComputing reference log probs for train dataset:  77%|███████▋  | 380/491 [00:42<00:13,  8.49it/s]
+[1AComputing reference log probs for train dataset:  78%|███████▊  | 382/491 [00:42<00:11,  9.69it/s]
+[1AComputing reference log probs for train dataset:  78%|███████▊  | 383/491 [00:42<00:11,  9.00it/s]
+[1AComputing reference log probs for train dataset:  78%|███████▊  | 385/491 [00:42<00:11,  9.48it/s]
+[1AComputing reference log probs for train dataset:  79%|███████▉  | 388/491 [00:42<00:08, 12.37it/s]
+[1AComputing reference log probs for train dataset:  79%|███████▉  | 390/491 [00:42<00:08, 11.28it/s]
+[1AComputing reference log probs for train dataset:  80%|███████▉  | 392/491 [00:43<00:08, 11.49it/s]
+[1AComputing reference log probs for train dataset:  80%|████████  | 394/491 [00:43<00:09, 10.11it/s]
+[1AComputing reference log probs for train dataset:  81%|████████  | 396/491 [00:43<00:09,  9.73it/s]
+[1AComputing reference log probs for train dataset:  81%|████████  | 398/491 [00:43<00:10,  8.98it/s]
+[1AComputing reference log probs for train dataset:  81%|████████▏ | 400/491 [00:44<00:09,  9.73it/s]
+[1AComputing reference log probs for train dataset:  82%|████████▏ | 402/491 [00:44<00:09,  9.38it/s]
+[1AComputing reference log probs for train dataset:  82%|████████▏ | 404/491 [00:44<00:09,  9.15it/s]
+[1AComputing reference log probs for train dataset:  83%|████████▎ | 406/491 [00:44<00:08,  9.80it/s]
+[1AComputing reference log probs for train dataset:  83%|████████▎ | 408/491 [00:44<00:08,  9.83it/s]
+[1AComputing reference log probs for train dataset:  84%|████████▎ | 410/491 [00:45<00:08,  9.46it/s]
+[1AComputing reference log probs for train dataset:  84%|████████▎ | 411/491 [00:45<00:08,  8.99it/s]
+[1AComputing reference log probs for train dataset:  84%|████████▍ | 413/491 [00:45<00:07, 10.24it/s]
+[1AComputing reference log probs for train dataset:  85%|████████▍ | 415/491 [00:45<00:06, 10.88it/s]
+[1AComputing reference log probs for train dataset:  85%|████████▍ | 417/491 [00:45<00:06, 11.37it/s]
+[1AComputing reference log probs for train dataset:  85%|████████▌ | 419/491 [00:46<00:07,  9.33it/s]
+[1AComputing reference log probs for train dataset:  86%|████████▌ | 421/491 [00:46<00:07,  8.92it/s]
+[1AComputing reference log probs for train dataset:  86%|████████▌ | 422/491 [00:46<00:07,  8.74it/s]
+[1AComputing reference log probs for train dataset:  86%|████████▌ | 423/491 [00:46<00:08,  8.36it/s]
+[1AComputing reference log probs for train dataset:  87%|████████▋ | 425/491 [00:46<00:07,  9.08it/s]
+[1AComputing reference log probs for train dataset:  87%|████████▋ | 426/491 [00:46<00:07,  8.94it/s]
+[1AComputing reference log probs for train dataset:  87%|████████▋ | 427/491 [00:46<00:07,  8.81it/s]
+[1AComputing reference log probs for train dataset:  87%|████████▋ | 428/491 [00:47<00:07,  8.67it/s]
+[1AComputing reference log probs for train dataset:  87%|████████▋ | 429/491 [00:47<00:07,  8.20it/s]
+[1AComputing reference log probs for train dataset:  88%|████████▊ | 430/491 [00:47<00:07,  7.67it/s]
+[1AComputing reference log probs for train dataset:  88%|████████▊ | 431/491 [00:47<00:08,  7.32it/s]
+[1AComputing reference log probs for train dataset:  88%|████████▊ | 433/491 [00:47<00:07,  8.26it/s]
+[1AComputing reference log probs for train dataset:  88%|████████▊ | 434/491 [00:47<00:06,  8.22it/s]
+[1AComputing reference log probs for train dataset:  89%|████████▉ | 436/491 [00:48<00:06,  8.92it/s]
+[1AComputing reference log probs for train dataset:  89%|████████▉ | 438/491 [00:48<00:05,  9.16it/s]
+[1AComputing reference log probs for train dataset:  90%|████████▉ | 440/491 [00:48<00:05,  9.32it/s]
+[1AComputing reference log probs for train dataset:  90%|████████▉ | 441/491 [00:48<00:05,  9.27it/s]
+[1AComputing reference log probs for train dataset:  90%|█████████ | 442/491 [00:48<00:05,  8.56it/s]
+[1AComputing reference log probs for train dataset:  90%|█████████ | 444/491 [00:48<00:05,  8.93it/s]
+[1AComputing reference log probs for train dataset:  91%|█████████ | 445/491 [00:49<00:05,  9.08it/s]
+[1AComputing reference log probs for train dataset:  91%|█████████ | 446/491 [00:49<00:05,  8.89it/s]
+[1AComputing reference log probs for train dataset:  91%|█████████ | 447/491 [00:49<00:04,  8.88it/s]
+[1AComputing reference log probs for train dataset:  91%|█████████ | 448/491 [00:49<00:04,  9.03it/s]
+[1AComputing reference log probs for train dataset:  91%|█████████▏| 449/491 [00:49<00:05,  8.27it/s]
+[1AComputing reference log probs for train dataset:  92%|█████████▏| 451/491 [00:49<00:03, 10.48it/s]
+[1AComputing reference log probs for train dataset:  92%|█████████▏| 453/491 [00:49<00:04,  9.03it/s]
+[1AComputing reference log probs for train dataset:  93%|█████████▎| 455/491 [00:50<00:03, 10.01it/s]
+[1AComputing reference log probs for train dataset:  93%|█████████▎| 457/491 [00:50<00:03,  9.74it/s]
+[1AComputing reference log probs for train dataset:  93%|█████████▎| 459/491 [00:50<00:03,  9.45it/s]
+[1AComputing reference log probs for train dataset:  94%|█████████▎| 460/491 [00:50<00:03,  9.38it/s]
+[1AComputing reference log probs for train dataset:  94%|█████████▍| 461/491 [00:50<00:03,  9.43it/s]
+[1AComputing reference log probs for train dataset:  94%|█████████▍| 463/491 [00:50<00:03,  9.32it/s]
+[1AComputing reference log probs for train dataset:  95%|█████████▍| 465/491 [00:51<00:02,  9.73it/s]
+[1AComputing reference log probs for train dataset:  95%|█████████▌| 467/491 [00:51<00:02, 10.99it/s]
+[1AComputing reference log probs for train dataset:  96%|█████████▌| 469/491 [00:51<00:01, 11.02it/s]
+[1AComputing reference log probs for train dataset:  96%|█████████▌| 471/491 [00:51<00:01, 11.16it/s]
+[1AComputing reference log probs for train dataset:  96%|█████████▋| 473/491 [00:51<00:01, 10.75it/s]
+[1AComputing reference log probs for train dataset:  97%|█████████▋| 475/491 [00:52<00:01,  9.91it/s]
+[1AComputing reference log probs for train dataset:  97%|█████████▋| 477/491 [00:52<00:01,  9.04it/s]
+[1AComputing reference log probs for train dataset:  97%|█████████▋| 478/491 [00:52<00:01,  8.56it/s]
+[1AComputing reference log probs for train dataset:  98%|█████████▊| 479/491 [00:52<00:01,  8.32it/s]
+[1AComputing reference log probs for train dataset:  98%|█████████▊| 480/491 [00:52<00:01,  8.34it/s]
+[1AComputing reference log probs for train dataset:  98%|█████████▊| 482/491 [00:52<00:01,  8.44it/s]
+[1AComputing reference log probs for train dataset:  99%|█████████▊| 484/491 [00:53<00:00,  9.48it/s]
+[1AComputing reference log probs for train dataset:  99%|█████████▉| 486/491 [00:53<00:00,  9.50it/s]
+[1AComputing reference log probs for train dataset:  99%|█████████▉| 488/491 [00:53<00:00, 11.32it/s]
+[1AComputing reference log probs for train dataset: 100%|█████████▉| 490/491 [00:53<00:00, 11.64it/s]
+[1AComputing reference log probs for train dataset: 100%|██████████| 491/491 [00:53<00:00,  9.15it/s]
+
+[1ACaching reference log probs for train dataset:   0%|          | 0/1963 [00:00<?, ? examples/s]
+[1ACaching reference log probs for train dataset: 100%|██████████| 1963/1963 [00:00<00:00, 63251.76 examples/s]
+
+[1AFlattening the indices:   0%|          | 0/1963 [00:00<?, ? examples/s]
+[1AFlattening the indices: 100%|██████████| 1963/1963 [00:00<00:00, 8371.29 examples/s]
+[1AFlattening the indices: 100%|██████████| 1963/1963 [00:00<00:00, 8127.32 examples/s]
+
+[1AFlattening the indices:   0%|          | 0/1963 [00:00<?, ? examples/s]Flattening the indices: 100%|██████████| 1963/1963 [00:00<00:00, 270934.18 examples/s]
+time-lapse snapshots at [3, 5, 6, 9, 10, 12]
+
+[1A  0%|          | 0/12 [00:00<?, ?it/s]
+[1A  8%|▊         | 1/12 [00:13<02:25, 13.26s/it][W1006 21:39:08.675321043 CUDACachingAllocator.cpp:508] expandable_segments: memory mapping failed with OOM on device 0 while trying to map 20971520 bytes (free: 19070976, total: 85017624576).
+[W1006 21:39:10.991371817 CUDACachingAllocator.cpp:508] expandable_segments: memory mapping failed with OOM on device 0 while trying to map 20971520 bytes (free: 21168128, total: 85017624576).
+[W1006 21:39:11.256748163 CUDACachingAllocator.cpp:508] expandable_segments: memory mapping failed with OOM on device 0 while trying to map 20971520 bytes (free: 19070976, total: 85017624576).
+[W1006 21:39:11.442459530 CUDACachingAllocator.cpp:508] expandable_segments: memory mapping failed with OOM on device 0 while trying to map 20971520 bytes (free: 19070976, total: 85017624576).
+Traceback (most recent call last):
+  File "/pkg/modal/_runtime/container_io_manager.py", line 987, in handle_input_exception
+    yield
+  File "/pkg/modal/_container_entrypoint.py", line 189, in run_input_sync
+    values = io_context.call_function_sync()
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/pkg/modal/_runtime/container_io_manager.py", line 266, in call_function_sync
+    expected_value_or_values = self.finalized_function.callable(*args, **kwargs)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/act1.py", line 35, in dpo
+    run_dpo(out_dir, sft_path=f"{SFT_DIR}/snapshots/step-{sft_step:05d}", n_pairs=n_pairs, max_steps=max_steps)
+  File "/root/upbringing/dpo.py", line 54, in run_dpo
+    trainer.train(resume_from_checkpoint=resume[-1] if resume else None)
+  File "/usr/local/lib/python3.12/site-packages/transformers/trainer.py", line 1562, in train
+    return inner_training_loop(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/transformers/trainer.py", line 1646, in _inner_training_loop
+    self._run_epoch(
+  File "/usr/local/lib/python3.12/site-packages/transformers/trainer.py", line 1892, in _run_epoch
+    tr_loss_step = self.training_step(model, inputs, num_items_in_batch)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/trl/trainer/dpo_trainer.py", line 1809, in training_step
+    return super().training_step(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/transformers/trainer.py", line 2101, in training_step
+    self.accelerator.backward(loss, **kwargs)
+  File "/usr/local/lib/python3.12/site-packages/accelerate/accelerator.py", line 2861, in backward
+    loss.backward(**kwargs)
+  File "/usr/local/lib/python3.12/site-packages/torch/_tensor.py", line 623, in backward
+    torch.autograd.backward(
+  File "/usr/local/lib/python3.12/site-packages/torch/autograd/__init__.py", line 395, in backward
+    _engine_run_backward(
+  File "/usr/local/lib/python3.12/site-packages/torch/autograd/graph.py", line 979, in _engine_run_backward
+    return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/torch/autograd/function.py", line 325, in apply
+    return user_fn(self, *args)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/trl/kernels/logprob_entropy.py", line 210, in backward
+    grad_logits = torch.empty_like(logits, memory_format=torch.contiguous_format)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 6.12 GiB. GPU 0 has a total capacity of 79.18 GiB of which 6.11 GiB is free. Process 1 has 73.06 GiB memory in use. Of the allocated memory 71.22 GiB is allocated by PyTorch, and 1.11 GiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)
+
+[1A  8%|▊         | 1/12 [00:22<04:12, 22.98s/it]
+
+[1ALoading weights:   0%|          | 0/179 [00:00<?, ?it/s]
+[1ALoading weights:  41%|████      | 73/179 [00:00<00:00, 729.54it/s]
+[1ALoading weights:  89%|████████▉ | 160/179 [00:00<00:00, 809.95it/s]
+[1ALoading weights: 100%|██████████| 179/179 [00:00<00:00, 831.88it/s]
+[RANK 0] `padding_free=True` is temporarily unavailable after a refactor and is currently disabled. Falling back to standard padding (`padding_free=False`). This feature is planned to return in a future update; for now, please set `padding_free=False` explicitly.
+[RANK 0] Detected kernel version 4.19.0, which is below the recommended minimum of 5.5.0; this can cause the process to hang. It is recommended to upgrade the kernel to the minimum version or higher.
+time-lapse snapshots at [3, 5, 6, 9, 10, 12]
+
+[1A  0%|          | 0/12 [00:00<?, ?it/s]
+[1A  8%|▊         | 1/12 [00:11<02:08, 11.68s/it][W1006 21:39:42.927538568 CUDACachingAllocator.cpp:508] expandable_segments: memory mapping failed with OOM on device 0 while trying to map 20971520 bytes (free: 19070976, total: 85017624576).
+[W1006 21:39:44.238586336 CUDACachingAllocator.cpp:508] expandable_segments: memory mapping failed with OOM on device 0 while trying to map 20971520 bytes (free: 21168128, total: 85017624576).
+[W1006 21:39:45.198480181 CUDACachingAllocator.cpp:508] expandable_segments: memory mapping failed with OOM on device 0 while trying to map 20971520 bytes (free: 19070976, total: 85017624576).
+[W1006 21:39:45.379019534 CUDACachingAllocator.cpp:508] expandable_segments: memory mapping failed with OOM on device 0 while trying to map 20971520 bytes (free: 19070976, total: 85017624576).
+Traceback (most recent call last):
+  File "/pkg/modal/_runtime/container_io_manager.py", line 987, in handle_input_exception
+    yield
+  File "/pkg/modal/_container_entrypoint.py", line 189, in run_input_sync
+    values = io_context.call_function_sync()
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/pkg/modal/_runtime/container_io_manager.py", line 266, in call_function_sync
+    expected_value_or_values = self.finalized_function.callable(*args, **kwargs)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/act1.py", line 35, in dpo
+    run_dpo(out_dir, sft_path=f"{SFT_DIR}/snapshots/step-{sft_step:05d}", n_pairs=n_pairs, max_steps=max_steps)
+  File "/root/upbringing/dpo.py", line 54, in run_dpo
+    trainer.train(resume_from_checkpoint=resume[-1] if resume else None)
+  File "/usr/local/lib/python3.12/site-packages/transformers/trainer.py", line 1562, in train
+    return inner_training_loop(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/transformers/trainer.py", line 1646, in _inner_training_loop
+    self._run_epoch(
+  File "/usr/local/lib/python3.12/site-packages/transformers/trainer.py", line 1892, in _run_epoch
+    tr_loss_step = self.training_step(model, inputs, num_items_in_batch)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/trl/trainer/dpo_trainer.py", line 1809, in training_step
+    return super().training_step(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/transformers/trainer.py", line 2101, in training_step
+    self.accelerator.backward(loss, **kwargs)
+  File "/usr/local/lib/python3.12/site-packages/accelerate/accelerator.py", line 2861, in backward
+    loss.backward(**kwargs)
+  File "/usr/local/lib/python3.12/site-packages/torch/_tensor.py", line 623, in backward
+    torch.autograd.backward(
+  File "/usr/local/lib/python3.12/site-packages/torch/autograd/__init__.py", line 395, in backward
+    _engine_run_backward(
+  File "/usr/local/lib/python3.12/site-packages/torch/autograd/graph.py", line 979, in _engine_run_backward
+    return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/torch/autograd/function.py", line 325, in apply
+    return user_fn(self, *args)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/trl/kernels/logprob_entropy.py", line 210, in backward
+    grad_logits = torch.empty_like(logits, memory_format=torch.contiguous_format)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 6.12 GiB. GPU 0 has a total capacity of 79.18 GiB of which 5.99 GiB is free. Process 1 has 73.18 GiB memory in use. Of the allocated memory 71.22 GiB is allocated by PyTorch, and 1.23 GiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)
+
+[1A  8%|▊         | 1/12 [00:26<04:47, 26.09s/it]
+
+[1ALoading weights:   0%|          | 0/179 [00:00<?, ?it/s]
+[1ALoading weights:  39%|███▊      | 69/179 [00:00<00:00, 665.80it/s]
+[1ALoading weights:  93%|█████████▎| 167/179 [00:00<00:00, 845.81it/s]
+[1ALoading weights: 100%|██████████| 179/179 [00:00<00:00, 831.52it/s]
+[RANK 0] `padding_free=True` is temporarily unavailable after a refactor and is currently disabled. Falling back to standard padding (`padding_free=False`). This feature is planned to return in a future update; for now, please set `padding_free=False` explicitly.
+[RANK 0] Detected kernel version 4.19.0, which is below the recommended minimum of 5.5.0; this can cause the process to hang. It is recommended to upgrade the kernel to the minimum version or higher.
+time-lapse snapshots at [3, 5, 6, 9, 10, 12]
+
+[1A  0%|          | 0/12 [00:00<?, ?it/s]
+[1A  8%|▊         | 1/12 [00:11<02:09, 11.81s/it][W1006 21:40:21.526856936 CUDACachingAllocator.cpp:508] expandable_segments: memory mapping failed with OOM on device 0 while trying to map 20971520 bytes (free: 19070976, total: 85017624576).
+[W1006 21:40:22.904688015 CUDACachingAllocator.cpp:508] expandable_segments: memory mapping failed with OOM on device 0 while trying to map 20971520 bytes (free: 21168128, total: 85017624576).
+[W1006 21:40:24.108743117 CUDACachingAllocator.cpp:508] expandable_segments: memory mapping failed with OOM on device 0 while trying to map 20971520 bytes (free: 19070976, total: 85017624576).
+[W1006 21:40:24.220575227 CUDACachingAllocator.cpp:508] expandable_segments: memory mapping failed with OOM on device 0 while trying to map 20971520 bytes (free: 19070976, total: 85017624576).
+Traceback (most recent call last):
+  File "/pkg/modal/_runtime/container_io_manager.py", line 987, in handle_input_exception
+    yield
+  File "/pkg/modal/_container_entrypoint.py", line 189, in run_input_sync
+    values = io_context.call_function_sync()
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/pkg/modal/_runtime/container_io_manager.py", line 266, in call_function_sync
+    expected_value_or_values = self.finalized_function.callable(*args, **kwargs)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/act1.py", line 35, in dpo
+    run_dpo(out_dir, sft_path=f"{SFT_DIR}/snapshots/step-{sft_step:05d}", n_pairs=n_pairs, max_steps=max_steps)
+  File "/root/upbringing/dpo.py", line 54, in run_dpo
+    trainer.train(resume_from_checkpoint=resume[-1] if resume else None)
+  File "/usr/local/lib/python3.12/site-packages/transformers/trainer.py", line 1562, in train
+    return inner_training_loop(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/transformers/trainer.py", line 1646, in _inner_training_loop
+    self._run_epoch(
+  File "/usr/local/lib/python3.12/site-packages/transformers/trainer.py", line 1892, in _run_epoch
+    tr_loss_step = self.training_step(model, inputs, num_items_in_batch)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/trl/trainer/dpo_trainer.py", line 1809, in training_step
+    return super().training_step(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/transformers/trainer.py", line 2101, in training_step
+    self.accelerator.backward(loss, **kwargs)
+  File "/usr/local/lib/python3.12/site-packages/accelerate/accelerator.py", line 2861, in backward
+    loss.backward(**kwargs)
+  File "/usr/local/lib/python3.12/site-packages/torch/_tensor.py", line 623, in backward
+    torch.autograd.backward(
+  File "/usr/local/lib/python3.12/site-packages/torch/autograd/__init__.py", line 395, in backward
+    _engine_run_backward(
+  File "/usr/local/lib/python3.12/site-packages/torch/autograd/graph.py", line 979, in _engine_run_backward
+    return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/torch/autograd/function.py", line 325, in apply
+    return user_fn(self, *args)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/trl/kernels/logprob_entropy.py", line 210, in backward
+    grad_logits = torch.empty_like(logits, memory_format=torch.contiguous_format)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 6.12 GiB. GPU 0 has a total capacity of 79.18 GiB of which 5.97 GiB is free. Process 1 has 73.20 GiB memory in use. Of the allocated memory 71.22 GiB is allocated by PyTorch, and 1.25 GiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)
+Stopping app - uncaught exception raised in remote container: OutOfMemoryError('CUDA out of memory. Tried to allocate 6.12 GiB. GPU 0 has a total capacity of 79.18 GiB of which 5.97 GiB is free. Process 1 has 73.20 GiB memory in use. Of the allocated memory 71.22 GiB is allocated by PyTorch, and 1.25 GiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)').
+
+[1A  8%|▊         | 1/12 [00:16<03:05, 16.87s/it]
+╭─ Error ──────────────────────────────────────────────────────────────────────╮
+│ CUDA out of memory. Tried to allocate 6.12 GiB. GPU 0 has a total capacity   │
+│ of 79.18 GiB of which 5.97 GiB is free. Process 1 has 73.20 GiB memory in    │
+│ use. Of the allocated memory 71.22 GiB is allocated by PyTorch, and 1.25 GiB │
+│ is reserved by PyTorch but unallocated. If reserved but unallocated memory   │
+│ is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to     │
+│ avoid fragmentation.  See documentation for Memory Management                │
+│ (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usag │
+│ e-with-pytorch-cuda-alloc-conf)                                              │
+╰──────────────────────────────────────────────────────────────────────────────╯

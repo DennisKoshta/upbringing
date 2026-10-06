@@ -73,3 +73,8 @@ def sweep(stage: str = "sft", official: bool = False):
     for out in eval_ckpt.starmap(jobs, order_outputs=False):
         print(out["label"], "ifeval", round(out["ifeval"]["prompt_loose"], 3), "gsm8k", round(out["gsm8k"]["acc"], 3),
               "number top", out["diversity"]["number"]["top"][:3])
+
+
+@app.local_entrypoint()
+def base_logprobs_entry():
+    print("files scored:", base_logprobs.remote())
