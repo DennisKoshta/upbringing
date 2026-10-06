@@ -80,6 +80,10 @@ def diversity_stats(probe, samples):
     canon = [normalize_sample(probe, s) for s in samples]
     valid = [c for c in canon if c is not None]
     counts = collections.Counter(valid)
+    first_raw = {}
+    for c, s in zip(canon, samples):
+        if c is not None and c not in first_raw:
+            first_raw[c] = s.strip()
     import math
 
     n = len(valid)
@@ -89,6 +93,7 @@ def diversity_stats(probe, samples):
         "distinct": len(counts),
         "entropy_bits": round(entropy, 3),
         "top": counts.most_common(10),
+        "top_raw": [first_raw[k] for k, _ in counts.most_common(10)],  # one verbatim sample per top answer
         "histogram": dict(counts) if probe == "number" else None,
     }
 
