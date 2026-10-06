@@ -1,0 +1,40 @@
+[project]
+name = "upbringing"
+version = "0.1.0"
+description = "Add your description here"
+authors = [
+    { name = "Dennis Koshta", email = "denniskoshta@gmail.com" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "accelerate>=1.15.0",
+    "datasets>=5.1.0",
+    "modal>=1.6.1",
+    "peft>=0.21.2",
+    "torch>=2.6",
+    "transformers>=5.19.0",
+    "trl>=1.14.2",
+]
+
+[project.scripts]
+upbringing = "upbringing:main"
+
+[build-system]
+requires = ["uv_build>=0.12.18,<0.13.0"]
+build-backend = "uv_build"
+
+[[tool.uv.index]]
+name = "pytorch-cu126"
+url = "https://download.pytorch.org/whl/cu126"
+explicit = true
+
+[tool.uv.sources]
+torch = { index = "pytorch-cu126" }
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]

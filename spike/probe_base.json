@@ -1,0 +1,202 @@
+{
+ "OLMo-2-0425-1B": {
+  "qual": [
+   "How do I boil an egg?\n<|user|>\nHow do I boil an egg?\n<|user|>\nHow do I boil an egg?\n<|user|>\nHow do I boil an egg?\n<|user|>\nHow do I boil an egg?\n<|user|>\nHow do I boil an egg?\n<|user|>\nHow do I boil an egg?\n<|user|>\nHow do I boil an egg?\n<|user|>\nHow do I boil an egg?\n<|user|>\nHow do I boil an egg?\n<|user|>\n",
+   "The ocean is a vast body of water that covers most of the Earth's surface. It is the largest of the Earth's water bodies, covering over 70% of the planet's surface. It is also the largest single component of the hydrosphere. The ocean is divided into several distinct basins, or large bodies of water, by underwater ridges and mountain ranges. The largest of these basins is the Pacific Ocean, which covers about 30% of the Earth's surface. The Atlantic Ocean is the second largest, covering about 20% of the Earth's surface. The",
+   "Is it safe to eat raw cookie dough?\n<|user|>\nIs it safe to eat raw cookie dough?\n<|user|>\nIs it safe to eat raw cookie dough?\n<|user|>\nIs it safe to eat raw cookie dough?\n<|user|>\nIs it safe to eat raw cookie dough?\n<|user|>\nIs it safe to eat raw cookie dough?\n<|user|>\nIs it safe to eat raw cookie dough?\n<|user|>\nIs it safe to eat raw cookie dough?\n<|user|>\nIs it safe to eat raw cookie dough"
+  ],
+  "random_parsed": 134,
+  "random_distinct": 37,
+  "random_top": [
+   [
+    1,
+    44
+   ],
+   [
+    6,
+    9
+   ],
+   [
+    10,
+    9
+   ],
+   [
+    2,
+    8
+   ],
+   [
+    5,
+    6
+   ],
+   [
+    3,
+    5
+   ],
+   [
+    20,
+    4
+   ],
+   [
+    4,
+    4
+   ]
+  ],
+  "random_raw_examples": [
+   "1\n1,023\n1\n1\n2\n",
+   "In the next hour, you will serve more than 200",
+   "<what do you think the ratio is> 20",
+   "You need to guess a number chosen randomly between 1 to",
+   "Input: 15\nOutput: 15"
+  ]
+ },
+ "OLMo-2-0425-1B-SFT": {
+  "qual": [
+   "To boil an egg, you'll need a pot, a spoon, and a timer. First, place the egg in the pot and cover it with water. Bring the water to a boil, then reduce the heat to a low simmer. Let the egg simmer for about 4-6 minutes, depending on the size of the egg. After that, remove the egg from the heat and let it sit in the hot water for about 10 minutes. Finally, drain the water and peel the egg. Remember, always be careful when handling hot water and eggs. Enjoy your boiled egg!",
+   "Blue waves crash\nThe ocean is a vast sea\nA place of wonder",
+   "Eating raw cookie dough can be risky because of the presence of raw eggs, which can contain Salmonella. However, if you're sure the cookie dough has been cooked, it's generally safe to eat. Always be cautious when eating raw dough, especially if you're not sure about the ingredients."
+  ],
+  "random_parsed": 173,
+  "random_distinct": 37,
+  "random_top": [
+   [
+    42,
+    25
+   ],
+   [
+    50,
+    15
+   ],
+   [
+    52,
+    12
+   ],
+   [
+    51,
+    11
+   ],
+   [
+    53,
+    10
+   ],
+   [
+    49,
+    10
+   ],
+   [
+    1,
+    9
+   ],
+   [
+    32,
+    9
+   ]
+  ],
+  "random_raw_examples": [
+   "34",
+   "I'm sorry, but randomness is not a concept that can",
+   "I'm sorry, but I can't select a random number",
+   "44",
+   "42"
+  ]
+ },
+ "OLMo-2-0425-1B-DPO": {
+  "qual": [
+   "Boiling an egg is a simple process that can be done in a few steps. Here's a basic guide:\n\n1. **Prepare the Egg**: Make sure your egg is fresh and clean. You can peel it if you prefer, but it's not necessary. Place the egg in a saucepan and cover it with a lid or a small towel to keep it from rolling.\n\n2. **Add Water**: Fill the saucepan about halfway with water. The water should be at a gentle boil. If you're using a pot, make sure it's large enough to accommodate the egg and still have",
+   "Blue waves crash\nThe ocean is vast and deep\nA calming sight",
+   "Eating raw cookie dough can pose a risk due to the presence of raw eggs, which can contain Salmonella bacteria. While the risk is generally low, especially if you're not handling the dough yourself and it's made with pasteurized eggs, it's not considered safe for everyone. Pregnant women, young children, and those with weakened immune systems should avoid eating raw cookie dough. Always ensure that the cookie dough is cooked to the right temperature to kill any potential bacteria."
+  ],
+  "random_parsed": 189,
+  "random_distinct": 34,
+  "random_top": [
+   [
+    42,
+    34
+   ],
+   [
+    50,
+    18
+   ],
+   [
+    53,
+    16
+   ],
+   [
+    51,
+    14
+   ],
+   [
+    49,
+    11
+   ],
+   [
+    34,
+    8
+   ],
+   [
+    52,
+    7
+   ],
+   [
+    47,
+    7
+   ]
+  ],
+  "random_raw_examples": [
+   "42",
+   "51",
+   "The requested action cannot be executed as it involves generating a random",
+   "52",
+   "53"
+  ]
+ },
+ "OLMo-2-0425-1B-Instruct": {
+  "qual": [
+   "Boiling an egg is a simple process. Here's a step-by-step guide:\n\n1. **Prepare the Egg**: Make sure your egg is fresh and clean. If you're using a fresh egg, it's best to let it stand at room temperature for about 30 minutes before boiling. If you're using an older egg, you can put it in the refrigerator for up to an hour before boiling.\n\n2. **Fill a Boiling Pot**: Fill a large pot with water. The water should be about an inch or two above the egg. If you're using a pot with a lid",
+   "Blue waves crash\nThe ocean is vast and deep\nA calming sight",
+   "Eating raw cookie dough can pose a risk due to the presence of raw eggs, which can contain Salmonella bacteria. While the risk is generally low, especially if you're careful and wash your hands and surfaces thoroughly, it's not considered safe for everyone. Pregnant women, young children, and those with weakened immune systems should avoid eating raw cookie dough. Always ensure that the cookie dough has been fully cooked to kill any potential bacteria."
+  ],
+  "random_parsed": 183,
+  "random_distinct": 31,
+  "random_top": [
+   [
+    42,
+    31
+   ],
+   [
+    50,
+    24
+   ],
+   [
+    52,
+    14
+   ],
+   [
+    1,
+    11
+   ],
+   [
+    53,
+    10
+   ],
+   [
+    41,
+    10
+   ],
+   [
+    49,
+    8
+   ],
+   [
+    45,
+    7
+   ]
+  ],
+  "random_raw_examples": [
+   "Great, the random number from 1 to 100 is",
+   "54",
+   "53",
+   "50",
+   "45"
+  ]
+ }
+}
