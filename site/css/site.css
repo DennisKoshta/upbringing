@@ -404,3 +404,9 @@ table.data th:first-child, table.data td:first-child { text-align: left; }
 
 .multiples.wide .legend { min-height: 44px; align-content: flex-start; }
 .trace-text .pre { color: var(--muted); }
+.kpis.three { grid-template-columns: repeat(3, 1fr); margin: 14px 0; }
+.kpis.three .kv { font-size: 24px; }
+table.spec.cmp td.ok { color: var(--good-text); font-weight: 600; white-space: nowrap; }
+table.spec.cmp td.bad { color: var(--critical); font-weight: 600; white-space: nowrap; }
+table.spec.cmp td.mono { font-size: 13px; }
+@media (max-width: 900px) { .kpis.three { grid-template-columns: 1fr; } }

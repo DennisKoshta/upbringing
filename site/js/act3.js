@@ -19,8 +19,8 @@ function smooth(points, k = 9) {
 }
 
 export async function initAct3() {
-  const [curves, traces, bug] = await Promise.all([load("rlvr/curves.json"), load("rlvr/traces.json"), load("rlvr/bug.json")]);
-  if (bug) drawBug(bug);
+  const [curves, traces, bug, cmp] = await Promise.all([load("rlvr/curves.json"), load("rlvr/traces.json"), load("rlvr/bug.json"), load("rlvr/grader_comparison.json")]);
+  if (bug) drawBug(bug, cmp);
   if (!curves || !curves.eval.length) {
     document.getElementById("a3-curves").textContent = "The run is in progress; curves appear after the first evaluation.";
     return;
@@ -43,7 +43,7 @@ function drawKpis(c) {
   const v1 = tr.slice(-10);
   const avg = (a, key) => a.reduce((s, x) => s + x[key], 0) / Math.max(a.length, 1);
   [
-    ["Held-out accuracy", pct(last.accuracy, 1), `from ${pct(first.accuracy, 1)} at step 0`],
+    ["Held-out accuracy (per attempt)", pct(last.accuracy, 1), `from ${pct(first.accuracy, 1)} at step 0 · 1,024 attempts`],
     ["Answer length", tok1 ? `${Math.round(tok1.tokens)} tokens` : "–", tok0 ? `from ${Math.round(tok0.tokens)} at the start` : ""],
     (() => {
       const b = CHARTED.slice().sort((x, y) => (avg(v1, y) - avg(v0, y)) - (avg(v1, x) - avg(v0, x)))[0];
@@ -107,7 +107,8 @@ function drawCurves(c, lastStep) {
   el("b", { text: `${pct(mean(first, "wait"))} → ${pct(mean(last, "wait"))}` }, note);
   note.append(" of attempts), and planning subgoals up front fades (");
   el("b", { text: `${pct(mean(first, "subgoal"))} → ${pct(mean(last, "subgoal"))}` }, note);
-  note.append("). Here the model's “aha” is systematic trial and error, not a sudden “wait”. Phrases are matched by regex: they show how it talks, not whether its checks are right.");
+  note.append("). By these counts, what grows is explicit trial-and-error language, not a sudden “wait”. " +
+    "Phrase counts describe how the model talks, not whether its checks are right, and they can't say whether RL created this search or amplified something the base model could already do; that needs comparisons at matched sampling budgets (pass@k, below).");
   tableToggle(box.parentElement, () => ({
     head: ["Step", "Held-out acc.", "Training acc.", ...Object.values(BEHAVIOR_META).map((m) => m.name), "Plans subgoals"],
     rows: c.train.filter((t) => t.step % 50 === 0).map((t) => {
@@ -191,17 +192,45 @@ function renderTrace(node, text, patterns) {
   node.append(text.slice(pos));
 }
 
-function drawBug(bug) {
+function drawBug(bug, cmp) {
   const body = document.getElementById("a3-bug-body");
   body.replaceChildren();
-  el("p", { class: "body-text", text:
-    "In our first run, the base model didn't stop after answering. It went on to invent new “User:” puzzles and " +
-    `answer those too: ${Math.round(bug.share_after_first_answer * 100)}% of everything it generated came after its first answer. ` +
-    "Our grader read the last answer in the text, so it could have scored an answer to a question nobody asked. " +
-    "It also inflated the length curve, which is exactly the signal an aha-moment chart relies on." }, body);
+  const intro = el("p", { class: "body-text" }, body);
+  intro.append("In our first run, generation didn't stop at the answer. The base model kept writing, often inventing new " +
+    `“User:” puzzles and answering them: ${Math.round(bug.share_after_first_answer * 100)}% of the text it generated came after its first answer` +
+    (cmp ? `, and ${Math.round((cmp.multiple_answer_blocks / cmp.rollouts) * 100)}% of rollouts held more than one answer block` : "") +
+    ". The original grader read the last answer block. We kept one logged batch from that run and re-graded it both ways.");
+  if (cmp) {
+    const kp = el("div", { class: "kpis three" }, body);
+    [
+      [`${cmp.different_answer_read} of ${cmp.rollouts}`, "rollouts where the old grader read a different answer than the model's first"],
+      [String(cmp.old_rewarded), `correct-answer reward${cmp.old_rewarded === 1 ? "" : "s"} in the batch under the old grader…`],
+      [String(cmp.old_rewarded - cmp.false_positives.length), "…that went to a rollout whose first answer was actually correct"],
+    ].forEach(([v, l]) => {
+      const d = el("div", { class: "kpi" }, kp);
+      el("div", { class: "kv", text: v }, d);
+      el("div", { class: "kd", text: l }, d);
+    });
+    const wrap = el("div", { class: "scroll-x" }, body);
+    const t = el("table", { class: "spec cmp" }, wrap);
+    const hr = el("tr", {}, el("thead", {}, t));
+    ["Puzzle", "The model's answer", "What the old grader read", "Old grader", "Corrected"].forEach((h) => el("th", { text: h }, hr));
+    const tb = el("tbody", {}, t);
+    const row = (c, oldOk) => {
+      const tr = el("tr", {}, tb);
+      el("td", { text: `${c.target} from ${c.nums.join(", ")}` }, tr);
+      el("td", { class: "mono", text: c.first_answer ?? "–" }, tr);
+      el("td", { class: "mono", text: c.answer_old_grader_read ?? "–" }, tr);
+      el("td", { class: oldOk ? "ok" : "bad", text: oldOk ? "✓ rewarded" : "✗ no reward" }, tr);
+      el("td", { class: oldOk ? "bad" : "ok", text: oldOk ? "✗ no reward" : "✓ rewarded" }, tr);
+    };
+    cmp.false_positives.forEach((c) => row(c, true));
+    cmp.false_negatives.forEach((c) => row(c, false));
+    el("p", { class: "fig-sub", text: `Logged batch at step ${cmp.step} (${cmp.rollouts} rollouts). Reproduce with analysis/grader_comparison.py.` }, body);
+  }
   const cols = el("div", { class: "cols" }, body);
   const left = el("div", {}, cols);
-  el("h4", { class: "fig-sub", text: `A real rollout from that run (puzzle: make ${bug.target} from ${bug.nums.join(", ")})` }, left);
+  el("h4", { class: "fig-sub", text: `What a rollout looked like (make ${bug.target} from ${bug.nums.join(", ")})` }, left);
   const tt = el("div", { class: "trace-text" }, left);
   tt.append(bug.before.slice(-420));
   const after = el("span", { class: "after" }, tt);
@@ -212,9 +241,10 @@ function drawBug(bug) {
   const ul = el("ul", {}, right);
   [
     "Stop generation at </answer>, as most RLVR setups do.",
-    "Grade the first <answer> after </think>, never the last.",
-    "A regression test pins the behavior: an invented follow-up answer must not be graded.",
-    "We restarted the run (about $1.50 lost). Every curve above is from the fixed run.",
-  ].forEach((t) => el("li", { text: t }, ul));
-  el("p", { class: "note", text: "Verifiers are where RL goes wrong first: the model optimizes what the checker measures, not what you meant." }, right);
+    "Grade the first <answer> after </think>, never a later one.",
+    "Tests pin both: an invented follow-up answer is never graded, and the logged batch re-grades as shown.",
+    "We restarted the run (about $1.50 lost). Every other number on this page is from the corrected run.",
+  ].forEach((x) => el("li", { text: x }, ul));
+  el("p", { class: "note", text: "What this is and isn't: a grading vulnerability with a measured effect on the rewards in one batch. " +
+    "It is not demonstrated reward hacking; we stopped the run at step 24, before we could see whether optimization learned to exploit it." }, right);
 }

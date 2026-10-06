@@ -60,7 +60,7 @@
     <a class="act-card a3" href="#act3">
       <span class="act-num">III</span>
       <span class="act-title">The aha moment</span>
-      <span class="act-sub">GRPO with a verifier: Qwen2.5-3B learns Countdown from right/wrong alone</span>
+      <span class="act-sub">GRPO with a programmatic checker: Qwen2.5-3B base learns Countdown puzzles</span>
     </a>
   </div>
   <p class="byline">By <strong>Dennis Koshta</strong> · October 2026 ·
@@ -220,17 +220,18 @@
     <p class="act-label">Act III</p>
     <h2 id="act3-title">The aha moment</h2>
     <p class="lede">Now there is no human at all. <strong>Qwen2.5-3B</strong>, a base model, gets arithmetic
-      puzzles (“make 48 from 10, 55 and 17”) and a checker that says right or wrong. Nothing tells it how to think.
-      This is reinforcement learning from verifiable rewards (RLVR) with GRPO: sample eight attempts per puzzle,
-      reinforce the ones that beat their siblings.</p>
+      puzzles (“make 48 from 10, 55 and 17”) and a programmatic checker: 1 point for a correct equation, 0.1 for a
+      well-formed answer, nothing else. Nothing tells it how to think. This is reinforcement learning from verifiable
+      rewards (RLVR) with GRPO: sample eight attempts per puzzle, reinforce the ones that beat their siblings.</p>
   </header>
 
   <div class="kpis" id="a3-kpis"></div>
 
   <figure class="panel">
     <h3 class="fig-title">Training, as it happened</h3>
-    <p class="fig-sub">Accuracy on 256 held-out puzzles, answer length, and how often reasoning shows three
-      behaviors. Hover to read any step.</p>
+    <p class="fig-sub">Held-out accuracy is per attempt: 256 puzzles never used in training, 4 attempts each at
+      temperature 1, graded by the corrected checker (1,024 attempts per point; not pass@k). Training-puzzle accuracy,
+      answer length and behavior rates come from every rollout. Hover to read any step.</p>
     <div class="multiples wide" id="a3-curves"></div>
   </figure>
 
@@ -255,7 +256,7 @@
   </figure>
 
   <figure class="panel exhibit" id="a3-bug">
-    <h3 class="fig-title">Our checker had a hole</h3>
+    <h3 class="fig-title">A grading bug, found and measured</h3>
     <div id="a3-bug-body"></div>
   </figure>
 </section>

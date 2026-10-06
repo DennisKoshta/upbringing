@@ -27,7 +27,7 @@ export async function initMethods() {
   });
 
   el("h3", { text: "Is the eval harness right?" }, body);
-  el("p", { class: "body-text", text: "Before trusting any curve, we ran AI2's own released checkpoints through our harness. IFEval lands within two points of their published numbers; GSM8K differs by protocol (we use 0-shot chain-of-thought, they use 8-shot)." }, body);
+  el("p", { class: "body-text", text: "Before trusting any curve, we ran AI2's own released checkpoints through our harness. IFEval lands within two points of their published numbers; GSM8K differs by protocol (we use 0-shot chain-of-thought, they use 8-shot). This validates our evaluation of their checkpoints. It does not mean our budget-cut training reproduces their results: our own checkpoints' scores are in Act I." }, body);
   if (act1) {
     const vt = el("table", { class: "spec" }, el("div", { class: "scroll-x" }, body));
     const vh = el("tr", {}, el("thead", {}, vt));

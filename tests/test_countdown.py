@@ -27,3 +27,12 @@ def test_reward_functions():
     nums, target = [[2, 3, 7]] * 3, [20] * 3
     assert correctness_reward(comps, nums=nums, target=target) == [1.0, 0.0, 0.0]
     assert format_reward(comps) == [0.1, 0.1, 0.0]
+
+
+def test_first_run_evidence_regrades_as_documented():
+    # The documented finding: in the logged batch the old grader's only reward went to the wrong rollout.
+    from analysis.grader_comparison import compare
+
+    r = compare()
+    assert r["rollouts"] == 256 and r["old_rewarded"] == 1 and r["new_rewarded"] == 1
+    assert len(r["false_positives"]) == 1 and len(r["false_negatives"]) == 1
