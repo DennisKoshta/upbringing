@@ -60,7 +60,7 @@ def smoke():
 
 
 @app.local_entrypoint()
-def sweep(stage: str = "sft", official: bool = False):
+def sweep(stage: str = "sft", official: bool = False, only: str = ""):
     jobs = []
     if official:
         jobs += [(label, path, rev) for label, (path, rev) in OFFICIAL.items()]
@@ -69,7 +69,11 @@ def sweep(stage: str = "sft", official: bool = False):
         for entry in vol.listdir(snap_dir.removeprefix("/vol")):
             name = os.path.basename(entry.path)
             jobs.append((f"{stage}-{name}", f"{snap_dir}/{name}", None))
-    print(f"evaluating {len(jobs)} checkpoints")
+    done = {os.path.basename(e.path).removesuffix(".json") for e in vol.listdir(EVAL_DIR.removeprefix("/vol"))}
+    jobs = [j for j in jobs if j[0] not in done and (not only or j[0] in only.split(","))]
+    print(f"evaluating {len(jobs)} checkpoints (skipping {len(done)} already scored)")
+    if not jobs:
+        return
     for out in eval_ckpt.starmap(jobs, order_outputs=False):
         print(out["label"], "ifeval", round(out["ifeval"]["prompt_loose"], 3), "gsm8k", round(out["gsm8k"]["acc"], 3),
               "number top", out["diversity"]["number"]["top"][:3])
