@@ -234,9 +234,9 @@
       <li>“What the picks reveal” is a <span class="term" data-t="bt">Bradley–Terry</span> fit: a logistic regression on the
         differences between the two answers' traits. Traits are counted by simple rules (length in tokens, list items and
         headers, hedge words, confident words, exclamation marks).</li>
-      <li>The replays use AI2's released SFT model as a stand-in until ours is finished. They were generated on a laptop GPU
+      <li>The replays start from our own SFT checkpoint (step 6,500 from section 1). They were generated on a laptop GPU
         (RTX 4060, about 100 seconds per round) by <a href="https://github.com/DennisKoshta/upbringing/blob/main/scripts/act2_replay.py">this script</a>.
-        Live training from your own picks is not built yet.</li>
+        Live training from your own judgments is not built.</li>
     </ul>
   </details>
 </section>

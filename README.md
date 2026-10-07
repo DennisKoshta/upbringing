@@ -14,10 +14,10 @@ page presents the results interactively: **[denniskoshta.github.io/upbringing](h
 
 | Component | Status |
 |---|---|
-| Act I SFT (6,500 steps) | Running on Modal |
+| Act I SFT (6,500 steps) | Done |
 | Act I DPO (60k pairs) | Queued; starts automatically after SFT (`scripts/act1_chain.sh`) |
 | Act I evaluation sweep | Base and AI2 references done; our checkpoints run automatically after training |
-| Act II replays | Generated with **AI2's SFT model as a stand-in**; to be regenerated from our SFT checkpoint |
+| Act II replays | Done, from our SFT checkpoint (step 6,500) |
 | Act II live training | Not built (deferred) |
 | Act III RLVR (900 steps) | Running on Modal |
 | Act III post-hoc evaluation | Base and early checkpoints done; remaining checkpoints after the run |
