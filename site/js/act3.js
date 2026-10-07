@@ -42,12 +42,9 @@ export function checkEquation(input, nums, target) {
 }
 
 export async function initAct3() {
-  const [curves, traces, bug, cmp, posthoc] = await Promise.all([
-    load("rlvr/curves.json"), load("rlvr/traces.json"), load("rlvr/bug.json"), load("rlvr/grader_comparison.json"), load("rlvr/posthoc.json"),
-  ]);
+  const [curves, traces, posthoc] = await Promise.all([load("rlvr/curves.json"), load("rlvr/traces.json"), load("rlvr/posthoc.json")]);
   let traceApi = null;
   if (traces && traces.puzzles.length) initTryIt(traces.puzzles, (i) => traceApi && traceApi.select(i));
-  if (bug) drawBug(bug, cmp);
   if (posthoc && posthoc.checkpoints.length > 1) drawPosthoc(posthoc.checkpoints);
   if (!curves || !curves.eval.length) {
     document.getElementById("a3-curves").textContent = "Training is in progress; results appear after the first evaluation.";
@@ -328,59 +325,4 @@ function drawPosthoc(all) {
         pct(c.greedy_accuracy, 1), ...ks.map((k) => pct(c.pass_at_k[String(k)], 1)), String(Math.round(c.mean_tokens))]),
     };
   });
-}
-
-function drawBug(bug, cmp) {
-  const body = document.getElementById("a3-bug-body");
-  body.replaceChildren();
-  el("p", { class: "body-text", text:
-    "In our first run, generation didn't stop at the answer. The base model kept writing, inventing new “User:” puzzles and " +
-    `answering them: ${Math.round(bug.share_after_first_answer * 100)}% of generated text came after its first answer. ` +
-    "The verifier graded the last answer block instead of the first, so it was sometimes scoring an answer to a puzzle that didn't exist." }, body);
-  if (cmp) {
-    const kp = el("div", { class: "kpis three" }, body);
-    [
-      [`${cmp.different_answer_read} of ${cmp.rollouts}`, "rollouts where the verifier read a different answer than the model's first"],
-      [String(cmp.old_rewarded), `positive reward${cmp.old_rewarded === 1 ? "" : "s"} in that batch…`],
-      [String(cmp.old_rewarded - cmp.false_positives.length), "…that went to a rollout whose answer was actually correct"],
-    ].forEach(([v, l]) => {
-      const d = el("div", { class: "kpi" }, kp);
-      el("div", { class: "kv", text: v }, d);
-      el("div", { class: "kd", text: l }, d);
-    });
-    const wrap = el("div", { class: "scroll-x" }, body);
-    const t = el("table", { class: "spec cmp" }, wrap);
-    const hr = el("tr", {}, el("thead", {}, t));
-    ["Puzzle", "Model's first answer", "What the old verifier read", "Old verifier", "Fixed verifier"].forEach((h) => el("th", { text: h }, hr));
-    const tb = el("tbody", {}, t);
-    const row = (c, oldOk) => {
-      const tr = el("tr", {}, tb);
-      el("td", { text: `Make ${c.target} from ${c.nums.join(", ")}` }, tr);
-      el("td", { class: "mono", text: c.first_answer ?? "–" }, tr);
-      el("td", { class: "mono", text: c.answer_old_grader_read ?? "–" }, tr);
-      el("td", { class: oldOk ? "ok" : "bad", text: oldOk ? "✓ rewarded" : "✗ no reward" }, tr);
-      el("td", { class: oldOk ? "bad" : "ok", text: oldOk ? "✗ no reward" : "✓ rewarded" }, tr);
-    };
-    cmp.false_positives.forEach((c) => row(c, true));
-    cmp.false_negatives.forEach((c) => row(c, false));
-    el("p", { class: "fig-sub", text: `The one logged batch kept from that run (step ${cmp.step}, ${cmp.rollouts} rollouts), re-graded both ways; see analysis/grader_comparison.py.` }, body);
-  }
-  const cols = el("div", { class: "cols" }, body);
-  const left = el("div", {}, cols);
-  el("h4", { class: "fig-sub", text: `A rollout from that run (make ${bug.target} from ${bug.nums.join(", ")})` }, left);
-  const tt = el("div", { class: "trace-text" }, left);
-  tt.append(bug.before.slice(-420));
-  const after = el("span", { class: "after" }, tt);
-  bug.after.split(/(User:)/).forEach((part) => (part === "User:" ? el("span", { class: "user", text: part }, after) : after.append(part)));
-  if (bug.after_chars > bug.after.length) after.append(`\n… ${(bug.after_chars - bug.after.length).toLocaleString("en-US")} more characters`);
-  const right = el("div", {}, cols);
-  el("h4", { class: "fig-sub", text: "The fix" }, right);
-  const ul = el("ul", {}, right);
-  [
-    "Stop generation at </answer>.",
-    "Grade only the first answer block.",
-    "Tests for both, including a regression test that re-grades this batch.",
-    "Restart training (about $1.50 lost). Everything else on this page uses the fixed verifier.",
-  ].forEach((x) => el("li", { text: x }, ul));
-  el("p", { class: "note", text: "Scope: this shows the bug corrupted rewards in that batch. It does not show reward hacking; the run was stopped at step 24, before optimization could exploit it." }, right);
 }
