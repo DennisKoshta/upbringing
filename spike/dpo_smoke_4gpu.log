@@ -267,3 +267,7 @@ Writing model shards: 100%|██████████| 1/1 [00:14<00:00, 14.
 [1A
 [1A100%|██████████| 12/12 [02:01<00:00,  7.47s/it]100%|██████████| 12/12 [02:01<00:00, 10.16s/it]
 [rank0]:[W1006 23:57:34.820929630 ProcessGroupNCCL.cpp:1624] Warning: WARNING: destroy_process_group() was not called before program exit, which can leak resources. For more info, please see https://pytorch.org/docs/stable/distributed.html#shutdown (function operator())
+Stopping app - local entrypoint completed.
+✓ App completed. View run at 
+https://modal.com/apps/denniskoshta/main/ap-vGKxCS9vHLjC3aZ83pa85Y
+EXIT 0

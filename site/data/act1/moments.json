@@ -12,7 +12,7 @@
  {
   "prompt": 0,
   "ckpt": "sft-step-00500",
-  "text": "Now it says OpenAI made it. Many of the example conversations were written by GPT models, and the identity came along with the style."
+  "text": "It now says OpenAI made it. Much of the SFT mixture was written by GPT models, so fine-tuning on it is partly distillation: the student inherits the teacher's style, and here its identity too. The mixture does include 240 examples of the model introducing itself as OLMo, but that's 0.03% of the data."
  },
  {
   "prompt": 1,
@@ -28,5 +28,10 @@
   "prompt": 2,
   "ckpt": "sft-step-00500",
   "text": "Earlier snapshots wrote prose about the ocean. By step 500 it writes a real haiku: 5, 7, 5."
+ },
+ {
+  "prompt": 0,
+  "ckpt": "sft-step-04550",
+  "text": "By step 4,550 the OpenAI claim is gone, but it doesn't call itself OLMo either: a generic \u201cAI language model\u201d. 240 identity examples are a faint signal against hundreds of thousands of distilled answers."
  }
 ]
