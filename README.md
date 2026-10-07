@@ -10,47 +10,66 @@ page presents the results interactively: **[denniskoshta.github.io/upbringing](h
 | **II. Preference learning** | Simulated labelers with known rules train an SFT model by LoRA DPO, round by round; a Bradley–Terry fit recovers each labeler's rule from their choices. Visitors can judge pairs and see the same fit applied to themselves. | OLMo-2 1B SFT |
 | **III. RLVR** | GRPO on Countdown from a base model with a programmatic verifier. Every rollout is logged; held-out evaluation during training and post-hoc with pass@k at matched sampling budgets. | Qwen2.5-3B |
 
-## Status (2026-10-06)
+## Status
 
-| Component | Status |
-|---|---|
-| Act I SFT (6,500 steps) | Done |
-| Act I DPO (60k pairs) | Queued; starts automatically after SFT (`scripts/act1_chain.sh`) |
-| Act I evaluation sweep | Base and AI2 references done; our checkpoints run automatically after training |
-| Act II replays | Done, from our SFT checkpoint (step 6,500) |
-| Act II live training | Not built (deferred) |
-| Act III RLVR (900 steps) | Running on Modal |
-| Act III post-hoc evaluation | Base and early checkpoints done; remaining checkpoints after the run |
-| Project page | Live, with data from completed stages |
+All training and evaluation is complete (2026-10-06). Total compute: **$69.59** on Modal, plus a laptop RTX 4060.
+Not built: live preference training from visitors' own judgments.
 
-This table is updated as stages finish. Numbers below are from completed stages only.
+## Results
 
-## Results so far
+### 1. SFT → DPO on OLMo-2 1B
 
-**Evaluation harness, validated on AI2's released checkpoints.** IFEval (prompt-level loose), two runs of our harness
-vs AI2's reported numbers: DPO 67.1% / 66.4% (AI2: 67.1%); SFT 49.4% / 49.4% (50.5%); Instruct 68.4% / 67.7% (70.1%).
-Greedy vLLM decoding is not bit-reproducible across batch compositions, so treat differences under ~1 point as noise.
-This validates our evaluation of their checkpoints, not a reproduction of their training results; our budget-cut
-checkpoints are scored separately.
+| Checkpoint | IFEval (prompt-level loose) | GSM8K (0-shot CoT) |
+|---|---|---|
+| Base model | 16.6% | 16.4% |
+| Our SFT (6,500 steps ≈ 0.58 epoch) | 39.6% | 49.4% |
+| Our SFT + DPO (60k pairs) | 48.4% | 45.8% |
+| AI2 SFT (reference, 2 epochs) | 49.4% | 60.0% |
+| AI2 DPO (reference, 378k pairs) | 66.4–67.1% | 61.6–62.3% |
 
-**RLVR (in progress).** Held-out accuracy is reported per attempt: 256 puzzles never used in training, 4 attempts each at
-temperature 1, corrected verifier (1,024 attempts per point). Base model: 1.6%. Final numbers, with confidence intervals
-and pass@k at matched sampling budgets, will be added when the run completes.
+DPO adds 9 points of IFEval at a cost of ~3.5 points of GSM8K. Our budget-scaled run lands below AI2's releases, as
+expected from 29% of their SFT tokens and 16% of their preference pairs. Other observations, visible on the site:
+over-refusal of harmless requests ("tell me a joke") peaks early in SFT and fades; the model claims to be made by
+OpenAI from step ~500 to ~1,600 (distilled SFT data; only 240 identity examples in 866k); output diversity collapses
+("pick a random number" → 42).
+
+**Evaluation harness, validated on AI2's released checkpoints.** IFEval, two runs of our harness vs AI2's reported
+numbers: DPO 67.1% / 66.4% (AI2: 67.1%); SFT 49.4% / 49.4% (50.5%); Instruct 68.4% / 67.7% (70.1%). Greedy vLLM
+decoding is not bit-reproducible across batch compositions, so treat differences under ~1 point as noise. This
+validates our evaluation of their checkpoints, not a reproduction of their training results.
+
+### 2. Preference learning (LoRA DPO, simulated labelers)
+
+Starting from our SFT checkpoint, 8 rounds × 16 judged pairs each. Each labeler moves its target trait on held-out
+prompts (length 163 → 230 tokens; list items/headers 3.2 → 11.3 per answer; hedges 0.89 → 0.45 per 100 words), and a
+Bradley–Terry fit to the judgments recovers each hidden rule as its largest weight.
+
+### 3. RLVR: GRPO on Countdown, Qwen2.5-3B
+
+Post-hoc evaluation, identical for every checkpoint: 256 held-out puzzles (all verified solvable by brute force),
+32 samples each at temperature 1, corrected verifier.
+
+| Checkpoint | Per-sample accuracy (95% CI) | Greedy | pass@32 | 3-number | 4-number |
+|---|---|---|---|---|---|
+| Base | 1.3% (1.0–1.6) | 0.8% | 26.6% | 2.7% | 0.1% |
+| Step 50 | 6.5% (5.5–7.5) | 13.7% | 55.1% | 12.3% | 1.5% |
+| Step 200 | 47.7% (42.3–53.4) | 50.8% | 56.2% | 74.4% | 24.5% |
+| Step 900 (final) | **55.7% (49.7–61.7)** | 55.9% | 56.2% | 76.5% | 37.6% |
+
+pass@32 reaches 56% by step 50 and stays there; per-sample accuracy then rises until it meets that ceiling. By the
+end, the model solves the same ~144 of 256 puzzles almost every time and essentially never solves the rest. At this
+scale, RL made the model reliable on solutions it could already find early, rather than expanding the set it can
+solve; 32 samples per puzzle is too few to settle the broader "sharpening vs. new capability" question. Phrase
+counts in the rollouts show explicit trial-and-error language ("let's try", "not equal") rising from ~17% to ~75% of
+rollouts while "wait" stays at 1–3%.
 
 **A grading bug, found and measured.** The first RLVR run did not stop generation at `</answer>`; the base model kept
 writing and often invented new "User:" puzzles and answered them (86% of generated text came after the first answer).
 The original grader read the *last* answer block. Re-grading the one logged batch kept from that run (step 24, 256
-rollouts; [`analysis/grader_comparison.py`](analysis/grader_comparison.py)):
-
-- the old grader read a different answer than the model's first in 166 of 256 rollouts;
-- the batch's only reward under the old grader went to a rollout whose actual answer, `(20 + 85) / 93 = 1.08651`, was
-  wrong, because a later invented block happened to contain a correct expression;
-- the one truly correct answer in the batch, `20 + 1 * 62` for 82, received no reward because the grader read a later
-  block (`4000 + (550 x 10) = 10,500 pounds`).
-
-Fix: stop generation at `</answer>`, grade the first answer block, and test both. This is a grading vulnerability with a
-measured effect on rewards in one batch, not demonstrated reward hacking: the run was stopped at step 24, before any
-evidence of optimization exploiting it could accumulate.
+rollouts; [`analysis/grader_comparison.py`](analysis/grader_comparison.py)): the old grader read a different answer
+than the model's first in 166 of 256 rollouts, and the batch's only reward went to a rollout whose actual answer was
+wrong. Fix: stop at `</answer>`, grade the first answer block, regression-test both. This is a grading vulnerability
+with a measured effect on rewards in one batch, not demonstrated reward hacking (the run was stopped at step 24).
 
 ## Exact configurations
 
