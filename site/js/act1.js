@@ -33,7 +33,7 @@ export async function initAct1() {
     scrub = stepper(document.getElementById("a1-stepper"), stepItems, {
       groups: { base: "Base", sft: "SFT steps", dpo: "DPO steps" },
       marks: momentIdx(),
-      minSlot: 34,
+      minSlot: 29,
       selected: idx,
       onChange: (i) => { idx = i; update(); },
     });
