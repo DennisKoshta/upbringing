@@ -6,7 +6,7 @@ const cache = new Map();
 
 export async function load(path) {
   if (!cache.has(path)) {
-    cache.set(path, fetch(`data/${path}`).then((r) => (r.ok ? r.json() : null)).catch(() => null));
+    cache.set(path, fetch(`data/${path}`, { cache: "no-cache" }).then((r) => (r.ok ? r.json() : null)).catch(() => null)); // revalidate: Pages caches 10 min
   }
   return cache.get(path);
 }

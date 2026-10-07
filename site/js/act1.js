@@ -15,12 +15,18 @@ export async function initAct1() {
   const data = await load("act1/checkpoints.json");
   if (!data) return;
   const moments = (await load("act1/moments.json")) || [];
-  const ckpts = data.checkpoints;
+  // A readable subset of the saved checkpoints: dense early, sparse later, and every checkpoint that carries a note.
+  const SFT_KEEP = [5, 10, 20, 50, 100, 225, 500, 1000, 2600, 4550, 6500];
+  const DPO_KEEP = [50, 150, 350];
+  const noted = new Set(moments.map((m) => m.ckpt));
+  const lastDpo = Math.max(0, ...data.checkpoints.filter((c) => c.stage === "dpo").map((c) => c.step));
+  const ckpts = data.checkpoints.filter((c) => c.stage === "base" || noted.has(c.id)
+    || (c.stage === "sft" && SFT_KEEP.includes(c.step)) || (c.stage === "dpo" && (DPO_KEEP.includes(c.step) || c.step === lastDpo)));
   const refs = data.references;
   const ai2 = refs.find((r) => r.id === "ai2-dpo") || refs[0];
   const n = ckpts.length;
   const lastSft = Math.max(0, ...ckpts.filter((c) => c.stage === "sft").map((c) => c.step));
-  document.getElementById("a1-nckpt").textContent = String(n - 1);
+  document.getElementById("a1-nckpt").textContent = String(data.checkpoints.length - 1);
 
   let prompt = 0;
   let idx = 0;
@@ -33,7 +39,7 @@ export async function initAct1() {
     scrub = stepper(document.getElementById("a1-stepper"), stepItems, {
       groups: { base: "Base", sft: "SFT steps", dpo: "DPO steps" },
       marks: momentIdx(),
-      minSlot: 29,
+      minSlot: 40,
       selected: idx,
       onChange: (i) => { idx = i; update(); },
     });
